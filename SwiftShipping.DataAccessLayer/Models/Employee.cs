@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SwiftShipping.DataAccessLayer.Models
 {
-    internal class Employee
+    public class Employee
     {
         public int Id { get; set; }
         [ForeignKey("User")]

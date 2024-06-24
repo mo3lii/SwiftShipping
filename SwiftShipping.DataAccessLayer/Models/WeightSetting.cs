@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SwiftShipping.DataAccessLayer.Models
 {
-    public class WeightSettings
+    public class WeightSetting
     {
         [Key]
         public string Key { get; set; } //"defaultWeight"

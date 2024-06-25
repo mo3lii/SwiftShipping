@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using SwiftShipping.DataAccessLayer.Models;
 
 namespace SwiftShippingAPI.Controllers
 {
@@ -18,16 +19,11 @@ namespace SwiftShippingAPI.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        [HttpGet]
+        public IActionResult Get()
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+            var x = (0 == (int)ShippingType.PickUp);
+            return Ok(new { result = x });
         }
     }
 }

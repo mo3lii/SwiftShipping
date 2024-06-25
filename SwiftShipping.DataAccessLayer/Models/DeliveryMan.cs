@@ -10,11 +10,12 @@ namespace SwiftShipping.DataAccessLayer.Models
     public class DeliveryMan
     {
         public int Id { get; set; }
-        [ForeignKey("User")]
-        public int RegionId { get; set; }
+        public string Name { get; set; }
 
+        [ForeignKey("User")]
+        public string UserId { get; set; }
         public virtual ApplicationUser User {  get; set; }
-        public virtual List<Order> orders { get; set; }
-        public virtual List <DeliveryManRegions> DeliverymanRegions { get; set;}
+        public virtual List<Order> Orders { get; set; }
+        public virtual List <DeliveryManRegions> DeliveryManRegions { get; set;}
     }
 }

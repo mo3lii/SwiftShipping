@@ -5,7 +5,9 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SwiftShipping.DataAccessLayer", "SwiftShipping.DataAccessLayer\SwiftShipping.DataAccessLayer.csproj", "{6C912BE5-D9E0-4D88-AC8F-8824FD5408A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwiftShippingAPI", "SwiftShippingAPI\SwiftShippingAPI.csproj", "{BBE837FA-DFE3-4EEE-B2ED-DDFE5AD57352}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SwiftShipping.API", "SwiftShippingAPI\SwiftShipping.API.csproj", "{BBE837FA-DFE3-4EEE-B2ED-DDFE5AD57352}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwiftShipping.ServiceLayer", "SwiftShipping.ServiceLayer\SwiftShipping.ServiceLayer.csproj", "{BD51EAA8-9928-4928-8506-B742E711131B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{BBE837FA-DFE3-4EEE-B2ED-DDFE5AD57352}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBE837FA-DFE3-4EEE-B2ED-DDFE5AD57352}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBE837FA-DFE3-4EEE-B2ED-DDFE5AD57352}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD51EAA8-9928-4928-8506-B742E711131B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD51EAA8-9928-4928-8506-B742E711131B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD51EAA8-9928-4928-8506-B742E711131B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD51EAA8-9928-4928-8506-B742E711131B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SwiftShipping.DataAccessLayer.Models
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
         {
         }
@@ -18,11 +18,14 @@ namespace SwiftShipping.DataAccessLayer.Models
         public DbSet<Region> Regions { get; set; }
         public DbSet<Government> Governments { get; set; }
         public DbSet<Seller> Sellers { get; set; }
-        public DbSet<WeightSetting> WeightSettings { get; set; }
+        public DbSet<WeightSetting> WeightSettings { get; set; } 
         public DbSet<DeliveryManRegions> DeliveryManRegions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<DeliveryManRegions>()
+          .HasKey(d => new { d.DeliveryManId, d.RegionId });
+            builder.Entity<WeightSetting>().HasData(new WeightSetting { DefaultWeight=5,KGPrice=10});
             base.OnModelCreating(builder);
 
         }

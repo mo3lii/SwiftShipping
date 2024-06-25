@@ -11,7 +11,8 @@ namespace SwiftShipping.DataAccessLayer.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public decimal Price { get; set; }
+        public decimal NormalPrice { get; set; }
+        public decimal PickupPrice { get; set; }
         [ForeignKey("Government")]
         public int GovernmentId { get; set; }
 

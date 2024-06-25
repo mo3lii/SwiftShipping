@@ -10,9 +10,12 @@ namespace SwiftShipping.DataAccessLayer.Models
     public class Employee
     {
         public int Id { get; set; }
-        [ForeignKey("User")]
-        public int RegionId { get; set; }
+        public string Name { get; set; }
 
+        [ForeignKey("User")]
+
+        public string UserId { get; set; }
+        public int RegionId { get; set; }
         public virtual ApplicationUser User { get; set; }
 
     }

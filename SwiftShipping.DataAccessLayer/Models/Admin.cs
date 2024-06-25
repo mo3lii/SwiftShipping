@@ -10,6 +10,8 @@ namespace SwiftShipping.DataAccessLayer.Models
     public class Admin
     {
         public int Id { get; set; }
+        public string Name { get; set; }
+
         [ForeignKey("User")]
         public string userId { get; set; }
 

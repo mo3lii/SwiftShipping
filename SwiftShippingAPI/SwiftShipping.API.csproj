@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SwiftShipping.DataAccessLayer\SwiftShipping.DataAccessLayer.csproj" />
+    <ProjectReference Include="..\SwiftShipping.ServiceLayer\SwiftShipping.ServiceLayer.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace SwiftShipping.API.DTO
+﻿namespace SwiftShipping.ServiceLayer.DTO
 {
     public class SellerDTO
     {

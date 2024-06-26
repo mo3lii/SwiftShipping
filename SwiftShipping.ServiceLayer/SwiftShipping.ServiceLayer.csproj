@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SwiftShipping.DataAccessLayer\SwiftShipping.DataAccessLayer.csproj" />
-    <ProjectReference Include="..\SwiftShippingAPI\SwiftShipping.API.csproj" />
   </ItemGroup>
 
 </Project>

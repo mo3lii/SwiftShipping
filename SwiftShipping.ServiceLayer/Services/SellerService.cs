@@ -27,7 +27,7 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             ApplicationUser appUser = new ApplicationUser()
             {
-                UserName = sellerDTO.email,
+                UserName = sellerDTO.userName,
                 Email = sellerDTO.email,
                 PasswordHash = sellerDTO.password,
                 Address = sellerDTO.address,
@@ -38,22 +38,20 @@ namespace SwiftShipping.ServiceLayer.Services
             IdentityResult result = await userManager.CreateAsync(appUser, sellerDTO.password);
             if (result.Succeeded)
             {
-                // if role User not exist create it
-                if (await roleManager.FindByNameAsync("Display") == null)
-                    await roleManager.CreateAsync(new IdentityRole() { Name = "Display" });
-
-                if (await roleManager.FindByNameAsync("Edit") == null)
-                    await roleManager.CreateAsync(new IdentityRole() { Name = "Edit" });
+       
+                // check if the role is exist if not, add it
+                if (await roleManager.FindByNameAsync("seller") == null)
+                    await roleManager.CreateAsync(new IdentityRole() { Name = "seller" });
 
                 // assign roles  to created user
-                IdentityResult DisplayRole = await userManager.AddToRoleAsync(appUser, "Display");
-                IdentityResult EditRole = await userManager.AddToRoleAsync(appUser, "Edit");
+                IdentityResult sellerRole = await userManager.AddToRoleAsync(appUser, "seller");
+            
 
-                if (DisplayRole.Succeeded && EditRole.Succeeded) {
+                if (sellerRole.Succeeded ) {
 
                     Seller seller = new Seller()
                     {
-                        userId = appUser.Id,
+                        UserId = appUser.Id,
                         RegionId = sellerDTO.regionId,
                         StoreName = sellerDTO.storeName,
                     };

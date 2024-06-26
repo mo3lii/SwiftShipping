@@ -23,10 +23,10 @@ namespace SwiftShipping.DataAccessLayer.Models
         public float Weight { get; set; }
         public decimal Cost { get; set; }
         [ForeignKey("DeliveryMan")]
-        public string DeliveryId { get; set; }
+        public string? DeliveryId { get; set; }
         [ForeignKey("OrderStatus")]
         public int StatusId { get; set; }
-        public string Note { get;set; }
+        public string? Note { get;set; }
 
         public ShippingType ShippingType { get; set; }
         public ShippingTime ShippingTime { get; set; }

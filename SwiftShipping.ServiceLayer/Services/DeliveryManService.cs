@@ -54,6 +54,7 @@ namespace SwiftShipping.ServiceLayer.Services
                     DeliveryMan DeliveryMan = new DeliveryMan()
                     {
                         UserId = appUser.Id,
+                        Name= deliveryManDTO.name,
                     };
                     unit.DeliveryManRipository.Insert(DeliveryMan);
                     unit.SaveChanges();

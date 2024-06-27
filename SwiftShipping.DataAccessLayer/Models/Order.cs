@@ -23,7 +23,7 @@ namespace SwiftShipping.DataAccessLayer.Models
         public float Weight { get; set; }
         public decimal Cost { get; set; }
         [ForeignKey("DeliveryMan")]
-        public string? DeliveryId { get; set; }
+        public int? DeliveryId { get; set; }
         [ForeignKey("OrderStatus")]
         public int StatusId { get; set; }
         public string? Note { get;set; }
@@ -31,7 +31,7 @@ namespace SwiftShipping.DataAccessLayer.Models
         public ShippingType ShippingType { get; set; }
         public ShippingTime ShippingTime { get; set; }
 
-        public virtual ApplicationUser DeliveryMan {  get; set; }
+        public virtual DeliveryMan DeliveryMan {  get; set; }
         public virtual OrderStatus OrderStatus { get; set; }
         public virtual Government Government { get; set; }
         public virtual Region Region { get; set; }

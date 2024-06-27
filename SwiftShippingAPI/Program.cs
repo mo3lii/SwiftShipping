@@ -31,6 +31,15 @@ builder.Services.Configure<IdentityOptions>(options =>
 //classes registerations
 builder.Services.AddScoped<UnitOfWork>();
 builder.Services.AddScoped<SellerService>();
+builder.Services.AddScoped<DeliveryManService>();
+builder.Services.AddScoped<GovernmentService>();
+builder.Services.AddScoped<RegionService>();
+builder.Services.AddScoped<WeightSettingService>();
+builder.Services.AddScoped<OrderService>();
+builder.Services.AddScoped<EmployeeService>();
+
+
+
 
 
 var app = builder.Build();

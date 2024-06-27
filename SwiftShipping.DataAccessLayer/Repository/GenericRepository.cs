@@ -21,6 +21,7 @@ namespace SwiftShipping.DataAccessLayer.Repository
             return query.ToList();
         }
 
+
         public void Insert(TEntity entity)
         {
             _context.Entry(entity).State = EntityState.Added;

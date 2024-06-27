@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SwiftShipping.DataAccessLayer.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -18,5 +19,9 @@ namespace SwiftShipping.ServiceLayer.DTO
         public string? villageName { get; set; }
         public float weight { get; set; }
         public string note { get; set; }
+        public ShippingType ShippingType { get; set; }
+        public ShippingTime ShippingTime { get; set; }
+
+
     }
 }

@@ -53,14 +53,39 @@ namespace SwiftShipping.ServiceLayer.Services
                     RegionId = orderDTO.regionId,
                     isShippedToVillage = orderDTO.isShippedToVillage,
                     Weight = orderDTO.weight,
-                    Note = orderDTO.note
+                    VillageName = orderDTO.villageName,
+                    Note = orderDTO.note,
+                    CreationDate = DateTime.Now,
+                    StatusId = 1,
+                    ShippingTime = ShippingTime.SameDay,
+                    ShippingType = ShippingType.Normal
                 };
                 unit.OrderRipository.Insert(order);
+                unit.SaveChanges();
                 return true;
             }catch 
             {
                 return false;
             }
+        }
+
+
+        public bool AssignOrderToDeliveryMan(int orderID, int deliveryManID)
+        {
+            Order order = unit.OrderRipository.GetFirstByFilter(o => o.Id == orderID);
+            if (order != null)
+            {
+                // Update the delivery man ID
+                order.DeliveryId = deliveryManID;
+
+                // Save changes
+                unit.OrderRipository.Update(order);
+                unit.SaveChanges();
+                return true; 
+            }
+
+            return false; 
+
         }
     }
 }

@@ -16,12 +16,12 @@ namespace SwiftShipping.DataAccessLayer.Repository
         private GenericRepository<Order> _orderRipository;
         private GenericRepository<Government> _governmentRipository; 
         private GenericRepository<Region> _regionRipository; 
+        private GenericRepository<Branch> _branchRipository;
         private GenericRepository<DeliveryMan> _deliveryManRipository;
         private GenericRepository<DeliveryManRegions> _deliveryManRegionsRipository;
         private GenericRepository<Employee> _employeeRipository;
         private GenericRepository<Seller> _sellerRipository;
         private GenericRepository<Admin> _adminRipository;
-        private GenericRepository<OrderStatus> _orderStatusRipository;
         //Custom Repositories 
         private WeightSettingRepository _weightSettingRepository;
 
@@ -74,6 +74,18 @@ namespace SwiftShipping.DataAccessLayer.Repository
                     _regionRipository = new GenericRepository<Region>(context);
                 }
                 return _regionRipository;
+            }
+        }
+
+        public GenericRepository<Branch> BranchRipository
+        {
+            get
+            {
+                if (_branchRipository == null)
+                {
+                    _branchRipository = new GenericRepository<Branch>(context);
+                }
+                return _branchRipository;
             }
         }
 
@@ -137,17 +149,6 @@ namespace SwiftShipping.DataAccessLayer.Repository
             }
         }
 
-        public GenericRepository<OrderStatus> OrderStatusRipository
-        {
-            get
-            {
-                if (_orderStatusRipository == null)
-                {
-                    _orderStatusRipository = new GenericRepository<OrderStatus>(context);
-                }
-                return _orderStatusRipository;
-            }
-        }
 
         // custom repos 
         public WeightSettingRepository WeightSettingRepository

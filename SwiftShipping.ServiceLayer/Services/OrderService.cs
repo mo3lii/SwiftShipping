@@ -16,25 +16,41 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             unit = _unit;
         }
-        public decimal CalculateOrderCost(float Weight, Region region, ShippingType shippingType)
+        public decimal CalculateOrderCost(Order order)
         {
             var settings = unit.WeightSettingRepository.GetSetting();
             float MaxFreeWeight = settings.DefaultWeight;
             decimal extraKiloPrice = settings.KGPrice;
             decimal calculatedPrice = 0;
 
-            if (shippingType == ShippingType.PickUp)
+            if (order.OrderType == OrderType.PickUp)
             {
-                calculatedPrice = region.PickupPrice;
+                calculatedPrice = order.Region.PickupPrice;
             }
-            else if (shippingType == ShippingType.Normal)
+            else if (order.OrderType == OrderType.Normal)
             {
-                calculatedPrice = region.NormalPrice;
+                calculatedPrice = order.Region.NormalPrice;
             }
 
-            if (Weight > MaxFreeWeight)
+            switch (order.ShippingType)
             {
-                float extraWeight = Weight - MaxFreeWeight;
+                case ShippingType.SameDay:
+                    calculatedPrice += 50m;
+                    break;
+                case ShippingType.In24H:
+                    calculatedPrice += 30m;
+                    break;
+            }
+
+            if(order.isShippedToVillage)
+            {
+                calculatedPrice += 15m;
+            }
+          
+
+            if (order.Weight > MaxFreeWeight)
+            {
+                float extraWeight = order.Weight - MaxFreeWeight;
                 calculatedPrice += (decimal)extraWeight * extraKiloPrice;
             }
             return calculatedPrice;
@@ -49,17 +65,19 @@ namespace SwiftShipping.ServiceLayer.Services
                     CustomerName = orderDTO.customerName,
                     CustomerPhone = orderDTO.customerPhone,
                     Address = orderDTO.address,
-                    GovernmentId = orderDTO.governmentId,
                     RegionId = orderDTO.regionId,
                     isShippedToVillage = orderDTO.isShippedToVillage,
                     Weight = orderDTO.weight,
                     VillageName = orderDTO.villageName,
                     Note = orderDTO.note,
                     CreationDate = DateTime.Now,
-                    StatusId = 1,
-                    ShippingTime = ShippingTime.SameDay,
-                    ShippingType = ShippingType.Normal
+                    ShippingType = orderDTO.shippingType,
+                    OrderType = orderDTO.orderType,
+                    Status = OrderStatus.New,
+                    BranchId = orderDTO.BranchId, 
+                    OrderPrice = orderDTO.orderPrice
                 };
+                order.DeliveryCost = CalculateOrderCost(order);
                 unit.OrderRipository.Insert(order);
                 unit.SaveChanges();
                 return true;

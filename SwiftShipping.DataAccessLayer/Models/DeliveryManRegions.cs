@@ -18,5 +18,7 @@ namespace SwiftShipping.DataAccessLayer.Models
 
         public virtual DeliveryMan DeliveryMan { get; set; }
         public virtual Region Region { get; set; }
+        public virtual Branch Branch { get; set; }
+
     }
 }

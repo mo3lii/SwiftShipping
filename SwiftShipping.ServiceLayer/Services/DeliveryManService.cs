@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.DTO;
@@ -15,13 +16,15 @@ namespace SwiftShipping.ServiceLayer.Services
         private UnitOfWork unit;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
-
+        private readonly IMapper _mapper;
         public DeliveryManService(UnitOfWork _unit, UserManager<ApplicationUser> _userManager,
-           RoleManager<IdentityRole> _roleManager)
+           RoleManager<IdentityRole> _roleManager,
+           IMapper mapper)
         {
             unit = _unit;
             userManager = _userManager;
             roleManager = _roleManager;
+            _mapper = mapper;
         }
 
         public async Task<bool> AddDliveryManAsync(DeliveryManDTO deliveryManDTO)
@@ -34,6 +37,7 @@ namespace SwiftShipping.ServiceLayer.Services
                 Address = deliveryManDTO.address,
                 PhoneNumber = deliveryManDTO.phoneNumber,
                 Name = deliveryManDTO.name,
+                
             };
 
             IdentityResult result = await userManager.CreateAsync(appUser, deliveryManDTO.password);
@@ -55,15 +59,23 @@ namespace SwiftShipping.ServiceLayer.Services
                     {
                         UserId = appUser.Id,
                         Name= deliveryManDTO.name,
+                        BranchId = deliveryManDTO.branchId
                     };
                     unit.DeliveryManRipository.Insert(DeliveryMan);
                     unit.SaveChanges();
                     return true;
                 }
-
             }
-
             return false;
         }
+
+        public List<OrderGetDTO> getDeliveryManOrders(int deliveryManId)
+        {
+            var orders =  unit.OrderRipository.GetAll(o => o.DeliveryId==deliveryManId);
+            var mappedOrders = _mapper.Map<List<Order>, List<OrderGetDTO>>(orders);
+            return mappedOrders;
+        }
+
+        
     }
 }

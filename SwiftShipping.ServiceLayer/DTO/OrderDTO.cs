@@ -13,15 +13,14 @@ namespace SwiftShipping.ServiceLayer.DTO
         public string customerName { get; set; }
         public string customerPhone { get; set; }
         public string address { get; set; }
-        public int governmentId { get; set; }
+        public int BranchId { get; set; }
         public int regionId { get; set; }
         public bool isShippedToVillage { get; set; }
         public string? villageName { get; set; }
         public float weight { get; set; }
+        public decimal orderPrice { get; set; }
         public string note { get; set; }
-        public ShippingType ShippingType { get; set; }
-        public ShippingTime ShippingTime { get; set; }
-
-
+        public ShippingType shippingType { get; set; }
+        public OrderType orderType { get; set; }
     }
 }

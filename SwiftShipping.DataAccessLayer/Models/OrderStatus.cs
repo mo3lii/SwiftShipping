@@ -6,9 +6,19 @@ using System.Threading.Tasks;
 
 namespace SwiftShipping.DataAccessLayer.Models
 {
-    public class OrderStatus
+    public enum OrderStatus
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        New=1,
+        AcceptedByDeliveryCompany,
+        RejectedByDeliveryCompany,
+        Pending,
+        DeliveredToDeliveryMan,
+        CanNotBeReached,
+        Postponed,
+        PartiallyDelivered,
+        CanceledByCustomer,
+        RejectWithPayment,
+        RejectWithoutPayment,
+        RejectWithPartiallyPaid
     }
 }

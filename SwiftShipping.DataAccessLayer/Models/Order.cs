@@ -13,27 +13,27 @@ namespace SwiftShipping.DataAccessLayer.Models
         public string CustomerName { get; set; }
         public string CustomerPhone { get; set; }
         public string Address { get; set; }
-        [ForeignKey("Government")]
-        public int GovernmentId { get; set; }
+
         [ForeignKey("Region")]
         public int RegionId { get; set; }
+        [ForeignKey("Branch")]
+        public int BranchId { get; set; }
         public DateTime CreationDate { get; set; }
         public bool isShippedToVillage {  get; set; }
         public string? VillageName { get; set;}
         public float Weight { get; set; }
-        public decimal Cost { get; set; }
+        public decimal OrderPrice { get; set; }
+        public decimal DeliveryCost { get; set; }
+        
         [ForeignKey("DeliveryMan")]
         public int? DeliveryId { get; set; }
-        [ForeignKey("OrderStatus")]
-        public int StatusId { get; set; }
+        public OrderStatus Status { get; set; }
+        public PaymentType PaymentType { get; set; }
         public string? Note { get;set; }
-
         public ShippingType ShippingType { get; set; }
-        public ShippingTime ShippingTime { get; set; }
-
+        public OrderType OrderType { get; set; }
         public virtual DeliveryMan DeliveryMan {  get; set; }
-        public virtual OrderStatus OrderStatus { get; set; }
-        public virtual Government Government { get; set; }
         public virtual Region Region { get; set; }
+        public virtual Branch Branch { get; set; }  
     }
 }

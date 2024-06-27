@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace SwiftShipping.DataAccessLayer.Models
 {
-    public enum  OrderType
+    public enum PaymentType
     {
-        Normal,
-        PickUp
+        MustBePaid=1,
+        Prepaid,
+        CargoVsCargo
+
     }
 }

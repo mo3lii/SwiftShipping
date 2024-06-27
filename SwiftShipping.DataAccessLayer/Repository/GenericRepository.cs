@@ -20,6 +20,11 @@ namespace SwiftShipping.DataAccessLayer.Repository
             var query = _context.Set<TEntity>();
             return query.ToList();
         }
+        public List<TEntity> GetAll(Func<TEntity, bool> filter)
+        {
+            var query = _context.Set<TEntity>().Where(filter);
+            return query.ToList();
+        }
 
 
         public void Insert(TEntity entity)

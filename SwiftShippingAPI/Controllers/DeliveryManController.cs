@@ -23,13 +23,18 @@ namespace SwiftShipping.API.Controllers
             {
                 await deliveryManService.AddDliveryManAsync(deliveryManDTO);
 
-
                 return Ok("Delivery Man Added Successfully");
             }
             else
             {
                 return BadRequest();
             }
+        }
+        [HttpGet("orders/{id}")]
+        public ActionResult<List<OrderGetDTO>> GetDeliveryManOrders(int id)
+        {
+            var orders = deliveryManService.getDeliveryManOrders(id);
+            return Ok(orders);
         }
     }
 }

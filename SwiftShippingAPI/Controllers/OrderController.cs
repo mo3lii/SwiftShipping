@@ -18,8 +18,8 @@ namespace SwiftShipping.API.Controllers
             orderService = _orderService;
         }
 
-        [HttpPost("AssignDeliveryManToOrder")]
-        public async Task<IActionResult> AssignDeliveryManToOrder(int orderID, int deliveryManID )
+        [HttpPost("AssignToDeliveryMan")]
+        public async Task<IActionResult> AssignDeliveryManToOrder(int orderID,  int deliveryManID )
         {
             var result = orderService.AssignOrderToDeliveryMan(orderID, deliveryManID);
             if(result == true)
@@ -32,6 +32,7 @@ namespace SwiftShipping.API.Controllers
             }
 
         }
+
             
 
     }

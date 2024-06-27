@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.ServiceLayer.DTO;
@@ -17,8 +18,11 @@ namespace SwiftShipping.API.Controllers
         GovernmentService governmentService;
         RegionService regionService;
 
+        private readonly IMapper _mapper;
+
         public TestController(SellerService _sellerService, DeliveryManService _deliveryManService, OrderService _orderService
-            , GovernmentService _governmentService, RegionService _regionService)
+            , GovernmentService _governmentService, RegionService _regionService,
+            IMapper mapper)
         {
 
             sellerService = _sellerService;
@@ -26,6 +30,7 @@ namespace SwiftShipping.API.Controllers
             orderService = _orderService;
             this.governmentService = _governmentService;
             regionService = _regionService;
+            _mapper = mapper;
 
         }
 
@@ -108,6 +113,12 @@ namespace SwiftShipping.API.Controllers
             {
                 return BadRequest();
             }
+        }
+        [HttpGet("testmapper")]
+        public IActionResult TestMapper()
+        {
+            
+            return Ok();
         }
 
     }

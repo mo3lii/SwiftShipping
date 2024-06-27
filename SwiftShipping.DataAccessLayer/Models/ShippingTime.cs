@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SwiftShipping.DataAccessLayer.Models
 {
-    public enum ShippingTime
+    public enum ShippingType
     {
         SameDay,
         In24H,

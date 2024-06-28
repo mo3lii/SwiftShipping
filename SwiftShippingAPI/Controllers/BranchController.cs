@@ -18,7 +18,7 @@ namespace SwiftShipping.API.Controllers
         public IActionResult getAllBranches()
         {
 
-            var branches = branchService.GetAllBranches();
+            var branches = branchService.GetAll();
             return Ok(branches);
 
         }
@@ -31,7 +31,14 @@ namespace SwiftShipping.API.Controllers
             return Ok("Branch Created Successfully");
         }
 
-      
+        [HttpGet("{id}")]
+        public ActionResult<BranchGetDTO> GetById(int id)
+        {
+            var branch = branchService.GetById(id);
+            return Ok(branch);
+        }
+
+
 
     }
 }

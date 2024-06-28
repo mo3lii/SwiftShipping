@@ -15,17 +15,26 @@ namespace SwiftShipping.API.Controllers
             regionService = _regionService;
         }
 
-        [HttpGet]
-        public ActionResult<List<RegionGetDTO>> GetAll()
-        {
-            var regions = regionService.GetAll();
-            return Ok(regions);
-        }
         [HttpPost("Add")]
         public IActionResult Add(RegionDTO regionDTO)
         {
             regionService.Add(regionDTO);
             return Created();
         }
+
+        [HttpGet]
+        public ActionResult<List<RegionGetDTO>> GetAll()
+        {
+            var regions = regionService.GetAll();
+            return Ok(regions);
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<RegionDTO> GetById(int id)
+        {
+            var region = regionService.GetById(id);
+            return Ok(region);
+        }
+
     }
 }

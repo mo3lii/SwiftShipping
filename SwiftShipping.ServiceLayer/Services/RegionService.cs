@@ -40,6 +40,13 @@ namespace SwiftShipping.ServiceLayer.Services
             var regions = unit.RegionRipository.GetAll();
             return mapper.Map<List<Region>, List<RegionGetDTO>>(regions);
         }
-    
+
+        public RegionDTO GetById(int id)
+        {
+            var region = unit.RegionRipository.GetById(id);
+            return mapper.Map<Region, RegionDTO>(region);
+
+        }
+
     }
 }

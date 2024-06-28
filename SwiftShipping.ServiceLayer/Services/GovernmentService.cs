@@ -34,10 +34,14 @@ namespace SwiftShipping.ServiceLayer.Services
         public List<GovernmentGetDTO> GetAll()
         {
             var governments = unit.GovernmentRipository.GetAll();
+            return mapper.Map<List<Government>, List<GovernmentGetDTO>>(governments);
+        }
 
-            var mappedGovernments = mapper.Map<List<Government>, List<GovernmentGetDTO>>(governments);
+        public GovernmentGetDTO GetById(int id)
+        {
+            var government = unit.GovernmentRipository.GetById(id);
+            return mapper.Map<Government, GovernmentGetDTO>(government);
 
-            return mappedGovernments;
         }
     }
 }

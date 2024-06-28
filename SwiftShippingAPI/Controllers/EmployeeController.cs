@@ -67,5 +67,19 @@ namespace SwiftShipping.API.Controllers
                 return BadRequest(); 
             }    
         }
+
+        [HttpGet]
+        public ActionResult<List<EmployeeDTO>> GetAll()
+        {
+            var employees = employeeService.GetAll();
+            return Ok(employees);
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<EmployeeDTO> GetById(int id)
+        {
+            var employee = employeeService.GetById(id);
+            return Ok(employee);
+        }
     }
 }

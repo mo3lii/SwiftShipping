@@ -30,10 +30,11 @@ namespace SwiftShipping.ServiceLayer.Helper
 
             CreateMap<Government, GovernmentGetDTO>();
             
-            CreateMap<Region,RegionDTO>();
+            CreateMap<RegionDTO,Region>().ReverseMap();
 
-            CreateMap<Region,RegionGetDTO>()
-                .ForMember(dest=>dest.GovernmentName,opt=>opt.MapFrom(src=>src.Government.Name));
+            //No need, we don't have GovernmentName in RegionDTO
+            //CreateMap<Region,RegionGetDTO>()
+            //    .ForMember(dest=>dest.GovernmentName,opt=>opt.MapFrom(src=>src.Government.Name));
 
 
             CreateMap<DeliveryManDTO, ApplicationUser>()
@@ -45,8 +46,31 @@ namespace SwiftShipping.ServiceLayer.Helper
             CreateMap<SellerDTO, ApplicationUser>()
                 .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.password));
 
-            CreateMap<DeliveryManDTO, DeliveryMan>();
+            CreateMap<DeliveryMan, DeliveryManDTO>()
+              .ForMember(dest => dest.password, opt => opt.MapFrom(src => src.User.PasswordHash))
+              .ForMember(dest => dest.email, opt => opt.MapFrom(src => src.User.Email))
+              .ForMember(dest => dest.address, opt => opt.MapFrom(src => src.User.Address))
+              .ForMember(dest => dest.userName, opt => opt.MapFrom(src => src.User.UserName))
+              .ForMember(dest => dest.phoneNumber, opt => opt.MapFrom(src => src.User.PhoneNumber))
+              .ForMember(dest => dest.name, opt => opt.MapFrom(src => src.User.Name));
+
+            CreateMap<ApplicationUser, DeliveryManDTO>().ForMember(dest => dest.password, opt => opt.MapFrom(src => src.PasswordHash)); ;
+
+
             CreateMap<EmployeeDTO, Employee>();
+
+            CreateMap<Employee,EmployeeDTO >()
+                .ForMember(dest => dest.password, opt => opt.MapFrom(src => src.User.PasswordHash))
+                .ForMember(dest => dest.email, opt => opt.MapFrom(src => src.User.Email))
+                .ForMember(dest => dest.address, opt => opt.MapFrom(src => src.User.Address))
+                .ForMember(dest => dest.userName, opt => opt.MapFrom(src => src.User.UserName))
+                .ForMember(dest => dest.phoneNumber, opt => opt.MapFrom(src => src.User.PhoneNumber))
+                .ForMember(dest => dest.name, opt => opt.MapFrom(src => src.User.Name))
+                ;
+
+
+            CreateMap<ApplicationUser, EmployeeDTO>().ForMember(dest => dest.password, opt => opt.MapFrom(src => src.PasswordHash)); ;
+
             CreateMap<SellerDTO, Seller>();
         }
     }

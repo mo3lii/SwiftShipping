@@ -11,10 +11,12 @@ namespace SwiftShipping.API.Controllers
     public class DeliveryManController : ControllerBase
     {
         DeliveryManService deliveryManService;
+
         public DeliveryManController(DeliveryManService _deliveryManService)
         {
             deliveryManService = _deliveryManService;
         }
+
         [HttpPost("Register")]
         public async Task<IActionResult> Register(DeliveryManDTO deliveryManDTO)
         {
@@ -36,5 +38,22 @@ namespace SwiftShipping.API.Controllers
             var orders = deliveryManService.getDeliveryManOrders(id);
             return Ok(orders);
         }
+
+        [HttpGet]
+        public ActionResult<List<DeliveryManDTO>> GetAll()
+        {
+            var deliveryMen = deliveryManService.GetAll();
+            return Ok(deliveryMen);
+        }
+
+
+        [HttpGet("{id}")]
+        public ActionResult<DeliveryManDTO> GetById(int id)
+        {
+            var deliveryMan = deliveryManService.GetById(id);
+            return Ok(deliveryMan);
+        }
+
+
     }
 }

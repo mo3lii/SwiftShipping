@@ -66,6 +66,8 @@ namespace SwiftShipping.ServiceLayer.Services
                 var order = mapper.Map<OrderDTO, Order>(orderDTO);
                 order.Status=OrderStatus.New;
                 order.CreationDate = DateTime.Now;
+                //assign region before send order to get the price
+                order.Region = unit.RegionRipository.GetById(order.RegionId);
                 order.DeliveryCost = CalculateOrderCost(order);
                 unit.OrderRipository.Insert(order);
                 unit.SaveChanges();

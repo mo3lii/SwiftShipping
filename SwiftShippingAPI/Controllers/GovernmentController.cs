@@ -20,13 +20,21 @@ namespace SwiftShipping.API.Controllers
             var governemnts = governmentService.GetAll();
             return Ok(governemnts);
         }
+
         [HttpPost("Add")]
         public IActionResult addGovernment(string name)
         {
-
             governmentService.AddGovernment(name);
             return Created();
         }
-       
+
+        [HttpGet("{id}")]
+        public ActionResult<GovernmentGetDTO> GetById(int id)
+        {
+            var government = governmentService.GetById(id);
+            return Ok(government);
+        }
+
+
     }
 }

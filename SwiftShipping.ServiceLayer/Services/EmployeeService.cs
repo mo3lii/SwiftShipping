@@ -87,5 +87,19 @@ namespace SwiftShipping.ServiceLayer.Services
             return (false, null,null);
         }
 
+
+        public EmployeeDTO GetById(int id)
+        {
+            var employee = unit.EmployeeRipository.GetById(id);
+            return mapper.Map<Employee, EmployeeDTO>(employee);
+
+        }
+
+        public List<EmployeeDTO> GetAll()
+        {
+            var employeesData = unit.EmployeeRipository.GetAll();
+            return mapper.Map<List<Employee>, List<EmployeeDTO>>(employeesData);
+        }
+
     }
 }

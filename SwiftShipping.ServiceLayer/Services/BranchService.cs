@@ -38,13 +38,17 @@ namespace SwiftShipping.ServiceLayer.Services
             return true;
         }
     
-        public List<BranchGetDTO> GetAllBranches()
+        public List<BranchGetDTO> GetAll()
         {
             var branches = unit.BranchRipository.GetAll();
+            return mapper.Map<List<Branch>, List<BranchGetDTO>>(branches);
+        }
 
-            var mappedOrders = mapper.Map<List<Branch>, List<BranchGetDTO>>(branches);
+        public BranchGetDTO GetById(int id)
+        {
+            var branch = unit.BranchRipository.GetById(id);
+            return mapper.Map<Branch, BranchGetDTO>(branch);
 
-            return mappedOrders;
         }
 
     }

@@ -17,6 +17,12 @@ namespace SwiftShipping.API.Controllers
             unitOfWork = _unitOfWork;
             orderService = _orderService;
         }
+        [HttpPost("Add")]
+        public IActionResult Add(OrderDTO orderDTO)
+        {
+            orderService.AddOrder(orderDTO);
+            return Created();
+        }
 
         [HttpGet]
         public ActionResult<OrderGetDTO> GetAll() { 

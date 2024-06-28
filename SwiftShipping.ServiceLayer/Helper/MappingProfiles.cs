@@ -22,6 +22,8 @@ namespace SwiftShipping.ServiceLayer.Helper
                 .ForMember(dest => dest.Region, opt => opt.MapFrom(src => src.Region.Name));
 
 
+            CreateMap<Branch, BranchGetDTO>()
+                .ForMember(dest => dest.GovernmentName, opt => opt.MapFrom(src => src.Government.Name));
 
 
 

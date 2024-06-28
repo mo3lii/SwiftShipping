@@ -44,6 +44,7 @@ builder.Services.AddScoped<RegionService>();
 builder.Services.AddScoped<WeightSettingService>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<EmployeeService>();
+builder.Services.AddScoped<BranchService>();
 
 
 

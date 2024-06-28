@@ -1,8 +1,10 @@
-﻿using SwiftShipping.DataAccessLayer.Models;
+﻿using AutoMapper;
+using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.DTO;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,9 +14,12 @@ namespace SwiftShipping.ServiceLayer.Services
     public class BranchService
     {
         private UnitOfWork unit;
-        public BranchService(UnitOfWork _unit)
+        private readonly IMapper mapper;
+
+        public BranchService(UnitOfWork _unit, IMapper _mapper)
         {
             unit = _unit;
+            mapper = _mapper;
         }
 
         public bool AddBrnach(BranchDTO branchDTO)
@@ -23,8 +28,10 @@ namespace SwiftShipping.ServiceLayer.Services
             {
                 var branch = new Branch()
                 {
-                    Name = branchDTO.name,
-                    GovernmentId = branchDTO.governmentId,
+                    Name = branchDTO.Name,
+                    GovernmentId = branchDTO.GovernmentId,
+                    CreationDate = DateTime.Now,
+                    IsActive = branchDTO.IsActive,
                 };
                 unit.BranchRipository.Insert(branch);
                 unit.SaveChanges();
@@ -35,5 +42,15 @@ namespace SwiftShipping.ServiceLayer.Services
             }
             return true;
         }
+    
+        public List<BranchGetDTO> GetAllBranches()
+        {
+            var branches = unit.BranchRipository.GetAll();
+
+            var mappedOrders = mapper.Map<List<Branch>, List<BranchGetDTO>>(branches);
+
+            return mappedOrders;
+        }
+
     }
 }

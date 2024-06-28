@@ -17,10 +17,10 @@ namespace SwiftShipping.ServiceLayer.Services
             unit = _unit;
         }
 
-        public bool AddGovernment(string name)
+        public bool AddGovernment(string name, bool isActive = true)
         {
             try { 
-            unit.GovernmentRipository.Insert(new Government() { Name = name });
+            unit.GovernmentRipository.Insert(new Government() { Name = name, IsActive = isActive });
             unit.SaveChanges();
             }catch { 
             return false;

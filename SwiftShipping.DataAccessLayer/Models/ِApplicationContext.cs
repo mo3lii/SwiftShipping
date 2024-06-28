@@ -24,7 +24,7 @@ namespace SwiftShipping.DataAccessLayer.Models
         {
             builder.Entity<DeliveryManRegions>()
           .HasKey(d => new { d.DeliveryManId, d.RegionId });
-            builder.Entity<WeightSetting>().HasData(new WeightSetting { DefaultWeight=5,KGPrice=10});
+            builder.Entity<WeightSetting>().HasData(new WeightSetting { Id=1,DefaultWeight=5,KGPrice=10});
             base.OnModelCreating(builder);
 
         }

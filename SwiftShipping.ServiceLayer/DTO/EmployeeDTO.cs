@@ -16,7 +16,6 @@ namespace SwiftShipping.ServiceLayer.DTO
         public string userName { get; set; }
         public string password { get; set; }
         public string phoneNumber { get; set; }
-        public int regionId { get; set; }
-
+        public int BranchId { get; set; }
     }
 }

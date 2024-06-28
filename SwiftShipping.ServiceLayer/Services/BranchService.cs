@@ -26,13 +26,8 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             try
             {
-                var branch = new Branch()
-                {
-                    Name = branchDTO.Name,
-                    GovernmentId = branchDTO.GovernmentId,
-                    CreationDate = DateTime.Now,
-                    IsActive = branchDTO.IsActive,
-                };
+                var branch = mapper.Map<BranchDTO,Branch>(branchDTO);
+               branch.CreationDate = DateTime.Now;
                 unit.BranchRipository.Insert(branch);
                 unit.SaveChanges();
             }

@@ -47,6 +47,20 @@ namespace SwiftShipping.DataAccessLayer.Repository
             return _context.Set<TEntity>().FirstOrDefault(filter);
         }
 
+        public TEntity GetById(int id)
+        {
+            return _context.Set<TEntity>().Find(id);
+        }
+        public TEntity GetById(string id)
+        {
+            return _context.Set<TEntity>().Find(id);
+        }
+
+        public TEntity GetById(params object[] keyValues)
+        {
+            return _context.Set<TEntity>().Find(keyValues);
+        }
+
 
 
     }

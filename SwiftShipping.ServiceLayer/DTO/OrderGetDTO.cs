@@ -22,6 +22,7 @@ namespace SwiftShipping.ServiceLayer.DTO
         public string Note { get; set; }
         public string ShippingType { get; set; }
         public string OrderType { get; set; }
+        public string PaymentType { get; set; }
         public string Status { get; set;}
     }
 }

@@ -12,5 +12,7 @@
         public string storeName { get; set; }
         public int governmentId { get; set; }
         public int regionId { get; set; }
+
+        public int branchId { get; set; }
     }
 }

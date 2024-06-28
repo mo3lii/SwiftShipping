@@ -29,39 +29,20 @@ namespace SwiftShipping.ServiceLayer.Services
 
         public async Task<bool> AddDliveryManAsync(DeliveryManDTO deliveryManDTO)
         {
-            ApplicationUser appUser = new ApplicationUser()
-            {
-                UserName = deliveryManDTO.userName,
-                Email = deliveryManDTO.email,
-                PasswordHash = deliveryManDTO.password,
-                Address = deliveryManDTO.address,
-                PhoneNumber = deliveryManDTO.phoneNumber,
-                Name = deliveryManDTO.name,
-                
-            };
-
+            var appUser = _mapper.Map<DeliveryManDTO, ApplicationUser>(deliveryManDTO);
             IdentityResult result = await userManager.CreateAsync(appUser, deliveryManDTO.password);
             if (result.Succeeded)
             {
-
                 // check if the role is exist if not, add it
                 if (await roleManager.FindByNameAsync("deliveryman") == null)
                     await roleManager.CreateAsync(new IdentityRole() { Name = "deliveryman" });
-
                 // assign roles  to created user
                 IdentityResult deliveryManRole = await userManager.AddToRoleAsync(appUser, "deliveryman");
-
-
                 if (deliveryManRole.Succeeded)
                 {
-
-                    DeliveryMan DeliveryMan = new DeliveryMan()
-                    {
-                        UserId = appUser.Id,
-                        Name= deliveryManDTO.name,
-                        BranchId = deliveryManDTO.branchId
-                    };
-                    unit.DeliveryManRipository.Insert(DeliveryMan);
+                    var deliveryMan = _mapper.Map<DeliveryManDTO, DeliveryMan>(deliveryManDTO);
+                    deliveryMan.UserId = appUser.Id;
+                    unit.DeliveryManRipository.Insert(deliveryMan);
                     unit.SaveChanges();
                     return true;
                 }

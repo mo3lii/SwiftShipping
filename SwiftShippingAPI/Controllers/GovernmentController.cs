@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SwiftShipping.ServiceLayer.DTO;
 using SwiftShipping.ServiceLayer.Services;
 
 namespace SwiftShipping.API.Controllers
@@ -13,12 +14,19 @@ namespace SwiftShipping.API.Controllers
             governmentService = _governmentService;
         }
 
-        [HttpPost("AddGovernment")]
-        public IActionResult addGovernment(string name, bool isActive = true)
+        [HttpGet]
+        public ActionResult<List<GovernmentGetDTO>> GetAll()
+        {
+            var governemnts = governmentService.GetAll();
+            return Ok(governemnts);
+        }
+        [HttpPost("Add")]
+        public IActionResult addGovernment(string name)
         {
 
-            governmentService.AddGovernment(name, isActive);
-            return Ok("Government Created Successfully");
+            governmentService.AddGovernment(name);
+            return Created();
         }
+       
     }
 }

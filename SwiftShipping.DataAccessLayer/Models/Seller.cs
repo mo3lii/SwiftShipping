@@ -21,8 +21,8 @@ namespace SwiftShipping.DataAccessLayer.Models
         [ForeignKey("User")]
         public string UserId { get; set; }
 
-
         public virtual ApplicationUser User { get; set; }
         public virtual Region Region { get; set; }
+        public virtual Branch Branch { get; set; }
     }
 }

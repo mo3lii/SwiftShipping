@@ -18,6 +18,20 @@ namespace SwiftShipping.API.Controllers
             orderService = _orderService;
         }
 
+        [HttpGet]
+        public ActionResult<OrderGetDTO> GetAll() { 
+        
+            var orders = orderService.GetAll();
+            return Ok(orders);
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<OrderGetDTO> GetById(int id)
+        {
+            var order = orderService.GetById(id);
+            return Ok(order);
+        }
+
         [HttpPost("AssignToDeliveryMan")]
         public async Task<IActionResult> AssignDeliveryManToOrder(int orderID,  int deliveryManID )
         {
@@ -33,6 +47,7 @@ namespace SwiftShipping.API.Controllers
 
         }
 
+        
             
 
     }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SwiftShipping.DataAccessLayer.Models;
+using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.DTO;
 using SwiftShipping.ServiceLayer.Services;
 
@@ -19,10 +20,10 @@ namespace SwiftShipping.API.Controllers
         RegionService regionService;
 
         private readonly IMapper _mapper;
-
+        private readonly UnitOfWork unit;
         public TestController(SellerService _sellerService, DeliveryManService _deliveryManService, OrderService _orderService
             , GovernmentService _governmentService, RegionService _regionService,
-            IMapper mapper)
+            IMapper mapper,UnitOfWork unit)
         {
 
             sellerService = _sellerService;
@@ -31,6 +32,7 @@ namespace SwiftShipping.API.Controllers
             this.governmentService = _governmentService;
             regionService = _regionService;
             _mapper = mapper;
+            this.unit = unit;
 
         }
 
@@ -106,7 +108,7 @@ namespace SwiftShipping.API.Controllers
             if (ModelState.IsValid)
             {
 
-               regionService.AddRegion(regionDTO);
+               regionService.Add(regionDTO);
                 return Ok("Region Added Successfully");
             }
             else
@@ -114,11 +116,12 @@ namespace SwiftShipping.API.Controllers
                 return BadRequest();
             }
         }
-        [HttpGet("testmapper")]
-        public IActionResult TestMapper()
+        [HttpGet("testGetById")]
+        public IActionResult TestGetById()
         {
-            
-            return Ok();
+            //var deliveryRegions = unit.DeliveryManRegionsRipository.GetById(5, 1);
+            var user = unit.AppUserRepository.GetById("b8e197ce-0bc5-4aaf-9212-e42ef29b6bc8");
+            return Ok(new {Name= user.Name });
         }
 
     }

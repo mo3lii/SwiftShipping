@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.DTO;
@@ -16,11 +17,13 @@ namespace SwiftShipping.ServiceLayer.Services
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly IMapper mapper; 
 
         public EmployeeService(UnitOfWork _unit, UserManager<ApplicationUser> _userManager,
-            RoleManager<IdentityRole> _roleManager, SignInManager<ApplicationUser> _signInManager)
+            RoleManager<IdentityRole> _roleManager, SignInManager<ApplicationUser> _signInManager,IMapper _mapper)
         {
             unit = _unit;
+            mapper = _mapper;
             userManager = _userManager;
             roleManager = _roleManager;
             signInManager = _signInManager;
@@ -28,16 +31,8 @@ namespace SwiftShipping.ServiceLayer.Services
 
         public async Task<bool> addEmployeeAsync(EmployeeDTO employeeDTO)
         {
-            ApplicationUser appUser = new ApplicationUser()
-            {
-                Name = employeeDTO.name,
-                Email = employeeDTO.email,
-                Address = employeeDTO.address,
-                UserName = employeeDTO.userName,
-                PasswordHash = employeeDTO.password,
-                PhoneNumber = employeeDTO.phoneNumber,
-            };
-
+          
+            var appUser = mapper.Map<EmployeeDTO, ApplicationUser>(employeeDTO);
             IdentityResult result = await userManager.CreateAsync(appUser, employeeDTO.password);
             if (result.Succeeded)
             {
@@ -52,13 +47,8 @@ namespace SwiftShipping.ServiceLayer.Services
 
                 if (employeeRole.Succeeded)
                 {
-
-                    Employee employee = new Employee()
-                    {
-                        UserId = appUser.Id,
-                        Name = employeeDTO.name,
-                        RegionId = employeeDTO.regionId,
-                    };
+                    var employee = mapper.Map<EmployeeDTO, Employee>(employeeDTO);
+                    employee.UserId = appUser.Id;
                     unit.EmployeeRipository.Insert(employee);
                     unit.SaveChanges();
                     return true;

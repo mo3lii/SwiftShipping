@@ -10,6 +10,7 @@ namespace SwiftShipping.DataAccessLayer.Models
     public class WeightSetting
     {
         [Key]
+        public int Id { get; set; }
         public float DefaultWeight { get; set; } //"defaultWeight"
         public decimal KGPrice { get; set; }
     }

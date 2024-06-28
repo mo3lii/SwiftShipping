@@ -10,7 +10,6 @@ namespace SwiftShipping.DataAccessLayer.Models
     {
         MustBePaid=1,
         Prepaid,
-        CargoVsCargo
-
+        CargoForCargo
     }
 }

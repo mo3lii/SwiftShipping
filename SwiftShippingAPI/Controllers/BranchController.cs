@@ -14,8 +14,16 @@ namespace SwiftShipping.API.Controllers
             branchService = _branchService;
         }
 
+        [HttpGet]
+        public IActionResult getAllBranches()
+        {
 
-        [HttpPost("AddBranch")]
+            var branches = branchService.GetAllBranches();
+            return Ok(branches);
+
+        }
+
+        [HttpPost("Add")]
         public IActionResult addBranch(BranchDTO branchDTO)
         {
 
@@ -23,14 +31,7 @@ namespace SwiftShipping.API.Controllers
             return Ok("Branch Created Successfully");
         }
 
-        [HttpGet("GetAllBranches")]
-        public IActionResult getAllBranches()
-        {
-
-            var branches =   branchService.GetAllBranches();
-           return Ok(branches);
-
-        }
+      
 
     }
 }

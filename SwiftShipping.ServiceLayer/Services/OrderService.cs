@@ -1,4 +1,5 @@
-﻿using SwiftShipping.DataAccessLayer.Models;
+﻿using AutoMapper;
+using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.DTO;
 using System;
@@ -12,9 +13,11 @@ namespace SwiftShipping.ServiceLayer.Services
     public class OrderService
     {
         private UnitOfWork unit;
-        public OrderService(UnitOfWork _unit)
+        private readonly IMapper mapper;
+        public OrderService(UnitOfWork _unit,IMapper mapper)
         {
             unit = _unit;
+            this.mapper = mapper;
         }
         public decimal CalculateOrderCost(Order order)
         {
@@ -60,23 +63,9 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             try
             {
-                var order = new Order()
-                {
-                    CustomerName = orderDTO.customerName,
-                    CustomerPhone = orderDTO.customerPhone,
-                    Address = orderDTO.address,
-                    RegionId = orderDTO.regionId,
-                    isShippedToVillage = orderDTO.isShippedToVillage,
-                    Weight = orderDTO.weight,
-                    VillageName = orderDTO.villageName,
-                    Note = orderDTO.note,
-                    CreationDate = DateTime.Now,
-                    ShippingType = orderDTO.shippingType,
-                    OrderType = orderDTO.orderType,
-                    Status = OrderStatus.New,
-                    BranchId = orderDTO.BranchId, 
-                    OrderPrice = orderDTO.orderPrice
-                };
+                var order = mapper.Map<OrderDTO, Order>(orderDTO);
+                order.Status=OrderStatus.New;
+                order.CreationDate = DateTime.Now;
                 order.DeliveryCost = CalculateOrderCost(order);
                 unit.OrderRipository.Insert(order);
                 unit.SaveChanges();
@@ -95,14 +84,24 @@ namespace SwiftShipping.ServiceLayer.Services
             {
                 // Update the delivery man ID
                 order.DeliveryId = deliveryManID;
-
                 // Save changes
                 unit.OrderRipository.Update(order);
                 unit.SaveChanges();
                 return true; 
             }
-
             return false; 
+        }
+
+        public List<OrderGetDTO> GetAll()
+        {
+            var orders = unit.OrderRipository.GetAll();
+            return mapper.Map<List<Order>, List<OrderGetDTO>>(orders);
+        }
+
+        public OrderGetDTO GetById(int id)
+        {
+            var order = unit.OrderRipository.GetById(id);
+            return mapper.Map<Order, OrderGetDTO>(order);
 
         }
     }

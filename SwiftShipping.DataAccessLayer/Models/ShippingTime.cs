@@ -8,7 +8,7 @@ namespace SwiftShipping.DataAccessLayer.Models
 {
     public enum ShippingType
     {
-        SameDay,
+        SameDay=1,
         In24H,
         In2to5Days
     }

@@ -1,4 +1,5 @@
-﻿using SwiftShipping.DataAccessLayer.Models;
+﻿using AutoMapper;
+using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.DTO;
 using System;
@@ -12,21 +13,18 @@ namespace SwiftShipping.ServiceLayer.Services
     public class RegionService
     {
         private UnitOfWork unit;
-        public RegionService(UnitOfWork _unit)
+        private readonly IMapper mapper;
+        public RegionService(UnitOfWork _unit, IMapper mapper)
         {
             unit = _unit;
+            this.mapper = mapper;
         }
 
-        public bool AddRegion(RegionDTO regionDTO)
+        public bool Add(RegionDTO regionDTO)
         {
             try
             {
-                var region = new Region() { 
-                    Name = regionDTO.name, 
-                    GovernmentId = regionDTO.governmentId, 
-                    NormalPrice = regionDTO.normalPrice, 
-                    PickupPrice = regionDTO.pickupPrice 
-                };
+                var region = mapper.Map<RegionDTO, Region>(regionDTO);
                 unit.RegionRipository.Insert(region);
                 unit.SaveChanges();
             }
@@ -36,5 +34,12 @@ namespace SwiftShipping.ServiceLayer.Services
             }
             return true;
         }
+
+        public List<RegionGetDTO> GetAll()
+        {
+            var regions = unit.RegionRipository.GetAll();
+            return mapper.Map<List<Region>, List<RegionGetDTO>>(regions);
+        }
+    
     }
 }

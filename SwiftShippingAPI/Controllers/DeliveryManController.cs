@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using E_CommerceAPI.Errors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.DTO;
@@ -64,8 +65,10 @@ namespace SwiftShipping.API.Controllers
         [HttpGet("{id}")]
         public ActionResult<DeliveryManGetDTO> GetById(int id)
         {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
             var deliveryMan = deliveryManService.GetById(id);
-            if (deliveryMan == null) {  return NotFound(); }
+            if (deliveryMan == null) {  return NotFound(new ApiResponse(404)); }
             return Ok(deliveryMan);
         }
 

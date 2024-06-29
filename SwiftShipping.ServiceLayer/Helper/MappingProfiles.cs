@@ -14,6 +14,7 @@ namespace SwiftShipping.ServiceLayer.Helper
         public MappingProfiles()
         {
 
+
             CreateMap<Order, OrderGetDTO>()
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => StatusMapper.StatusDictionary[src.Status]))
                 .ForMember(dest => dest.ShippingType, opt => opt.MapFrom(src => ShippingTypeMapper.ShippingTypeDictionary[src.ShippingType]))
@@ -59,6 +60,16 @@ namespace SwiftShipping.ServiceLayer.Helper
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.User.PhoneNumber))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email));
 
+            CreateMap<Seller, SellerGetDTO>()
+              .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email))
+              .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.User.Name))
+              .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.User.Address))
+              .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
+              .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.User.PhoneNumber))
+              .ForMember(dest => dest.BranchName, opt => opt.MapFrom(src => src.Branch.Name))
+              .ForMember(dest => dest.RegionName, opt => opt.MapFrom(src => src.Region.Name));
+                
+
 
             CreateMap<ApplicationUser, DeliveryManDTO>().ForMember(dest => dest.password, opt => opt.MapFrom(src => src.PasswordHash)); ;
 
@@ -71,8 +82,7 @@ namespace SwiftShipping.ServiceLayer.Helper
                 .ForMember(dest => dest.address, opt => opt.MapFrom(src => src.User.Address))
                 .ForMember(dest => dest.userName, opt => opt.MapFrom(src => src.User.UserName))
                 .ForMember(dest => dest.phoneNumber, opt => opt.MapFrom(src => src.User.PhoneNumber))
-                .ForMember(dest => dest.name, opt => opt.MapFrom(src => src.User.Name))
-                ;
+                .ForMember(dest => dest.name, opt => opt.MapFrom(src => src.User.Name));
 
 
             CreateMap<ApplicationUser, EmployeeDTO>().ForMember(dest => dest.password, opt => opt.MapFrom(src => src.PasswordHash)); ;

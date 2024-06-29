@@ -16,7 +16,7 @@ namespace SwiftShipping.API.Controllers
 
         }
 
-        [HttpPost]
+        [HttpPost("Add")]
         public async Task<IActionResult> addSeller(SellerDTO sellerDTO)
         {
             if (ModelState.IsValid)
@@ -28,6 +28,22 @@ namespace SwiftShipping.API.Controllers
             {
                 return BadRequest();
             }
+        }
+
+
+        [HttpGet("{id}")]
+        public ActionResult<SellerGetDTO> GetById(int id)
+        {
+            var seller = sellerService.GetById(id);
+            if (seller == null) return NotFound();
+            return Ok(seller);
+        }
+
+        [HttpGet]
+        public ActionResult<List<SellerGetDTO>> GetAll()
+        {
+            var sellers = sellerService.GetAll();
+            return Ok(sellers);
         }
     }
 }

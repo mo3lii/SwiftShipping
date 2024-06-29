@@ -2,6 +2,7 @@
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.DTO;
+using SwiftShipping.ServiceLayer.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -104,6 +105,39 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             var order = unit.OrderRipository.GetById(id);
             return mapper.Map<Order, OrderGetDTO>(order);
+
+        }
+   
+        public List<OrderGetDTO> GetByStatus(OrderStatus orderStatus)
+        {
+            var orders = unit.OrderRipository.GetAll(o => o.Status == orderStatus).ToList();
+            return mapper.Map<List<Order>, List<OrderGetDTO>>(orders);
+        }
+
+        public EnumDTO GetOrderStatusCount(OrderStatus orderStatus)
+        {
+             int count = unit.OrderRipository.GetAll(o => o.Status == orderStatus).Count;
+
+            return (new EnumDTO() { Name = StatusMapper.StatusDictionary[orderStatus], Count =  count});
+        }
+
+        public List<EnumDTO> GetAllOrderStatusCount()
+        {
+
+
+            // get status, count
+            var res = unit.OrderRipository.GetAll().GroupBy(x => x.Status).ToDictionary(g => g.Key, g => g.Count());
+
+            foreach (var status in StatusMapper.StatusDictionary)
+            {
+                if (res.ContainsKey(status.Key) == false)
+                    res.Add(status.Key, 0);
+            }
+
+            List<EnumDTO> statusWithCount =
+                res.Select(x=> new EnumDTO() { Name = StatusMapper.StatusDictionary[x.Key], Count = x.Value}).ToList();
+
+            return statusWithCount;
 
         }
     }

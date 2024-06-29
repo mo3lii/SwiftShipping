@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.DTO;
 using SwiftShipping.ServiceLayer.Services;
@@ -54,7 +55,12 @@ namespace SwiftShipping.API.Controllers
 
         }
 
-        
+        [HttpGet("GetByStatus")]
+        public IActionResult getByStatus(OrderStatus status)
+        {
+            var orders = orderService.GetByStatus(status);
+            return Ok(orders);
+        }
             
 
     }

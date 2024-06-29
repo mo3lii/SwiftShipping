@@ -13,7 +13,7 @@ namespace SwiftShipping.ServiceLayer.Helper
         {
             {PaymentType.MustBePaid,"Must Be Paid" },
             {PaymentType.Prepaid,"Prepaid" },
-            {PaymentType.CargoForCargo,"Cargo For Cargo" },
+            {PaymentType.CargoForCargo,"Cargo For Cargo" }, 
         };
     }
 }

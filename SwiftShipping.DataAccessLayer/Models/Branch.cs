@@ -15,6 +15,12 @@ namespace SwiftShipping.DataAccessLayer.Models
         public int GovernmentId { get; set; }
         public DateTime CreationDate { get; set; }
         public bool IsActive { get; set; } = true;
+        public bool IsDeleted { get; set; } = false;
+
         public virtual Government Government { get; set; }
+        public virtual List<DeliveryMan> DeliveryMen {  get; set; }
+        public virtual List<Order> Orders { get; set; }
+
+        public virtual List<Seller> Sellers { get; set; }
     }
 }

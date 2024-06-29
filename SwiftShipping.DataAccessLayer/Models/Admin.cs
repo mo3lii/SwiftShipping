@@ -15,6 +15,9 @@ namespace SwiftShipping.DataAccessLayer.Models
         [ForeignKey("User")]
         public string userId { get; set; }
 
+        public bool IsDeleted { get; set; } = false;
+
+
         public virtual ApplicationUser User { get; set; }
     }
 }

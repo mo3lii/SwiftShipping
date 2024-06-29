@@ -10,10 +10,11 @@ namespace SwiftShipping.DataAccessLayer.Models
     public class Order
     {
         public int Id { get; set; }
+        [ForeignKey("Seller")]
+        public int SellerId { get; set; }
         public string CustomerName { get; set; }
         public string CustomerPhone { get; set; }
         public string Address { get; set; }
-
         [ForeignKey("Region")]
         public int RegionId { get; set; }
         [ForeignKey("Branch")]
@@ -32,8 +33,12 @@ namespace SwiftShipping.DataAccessLayer.Models
         public string? Note { get;set; }
         public ShippingType ShippingType { get; set; }
         public OrderType OrderType { get; set; }
+        public bool IsDeleted { get; set; }=false;
+        ///objects
         public virtual DeliveryMan DeliveryMan {  get; set; }
         public virtual Region Region { get; set; }
         public virtual Branch Branch { get; set; }  
+        public virtual Seller Seller { get; set; }
+        
     }
 }

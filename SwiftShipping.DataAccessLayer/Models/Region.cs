@@ -16,6 +16,8 @@ namespace SwiftShipping.DataAccessLayer.Models
         [ForeignKey("Government")]
         public int GovernmentId { get; set; }
 
+        public bool IsDeleted { get; set; } = false;
+
         public virtual Government Government { get; set; }
         public virtual List<DeliveryManRegions> DeliveryManRegions {get;set;}
     }

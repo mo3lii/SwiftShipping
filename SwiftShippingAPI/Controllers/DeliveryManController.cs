@@ -11,10 +11,11 @@ namespace SwiftShipping.API.Controllers
     public class DeliveryManController : ControllerBase
     {
         DeliveryManService deliveryManService;
-
-        public DeliveryManController(DeliveryManService _deliveryManService)
+        RegionService regionService;
+        public DeliveryManController(DeliveryManService _deliveryManService,RegionService _regionService)
         {
             deliveryManService = _deliveryManService;
+            regionService = _regionService;
         }
 
         [HttpPost("Register")]
@@ -32,15 +33,28 @@ namespace SwiftShipping.API.Controllers
                 return BadRequest();
             }
         }
-        [HttpGet("orders/{id}")]
+        [HttpPost("AssignToRegion")]
+        public IActionResult AssignToRegion(int deliveryManId,int regionId)
+        {
+            var deliveryMan = deliveryManService.GetById(deliveryManId);
+            if (deliveryMan == null) return NotFound();
+            var region = regionService.GetById(regionId);
+            if (region == null) return NotFound();
+            var result = deliveryManService.assignDeliveryManTORegion(deliveryManId, regionId);
+            if (result) return Ok();
+            return BadRequest();
+        }
+        [HttpGet("{id}/orders")]
         public ActionResult<List<OrderGetDTO>> GetDeliveryManOrders(int id)
         {
+            var deliveryMan = deliveryManService.GetById(id);
+            if (deliveryMan == null) { return NotFound(); } 
             var orders = deliveryManService.getDeliveryManOrders(id);
             return Ok(orders);
         }
 
         [HttpGet]
-        public ActionResult<List<DeliveryManDTO>> GetAll()
+        public ActionResult<List<DeliveryManGetDTO>> GetAll()
         {
             var deliveryMen = deliveryManService.GetAll();
             return Ok(deliveryMen);
@@ -48,9 +62,10 @@ namespace SwiftShipping.API.Controllers
 
 
         [HttpGet("{id}")]
-        public ActionResult<DeliveryManDTO> GetById(int id)
+        public ActionResult<DeliveryManGetDTO> GetById(int id)
         {
             var deliveryMan = deliveryManService.GetById(id);
+            if (deliveryMan == null) {  return NotFound(); }
             return Ok(deliveryMan);
         }
 

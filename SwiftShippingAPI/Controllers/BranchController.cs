@@ -35,6 +35,7 @@ namespace SwiftShipping.API.Controllers
         public ActionResult<BranchGetDTO> GetById(int id)
         {
             var branch = branchService.GetById(id);
+            if (branch == null) { return NotFound(); }
             return Ok(branch);
         }
 

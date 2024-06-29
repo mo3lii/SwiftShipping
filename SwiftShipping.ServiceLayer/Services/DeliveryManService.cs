@@ -17,6 +17,7 @@ namespace SwiftShipping.ServiceLayer.Services
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IMapper _mapper;
+
         public DeliveryManService(UnitOfWork _unit, UserManager<ApplicationUser> _userManager,
            RoleManager<IdentityRole> _roleManager,
            IMapper mapper)
@@ -25,6 +26,7 @@ namespace SwiftShipping.ServiceLayer.Services
             userManager = _userManager;
             roleManager = _roleManager;
             _mapper = mapper;
+
         }
 
         public async Task<bool> AddDliveryManAsync(DeliveryManDTO deliveryManDTO)
@@ -50,22 +52,38 @@ namespace SwiftShipping.ServiceLayer.Services
             return false;
         }
 
+        public bool assignDeliveryManTORegion(int DeliveyManId, int RegionId)
+        {
+            try
+            {
+                var deliveryManRegion = new DeliveryManRegions()
+                {
+                    DeliveryManId = DeliveyManId,
+                    RegionId = RegionId
+                };
+                unit.DeliveryManRegionsRipository.Insert(deliveryManRegion);
+                unit.SaveChanges();
+                return true;
+            }
+            catch { return false; }
+        }
+
         public List<OrderGetDTO> getDeliveryManOrders(int deliveryManId)
         {
             var orders =  unit.OrderRipository.GetAll(o => o.DeliveryId==deliveryManId);
             return _mapper.Map<List<Order>, List<OrderGetDTO>>(orders);
         }
 
-        public DeliveryManDTO GetById(int id)
+        public DeliveryManGetDTO GetById(int id)
         {
             var deliveryMan = unit.DeliveryManRipository.GetById(id);
-            return _mapper.Map<DeliveryMan, DeliveryManDTO>(deliveryMan);
+            return _mapper.Map<DeliveryMan, DeliveryManGetDTO>(deliveryMan);
         }
 
-        public List<DeliveryManDTO> GetAll()
+        public List<DeliveryManGetDTO> GetAll()
         {
             var deliveryMenData = unit.DeliveryManRipository.GetAll();
-            return _mapper.Map<List<DeliveryMan>, List<DeliveryManDTO>>(deliveryMenData);
+            return _mapper.Map<List<DeliveryMan>, List<DeliveryManGetDTO>>(deliveryMenData);
         }
     }
 }

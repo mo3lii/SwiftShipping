@@ -35,6 +35,7 @@ namespace SwiftShipping.API.Controllers
         public ActionResult<OrderGetDTO> GetById(int id)
         {
             var order = orderService.GetById(id);
+            if (order == null) { return NotFound(); }
             return Ok(order);
         }
 

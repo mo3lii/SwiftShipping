@@ -30,9 +30,13 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<RegionDTO> GetById(int id)
+        public ActionResult<RegionGetDTO> GetById(int id)
         {
             var region = regionService.GetById(id);
+            if (region == null)
+            {
+                return NotFound();
+            }
             return Ok(region);
         }
 

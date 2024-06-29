@@ -32,9 +32,8 @@ namespace SwiftShipping.ServiceLayer.Helper
             
             CreateMap<RegionDTO,Region>().ReverseMap();
 
-            //No need, we don't have GovernmentName in RegionDTO
-            //CreateMap<Region,RegionGetDTO>()
-            //    .ForMember(dest=>dest.GovernmentName,opt=>opt.MapFrom(src=>src.Government.Name));
+            CreateMap<Region, RegionGetDTO>()
+                .ForMember(dest => dest.GovernmentName, opt => opt.MapFrom(src => src.Government.Name));
 
 
             CreateMap<DeliveryManDTO, ApplicationUser>()
@@ -52,7 +51,14 @@ namespace SwiftShipping.ServiceLayer.Helper
               .ForMember(dest => dest.address, opt => opt.MapFrom(src => src.User.Address))
               .ForMember(dest => dest.userName, opt => opt.MapFrom(src => src.User.UserName))
               .ForMember(dest => dest.phoneNumber, opt => opt.MapFrom(src => src.User.PhoneNumber))
-              .ForMember(dest => dest.name, opt => opt.MapFrom(src => src.User.Name));
+              .ForMember(dest => dest.name, opt => opt.MapFrom(src => src.User.Name)).ReverseMap();
+
+            CreateMap<DeliveryMan, DeliveryManGetDTO>()
+                .ForMember(dest => dest.BranchName, opt => opt.MapFrom(src => src.Branch.Name))
+                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.User.Address))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.User.PhoneNumber))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email));
+
 
             CreateMap<ApplicationUser, DeliveryManDTO>().ForMember(dest => dest.password, opt => opt.MapFrom(src => src.PasswordHash)); ;
 

@@ -56,7 +56,7 @@ namespace SwiftShipping.API.Controllers
                     {
                         new Claim("UserId", result.UserId),
                         new Claim(ClaimTypes.Role, result.Role),
-                        new Claim("Policy", "CanView")
+                        //new Claim("Policy", "CanView")
                     };
 
                     var Token = JwtTokenHelper.GenerateToken(claims);

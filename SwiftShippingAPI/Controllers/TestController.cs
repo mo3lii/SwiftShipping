@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SwiftShipping.DataAccessLayer.Models;
@@ -118,11 +119,20 @@ namespace SwiftShipping.API.Controllers
             }
         }
         [HttpGet("testGetById")]
+
         public IActionResult TestGetById()
         {
             //var deliveryRegions = unit.DeliveryManRegionsRipository.GetById(5, 1);
             var user = unit.AppUserRepository.GetById("b8e197ce-0bc5-4aaf-9212-e42ef29b6bc8");
             return Ok(new {Name= user.Name });
+        }
+
+        [HttpGet("auth")]
+        [Authorize(Roles = "Employee")]
+        [Authorize(Policy = "CanView")]
+        public ActionResult TestAuth()
+        {
+            return Ok("You Are Authorized");
         }
 
     }

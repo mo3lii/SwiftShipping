@@ -1,5 +1,7 @@
 using E_CommerceAPI.Errors;
 using E_CommerceAPI.Middleware;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +11,7 @@ using SwiftShipping.DataAccessLayer.Permissions;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.Helper;
 using SwiftShipping.ServiceLayer.Services;
+using SwiftShipping.ServiceLayer.TestAuth;
 using System.Text;
 using System.Text.Json;
 using static System.Net.Mime.MediaTypeNames;
@@ -87,13 +90,27 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     };
 });
 
+//builder.Services.AddTransient<IClaimsTransformation, ClaimsTransformation>();
+
+//builder.Services.AddAuthorization(options =>
+//{
+//    options.AddPolicy("CanView", policy => policy.RequireClaim(Permissions.View));
+//});
+
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("CanView", policy => policy.RequireClaim(Permissions.View));
-    options.AddPolicy("CanEdit", policy => policy.RequireClaim(Permissions.Edit));
-    options.AddPolicy("CanDelete", policy => policy.RequireClaim(Permissions.Delete));
-    options.AddPolicy("CanAdd", policy => policy.RequireClaim(Permissions.Add));
+    options.AddPolicy("CanView", policy =>
+             policy.RequireAuthenticatedUser()
+                   .AddRequirements(new RoleClaimRequirement("View")));
 });
+
+// Register services required for authorization
+builder.Services.AddScoped<IRoleClaimsService, RoleClaimsService>();
+builder.Services.AddScoped<IAuthorizationHandler, RoleClaimHandler>();
+
+// Ensure RoleManager<IdentityRole> is registered if used
+builder.Services.AddScoped<RoleManager<IdentityRole>>();
+builder.Services.AddScoped<HttpContextAccessor>();
 
 //classes registerations
 builder.Services.AddScoped<UnitOfWork>();

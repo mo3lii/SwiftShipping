@@ -71,7 +71,13 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             var sellers = unit.SellerRipository.GetAll();
             return mapper.Map<List<Seller>, List<SellerGetDTO>>(sellers);
+        }
 
+        public List<OrderGetDTO> GetSellerOrders(int id)
+        {
+            var seller = unit.SellerRipository.GetById(id);
+            var sellerOrders = seller?.Orders;
+            return mapper.Map<List<Order>, List<OrderGetDTO>>(sellerOrders);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using E_CommerceAPI.Errors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SwiftShipping.ServiceLayer.DTO;
 using SwiftShipping.ServiceLayer.Services;
@@ -44,6 +45,14 @@ namespace SwiftShipping.API.Controllers
         {
             var sellers = sellerService.GetAll();
             return Ok(sellers);
+        }
+        [HttpGet("{id}/orders")]
+        public ActionResult<List<OrderGetDTO>> getSellerOrders(int id)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400,"seller not exist"));
+            var orders = sellerService.GetSellerOrders(id);
+            if (orders.Count == 0) return NotFound(new ApiResponse(404, "This Seller has no orders"));
+            return Ok(orders);
         }
     }
 }

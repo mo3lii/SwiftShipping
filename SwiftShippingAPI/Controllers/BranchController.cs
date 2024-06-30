@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using E_CommerceAPI.Errors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SwiftShipping.ServiceLayer.DTO;
 using SwiftShipping.ServiceLayer.Services;
@@ -17,8 +18,8 @@ namespace SwiftShipping.API.Controllers
         [HttpGet]
         public IActionResult getAllBranches()
         {
-
             var branches = branchService.GetAll();
+            if (branches == null) NotFound(new ApiResponse(404));
             return Ok(branches);
 
         }
@@ -26,7 +27,6 @@ namespace SwiftShipping.API.Controllers
         [HttpPost("Add")]
         public IActionResult addBranch(BranchDTO branchDTO)
         {
-
             branchService.AddBrnach(branchDTO);
             return Ok("Branch Created Successfully");
         }
@@ -34,8 +34,11 @@ namespace SwiftShipping.API.Controllers
         [HttpGet("{id}")]
         public ActionResult<BranchGetDTO> GetById(int id)
         {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
             var branch = branchService.GetById(id);
-            if (branch == null) { return NotFound(); }
+
+            if (branch == null) { return NotFound(new ApiResponse(404)); }
             return Ok(branch);
         }
 

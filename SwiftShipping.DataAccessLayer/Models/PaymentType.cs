@@ -9,7 +9,7 @@ namespace SwiftShipping.DataAccessLayer.Models
     public enum PaymentType
     {
         MustBePaid=1,
-        Prepaid,
-        CargoForCargo
+        Prepaid = 2,
+        CargoForCargo = 3
     }
 }

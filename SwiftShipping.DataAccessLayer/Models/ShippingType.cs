@@ -9,6 +9,6 @@ namespace SwiftShipping.DataAccessLayer.Models
     public enum  OrderType
     {
         Normal=1,
-        PickUp
+        PickUp=2
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using E_CommerceAPI.Errors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Repository;
@@ -29,14 +30,21 @@ namespace SwiftShipping.API.Controllers
         public ActionResult<OrderGetDTO> GetAll() { 
         
             var orders = orderService.GetAll();
+
+            if (orders.Count == 0) { return NotFound(new ApiResponse(404)); }
+
             return Ok(orders);
         }
 
         [HttpGet("{id}")]
         public ActionResult<OrderGetDTO> GetById(int id)
         {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
             var order = orderService.GetById(id);
-            if (order == null) { return NotFound(); }
+
+            if (order == null) { return NotFound(new ApiResponse(404)); }
+
             return Ok(order);
         }
 

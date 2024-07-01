@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SwiftShipping.DataAccessLayer.Models
+namespace SwiftShipping.DataAccessLayer.Enum
 {
-    public enum ShippingType
+    public enum PermissionType
     {
-        SameDay=1,
-        In24H,
-        In2to5Days
+        View = 1,
+        Add,
+        Edit,
+        Delete
     }
 }

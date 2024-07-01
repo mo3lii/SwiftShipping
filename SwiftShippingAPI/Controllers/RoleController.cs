@@ -1,6 +1,8 @@
 ﻿
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SwiftShipping.DataAccessLayer.Models;
+using SwiftShipping.ServiceLayer.DTO;
 using SwiftShipping.ServiceLayer.Services;
 
 namespace SwiftShipping.API.Controllers
@@ -10,10 +12,11 @@ namespace SwiftShipping.API.Controllers
     public class RoleController : ControllerBase
     {
         private readonly RolePermissionService _rolePermissionService;
-
-        public RoleController(RolePermissionService rolePermissionService)
+        private readonly RolesService _rolesService;
+        public RoleController(RolePermissionService rolePermissionService, RolesService rolesService)
         {
             _rolePermissionService = rolePermissionService;
+            _rolesService = rolesService;
         }
 
         [HttpPost("assign")]
@@ -28,6 +31,21 @@ namespace SwiftShipping.API.Controllers
         {
             await _rolePermissionService.RemovePermissionFromRoleAsync(model.RoleName, model.Permission);
             return Ok();
+        }
+
+        [HttpGet("{role}")]
+        public ActionResult<List<RolePermissions>> GetPermissionsByRole(string role){
+            var PermissionsDTOList = _rolesService.GetAllRolePermissions(role);
+            if(PermissionsDTOList == null || PermissionsDTOList.Count()==0) return NotFound();
+            return Ok(PermissionsDTOList);
+        }
+
+        [HttpPut("{role}")]
+        public ActionResult<List<RolePermissions>> updatePermissionsByRole(string role,[FromBody]List<PermissionDTO> permissionsDTOList)
+        {
+            var result = _rolesService.updateRolePermissions(role, permissionsDTOList);
+            if (!result) return NotFound();
+            return Ok("updated successfully");
         }
     }
 

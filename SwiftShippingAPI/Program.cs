@@ -1,20 +1,18 @@
 using E_CommerceAPI.Errors;
 using E_CommerceAPI.Middleware;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SwiftShipping.DataAccessLayer.Models;
-using SwiftShipping.DataAccessLayer.Permissions;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.Helper;
 using SwiftShipping.ServiceLayer.Services;
-using SwiftShipping.ServiceLayer.TestAuth;
+using SwiftShipping.API.Authorization;
 using System.Text;
-using System.Text.Json;
-using static System.Net.Mime.MediaTypeNames;
+using SwiftShipping.DataAccessLayer.Enum;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +39,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationContext>(o =>
 {
     o.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("mainString"));
+    o.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 
@@ -90,23 +89,17 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     };
 });
 
-//builder.Services.AddTransient<IClaimsTransformation, ClaimsTransformation>();
-
-//builder.Services.AddAuthorization(options =>
-//{
-//    options.AddPolicy("CanView", policy => policy.RequireClaim(Permissions.View));
-//});
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("CanView", policy =>
+    options.AddPolicy("Employee/View", policy =>
              policy.RequireAuthenticatedUser()
-                   .AddRequirements(new RoleClaimRequirement("View")));
+                   .AddRequirements(new PermissionRequirement(Department.Employees,PermissionType.View)));
 });
 
 // Register services required for authorization
-builder.Services.AddScoped<IRoleClaimsService, RoleClaimsService>();
-builder.Services.AddScoped<IAuthorizationHandler, RoleClaimHandler>();
+builder.Services.AddScoped<IRolePermissionsService, RolePermissionsService>();
+builder.Services.AddScoped<IAuthorizationHandler, PermissionHandler>();
 
 // Ensure RoleManager<IdentityRole> is registered if used
 builder.Services.AddScoped<RoleManager<IdentityRole>>();
@@ -123,6 +116,7 @@ builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<EmployeeService>();
 builder.Services.AddScoped<BranchService>();
 builder.Services.AddScoped<RolePermissionService>();
+builder.Services.AddScoped<RolesService>();
 
 
 builder.Services.AddEndpointsApiExplorer();

@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SwiftShipping.DataAccessLayer.Enum;
+using SwiftShipping.DataAccessLayer.Permissions;
+using System.Reflection.Emit;
 
 namespace SwiftShipping.DataAccessLayer.Models
 {
@@ -20,6 +24,8 @@ namespace SwiftShipping.DataAccessLayer.Models
         public DbSet<WeightSetting> WeightSettings { get; set; } 
         public DbSet<DeliveryManRegions> DeliveryManRegions { get; set; }
 
+        public DbSet<RolePermissions> RolePermissions { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<DeliveryManRegions>()
@@ -27,6 +33,35 @@ namespace SwiftShipping.DataAccessLayer.Models
             builder.Entity<WeightSetting>().HasData(new WeightSetting { Id=1,DefaultWeight=5,KGPrice=10});
             base.OnModelCreating(builder);
 
+            builder.Entity<RolePermissions>()
+        .HasKey(d => new { d.RoleName, d.DepartmentId });
+
+            // Seed initial role permissions
+            SeedRolePermissions(builder);
+
+        }
+
+        public void SeedRolePermissions(ModelBuilder builder)
+        {
+            var roles = RoleTypes.GetNames(typeof(RoleTypes)).ToList();
+            
+            var departments = Department.GetValues(typeof(Department)).Cast<Department>().ToList();
+
+            foreach (var role in roles)
+            {
+                foreach (var department in departments)
+                {
+                    builder.Entity<RolePermissions>().HasData(new RolePermissions
+                    {
+                        RoleName = role,
+                        DepartmentId = department,
+                        View = false,
+                        Edit = false,
+                        Delete = false,
+                        Add = false
+                    });
+                }
+            }
         }
     }
 }

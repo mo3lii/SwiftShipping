@@ -22,6 +22,8 @@ namespace SwiftShipping.DataAccessLayer.Repository
         private GenericRepository<Employee> _employeeRipository;
         private GenericRepository<Seller> _sellerRipository;
         private GenericRepository<Admin> _adminRipository;
+        private GenericRepository<RolePermissions> _rolePermissionsRipository;
+
         //Custom Repositories 
         private WeightSettingRepository _weightSettingRepository;
 
@@ -146,6 +148,18 @@ namespace SwiftShipping.DataAccessLayer.Repository
                     _adminRipository = new GenericRepository<Admin>(context);
                 }
                 return _adminRipository;
+            }
+        }
+
+        public GenericRepository<RolePermissions> RolePermissionsRepository
+        {
+            get
+            {
+                if (_rolePermissionsRipository == null)
+                {
+                    _rolePermissionsRipository = new GenericRepository<RolePermissions>(context);
+                }
+                return _rolePermissionsRipository;
             }
         }
 

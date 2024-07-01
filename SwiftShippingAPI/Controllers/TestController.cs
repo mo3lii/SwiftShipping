@@ -130,7 +130,7 @@ namespace SwiftShipping.API.Controllers
 
         [HttpGet("auth")]
         [Authorize(Roles = "Employee")]
-        [Authorize(Policy = "Employee/View")]
+        [Authorize(Policy = "Employees/View")]
         public ActionResult TestAuth()
         {
             return Ok("You Are Authorized");

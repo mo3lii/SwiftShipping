@@ -94,8 +94,6 @@ namespace SwiftShipping.API.Controllers
             var employee = employeeService.GetById(id);
 
             if ( employee == null) { return NotFound(new ApiResponse(404)); }
-
-
             return Ok(employee);
         }
     }

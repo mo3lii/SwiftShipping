@@ -9,7 +9,7 @@ namespace SwiftShipping.DataAccessLayer.Enum
     public enum RoleTypes
     {
         Employee,
-        DliveryMan,
+        DeliveryMan,
         Seller,
         Admin
     }

@@ -92,9 +92,12 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("Employee/View", policy =>
+    options.AddPolicy("Employees/View", policy =>
              policy.RequireAuthenticatedUser()
-                   .AddRequirements(new PermissionRequirement(Department.Employees,PermissionType.View)));
+                   .AddRequirements(new PermissionRequirement(Department.Employees, PermissionType.View)));
+
+    //policy name : DepartmentName/Permission  example: Branch/View
+    //AuthorizationPolicies.AddDepartmentsPolicies(options);
 });
 
 // Register services required for authorization
@@ -115,7 +118,6 @@ builder.Services.AddScoped<WeightSettingService>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<EmployeeService>();
 builder.Services.AddScoped<BranchService>();
-builder.Services.AddScoped<RolePermissionService>();
 builder.Services.AddScoped<RolesService>();
 
 

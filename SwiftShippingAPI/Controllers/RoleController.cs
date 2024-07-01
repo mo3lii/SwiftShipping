@@ -11,26 +11,11 @@ namespace SwiftShipping.API.Controllers
     [ApiController]
     public class RoleController : ControllerBase
     {
-        private readonly RolePermissionService _rolePermissionService;
         private readonly RolesService _rolesService;
-        public RoleController(RolePermissionService rolePermissionService, RolesService rolesService)
+        public RoleController( RolesService rolesService)
         {
-            _rolePermissionService = rolePermissionService;
+
             _rolesService = rolesService;
-        }
-
-        [HttpPost("assign")]
-        public async Task<IActionResult> AssignPermissionsToRole([FromBody] AssignPermissionsToRoleDto model)
-        {
-            await _rolePermissionService.AssignPermissionsToRoleAsync(model.RoleName, model.Permissions);
-            return Ok();
-        }
-
-        [HttpPost("remove")]
-        public async Task<IActionResult> RemovePermissionFromRole([FromBody] RemovePermissionFromRoleDto model)
-        {
-            await _rolePermissionService.RemovePermissionFromRoleAsync(model.RoleName, model.Permission);
-            return Ok();
         }
 
         [HttpGet("{role}")]

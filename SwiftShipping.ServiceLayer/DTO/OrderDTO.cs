@@ -1,4 +1,4 @@
-﻿using SwiftShipping.DataAccessLayer.Models;
+﻿using SwiftShipping.DataAccessLayer.Enum;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;

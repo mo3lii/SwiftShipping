@@ -41,6 +41,9 @@ namespace SwiftShipping.ServiceLayer.Services
         public List<BranchGetDTO> GetAll()
         {
             var branches = unit.BranchRipository.GetAll();
+
+            if (branches.Count == 0) return null;
+            
             return mapper.Map<List<Branch>, List<BranchGetDTO>>(branches);
         }
 

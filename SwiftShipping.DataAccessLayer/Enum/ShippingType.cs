@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SwiftShipping.DataAccessLayer.Models
+namespace SwiftShipping.DataAccessLayer.Enum
 {
-    public enum  OrderType
+    public enum OrderType
     {
-        Normal=1,
-        PickUp
+        Normal = 1,
+        PickUp = 2
     }
 }

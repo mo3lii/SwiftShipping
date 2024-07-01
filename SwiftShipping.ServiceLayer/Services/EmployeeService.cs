@@ -33,16 +33,17 @@ namespace SwiftShipping.ServiceLayer.Services
         {
           
             var appUser = mapper.Map<EmployeeDTO, ApplicationUser>(employeeDTO);
+
             IdentityResult result = await userManager.CreateAsync(appUser, employeeDTO.password);
             if (result.Succeeded)
             {
 
                 // check if the role is exist if not, add it
-                if (await roleManager.FindByNameAsync("employee") == null)
-                    await roleManager.CreateAsync(new IdentityRole() { Name = "employee" });
+                if (await roleManager.FindByNameAsync("Employee") == null)
+                    await roleManager.CreateAsync(new IdentityRole() { Name = "Employee" });
 
                 // assign roles  to created user
-                IdentityResult employeeRole = await userManager.AddToRoleAsync(appUser, "employee");
+                IdentityResult employeeRole = await userManager.AddToRoleAsync(appUser, "Employee");
 
 
                 if (employeeRole.Succeeded)
@@ -90,6 +91,7 @@ namespace SwiftShipping.ServiceLayer.Services
 
         public EmployeeDTO GetById(int id)
         {
+
             var employee = unit.EmployeeRipository.GetById(id);
             return mapper.Map<Employee, EmployeeDTO>(employee);
 

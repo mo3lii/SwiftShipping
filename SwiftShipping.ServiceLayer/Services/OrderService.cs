@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using SwiftShipping.DataAccessLayer.Enum;
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.DTO;
@@ -118,13 +119,11 @@ namespace SwiftShipping.ServiceLayer.Services
         {
              int count = unit.OrderRipository.GetAll(o => o.Status == orderStatus).Count;
 
-            return (new EnumDTO() { Name = StatusMapper.StatusDictionary[orderStatus], Count =  count});
+            return (new EnumDTO() { Name = StatusMapper.StatusDictionary[orderStatus], Count =  count, Id =  (int) orderStatus });
         }
 
         public List<EnumDTO> GetAllOrderStatusCount()
         {
-
-
             // get status, count
             var res = unit.OrderRipository.GetAll().GroupBy(x => x.Status).ToDictionary(g => g.Key, g => g.Count());
 
@@ -135,10 +134,15 @@ namespace SwiftShipping.ServiceLayer.Services
             }
 
             List<EnumDTO> statusWithCount =
-                res.Select(x=> new EnumDTO() { Name = StatusMapper.StatusDictionary[x.Key], Count = x.Value}).ToList();
+                res.Select(x=> new EnumDTO() { Name = StatusMapper.StatusDictionary[x.Key], 
+                    Count = x.Value, Id = (int) x.Key}).ToList();
 
             return statusWithCount;
 
         }
+
+
+
+
     }
 }

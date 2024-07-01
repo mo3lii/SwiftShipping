@@ -89,5 +89,55 @@ namespace SwiftShipping.ServiceLayer.Services
             var deliveryMenData = unit.DeliveryManRipository.GetAll();
             return _mapper.Map<List<DeliveryMan>, List<DeliveryManGetDTO>>(deliveryMenData);
         }
+
+        public bool UpdateDeliveryMan(int id, DeliveryManDTO deliveryManDTO)
+        {
+            try
+            {
+                var existingDeliveryMan = unit.DeliveryManRipository.GetById(id);
+                if (existingDeliveryMan == null)
+                {
+                    return false; 
+                }
+                var DeliveryManUser = unit.AppUserRepository.GetById(existingDeliveryMan.UserId);
+                _mapper.Map(deliveryManDTO, existingDeliveryMan);
+                _mapper.Map(existingDeliveryMan, DeliveryManUser);
+                unit.DeliveryManRipository.Update(existingDeliveryMan);
+                unit.AppUserRepository.Update(DeliveryManUser);
+
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool DeleteDeliveryMan(int id)
+        {
+            try
+            {
+                var existingDeliveryMan = unit.DeliveryManRipository.GetById(id);
+                if (existingDeliveryMan == null)
+                {
+                    return false;
+                }
+                var existingUser = unit.AppUserRepository.GetById(existingDeliveryMan.UserId);
+
+                existingDeliveryMan.IsDeleted = true;
+                existingUser.IsDeleted = true;
+
+                unit.DeliveryManRipository.Update(existingDeliveryMan);
+                unit.AppUserRepository.Update(existingUser);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
     }
 }

@@ -54,5 +54,49 @@ namespace SwiftShipping.ServiceLayer.Services
 
         }
 
+
+        public bool EditBranch(int id, BranchDTO branchDTO)
+        {
+            try
+            {
+                var existingBranch = unit.BranchRipository.GetById(id);
+                if (existingBranch == null)
+                {
+                    return false;
+                }
+
+                mapper.Map(branchDTO, existingBranch);
+                unit.BranchRipository.Update(existingBranch);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool DeleteBranch(int id)
+        {
+            try
+            {
+                var existingBranch = unit.BranchRipository.GetById(id);
+                if (existingBranch == null)
+                {
+                    return false; 
+                }
+
+                existingBranch.IsDeleted = true;
+                unit.BranchRipository.Update(existingBranch);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+
     }
 }

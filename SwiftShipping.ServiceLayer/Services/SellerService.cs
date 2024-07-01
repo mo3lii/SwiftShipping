@@ -82,5 +82,57 @@ namespace SwiftShipping.ServiceLayer.Services
             var sellerOrders = seller?.Orders;
             return mapper.Map<List<Order>, List<OrderGetDTO>>(sellerOrders);
         }
+
+        public bool Update(int id, SellerDTO sellerDTO)
+        {
+            try
+            {
+                var foundSeller = unit.SellerRipository.GetById(id);
+                //app user
+                if (foundSeller == null)
+                {
+                    return false;
+                }
+                var existingSellerUser = unit.AppUserRepository.GetById(foundSeller.UserId);
+
+                mapper.Map(sellerDTO, foundSeller);
+                mapper.Map(sellerDTO, existingSellerUser);
+                unit.SellerRipository.Update(foundSeller);
+                unit.AppUserRepository.Update(existingSellerUser);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool Delete(int id)
+        {
+            try
+            {
+                var foundSeller = unit.SellerRipository.GetById(id);
+                var existingSellerUser = unit.AppUserRepository.GetById(foundSeller.UserId);
+                if (foundSeller == null)
+                {
+                    return false;
+                }
+                foundSeller.IsDeleted = true;
+                existingSellerUser.IsDeleted = true;
+
+                unit.SellerRipository.Update(foundSeller);
+                unit.AppUserRepository.Update(existingSellerUser);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+
+
     }
 }

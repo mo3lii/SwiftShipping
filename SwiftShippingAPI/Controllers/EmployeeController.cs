@@ -96,5 +96,28 @@ namespace SwiftShipping.API.Controllers
             if ( employee == null) { return NotFound(new ApiResponse(404)); }
             return Ok(employee);
         }
+
+        [HttpPut("Update/{id}")]
+        public IActionResult UpdateEmployee(int id, EmployeeDTO employee)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
+            var result = employeeService.UpdateEmployee(id, employee);
+            if (!result) return NotFound(new ApiResponse(404));
+
+            return Ok("Employee Updated Successfully");
+        }
+
+        [HttpDelete("Delete/{id}")]
+        public IActionResult DeleteEmployee(int id)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
+            var result = employeeService.DeleteEmployee(id);
+            if (!result) return NotFound(new ApiResponse(404));
+
+            return Ok("Employee Deleted Successfully");
+        }
+
     }
 }

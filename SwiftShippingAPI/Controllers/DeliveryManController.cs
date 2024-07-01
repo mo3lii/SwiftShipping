@@ -93,6 +93,27 @@ namespace SwiftShipping.API.Controllers
             return Ok(deliveryMan);
         }
 
+        [HttpPut("Update/{id}")]
+        public IActionResult UpdateDeliveryMan(int id, DeliveryManDTO deliveryManDTO)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
+            var result = deliveryManService.UpdateDeliveryMan(id, deliveryManDTO);
+            if (!result) return NotFound(new ApiResponse(404));
+
+            return Ok("Delivery Man Updated Successfully");
+        }
+
+        [HttpDelete("Delete/{id}")]
+        public IActionResult DeleteDeliveryMan(int id)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
+            var result = deliveryManService.DeleteDeliveryMan(id);
+            if (!result) return NotFound(new ApiResponse(404));
+
+            return Ok("Delivery Man Deleted Successfully");
+        }
 
     }
 }

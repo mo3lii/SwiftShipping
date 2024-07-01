@@ -159,29 +159,73 @@ namespace SwiftShipping.ServiceLayer.Services
             return shippingTimes;
         }
 
-        public bool ChangeOrderStatus( int orderId, OrderStatus status)
+        public bool ChangeOrderStatus(OrderStatus status, int orderId)
         {
             try
             {
                 var order = unit.OrderRipository.GetById(orderId);
+
                 if (order != null)
                 {
                     order.Status = status;
+                    unit.OrderRipository.Update(order);
                     unit.SaveChanges();
                     return true;
                 }
                 else
                 {
-                    return false;
+                    return false; 
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-
+                Console.WriteLine(ex.Message); 
             }
-            return false;
+
+            return false; 
         }
 
+
+        public bool UpdateOrder(int id, OrderDTO orderDTO)
+        {
+            try
+            {
+                var foundOrder = unit.OrderRipository.GetById(id);
+                //app user
+                if (foundOrder == null)
+                {
+                    return false;
+                }
+
+                mapper.Map(orderDTO, foundOrder);
+                unit.OrderRipository.Update(foundOrder);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool DeleteOrder(int id)
+        {
+            try
+            {
+                var foundOrder = unit.OrderRipository.GetById(id);
+                if (foundOrder == null)
+                {
+                    return false;
+                }
+                foundOrder.IsDeleted = true;
+                unit.OrderRipository.Update(foundOrder);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

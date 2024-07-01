@@ -11,6 +11,7 @@ namespace SwiftShipping.DataAccessLayer.Repository
     public class GenericRepository<TEntity> where TEntity:class
     {
         ApplicationContext _context;
+
         public GenericRepository(ApplicationContext context)
         {
             _context = context;
@@ -60,8 +61,6 @@ namespace SwiftShipping.DataAccessLayer.Repository
         {
             return _context.Set<TEntity>().Find(keyValues);
         }
-
-
 
     }
 }

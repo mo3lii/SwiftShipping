@@ -85,12 +85,17 @@ namespace SwiftShipping.ServiceLayer.Helper
                 .ForMember(dest => dest.name, opt => opt.MapFrom(src => src.User.Name));
 
 
-            CreateMap<ApplicationUser, EmployeeDTO>().ForMember(dest => dest.password, opt => opt.MapFrom(src => src.PasswordHash)); ;
+            CreateMap<ApplicationUser, EmployeeDTO>().ForMember(dest => dest.password, opt => opt.MapFrom(src => src.PasswordHash));
 
             CreateMap<SellerDTO, Seller>();
 
+            CreateMap<ApplicationUser, SellerDTO>();
+
             CreateMap<RolePermissions, PermissionDTO>()
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => DepartmentMapper.DepartmentsDictionary[src.DepartmentId])).ReverseMap();
+
+            CreateMap<GovernmentDTO, Government>().ReverseMap();
+
         }
     }
 }

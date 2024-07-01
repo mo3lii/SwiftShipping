@@ -48,6 +48,28 @@ namespace SwiftShipping.API.Controllers
             return Ok(government);
         }
 
+        [HttpPut("Edit/{id}")]
+        public IActionResult Edit(int id, GovernmentDTO governmentDTO)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
+            var result = governmentService.EditGovernment(id, governmentDTO);
+            if (!result) return NotFound(new ApiResponse(404));
+            return Ok("Government Updated Successfully");
+        }
+
+
+        [HttpDelete("Delete/{id}")]
+        public IActionResult Delete(int id)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
+            var result = governmentService.Delete(id);
+            if (!result) return NotFound(new ApiResponse(404));
+
+            return Ok("Government Deleted Successfully");
+        }
+
 
     }
 }

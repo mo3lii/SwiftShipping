@@ -86,19 +86,41 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpPut("ChangeOrderStatus")]
-        public IActionResult ChangeOrderStatus(OrderStatus status, int id )
+        public IActionResult ChangeOrderStatus([FromBody] OrderStatus status, int id)
         {
-            var result = orderService.ChangeOrderStatus(id,status);
-            if (result == true) 
+            var result = orderService.ChangeOrderStatus(status, id);
+
+            if (result)
             {
-                return Ok("Status Changes Successfully");
+                return Ok("Status changed successfully");
             }
             else
             {
-                return BadRequest();
+                return BadRequest("Failed to change status");
             }
+
         }
 
+        [HttpPut("Edit/{id}")]
+        public IActionResult Edit(int id, OrderDTO order)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
+            var result = orderService.UpdateOrder(id, order);
+            if (!result) return NotFound(new ApiResponse(404));
+            return Ok("Order Updated Successfully");
+        }
+
+        [HttpDelete("Delete/{id}")]
+        public IActionResult DeleteOrder(int id)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
+            var result = orderService.DeleteOrder(id);
+            if (!result) return NotFound(new ApiResponse(404));
+
+            return Ok("Order Deleted Successfully");
+        }
 
     }
 }

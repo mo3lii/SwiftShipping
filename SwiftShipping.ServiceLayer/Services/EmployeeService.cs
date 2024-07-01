@@ -106,5 +106,53 @@ namespace SwiftShipping.ServiceLayer.Services
             return mapper.Map<List<Employee>, List<EmployeeDTO>>(employeesData);
         }
 
+        public bool UpdateEmployee(int id, EmployeeDTO employeeDTO)
+        {
+            try
+            {
+                var existingEmployee = unit.EmployeeRipository.GetById(id);
+                //app user
+                if (existingEmployee == null)
+                {
+                    return false;
+                }
+                var existingEmployeeUser = unit.AppUserRepository.GetById(existingEmployee.UserId);
+
+                mapper.Map(employeeDTO, existingEmployee);
+                mapper.Map(employeeDTO, existingEmployeeUser);
+                unit.EmployeeRipository.Update(existingEmployee);
+                unit.AppUserRepository.Update(existingEmployeeUser);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool DeleteEmployee(int id)
+        {
+            try
+            {
+                var existingEmployee = unit.EmployeeRipository.GetById(id);
+                var existingEmployeeUser = unit.AppUserRepository.GetById(existingEmployee.UserId);
+                if (existingEmployee == null)
+                {
+                    return false;
+                }
+                existingEmployee.IsDeleted = true;
+                existingEmployeeUser.IsDeleted = true;  
+                unit.EmployeeRipository.Update(existingEmployee);
+                unit.AppUserRepository.Update(existingEmployeeUser);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
     }
 }

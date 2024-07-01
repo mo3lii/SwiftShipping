@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using SwiftShipping.DataAccessLayer.Enum;
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.DTO;
@@ -36,13 +37,15 @@ namespace SwiftShipping.ServiceLayer.Services
             IdentityResult result = await userManager.CreateAsync(appUser, sellerDTO.password);
             if (result.Succeeded)
             {
-       
+                //Seller Role as string
+                var SellerRole = RoleTypes.Seller.ToString();
+
                 // check if the role is exist if not, add it
-                if (await roleManager.FindByNameAsync("seller") == null)
-                    await roleManager.CreateAsync(new IdentityRole() { Name = "seller" });
+                if (await roleManager.FindByNameAsync(SellerRole) == null)
+                    await roleManager.CreateAsync(new IdentityRole() { Name = SellerRole });
 
                 // assign roles  to created user
-                IdentityResult sellerRole = await userManager.AddToRoleAsync(appUser, "seller");
+                IdentityResult sellerRole = await userManager.AddToRoleAsync(appUser, SellerRole);
             
 
                 if (sellerRole.Succeeded ) {

@@ -69,7 +69,36 @@ namespace SwiftShipping.API.Controllers
             var orders = orderService.GetByStatus(status);
             return Ok(orders);
         }
-            
+
+        [HttpGet("GetShippingType")]
+        public IActionResult GetShippingTypes()
+        {
+            var shipingTypes = orderService.GetShippingTypes();
+            return Ok(shipingTypes);
+        }
+
+
+        [HttpGet("GetShippingTime")]
+        public IActionResult GetShippingTime()
+        {
+            var shipingTime = orderService.GetShippingTimes();
+            return Ok(shipingTime);
+        }
+
+        [HttpPut("ChangeOrderStatus")]
+        public IActionResult ChangeOrderStatus(OrderStatus status, int id )
+        {
+            var result = orderService.ChangeOrderStatus(id,status);
+            if (result == true) 
+            {
+                return Ok("Status Changes Successfully");
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
 
     }
 }

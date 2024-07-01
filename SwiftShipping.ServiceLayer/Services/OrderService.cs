@@ -142,7 +142,46 @@ namespace SwiftShipping.ServiceLayer.Services
         }
 
 
+        public List<ShippingTypeDto> GetShippingTypes()
+        {
+            var shippingTypesDto = Enum.GetValues(typeof(OrderType))
+                                       .Cast<OrderType>().Select(x => new ShippingTypeDto() { Id = (int)x, Name = x.ToString()})
+                                       .ToList();
 
+            return shippingTypesDto;
+        }
+        public List<ShippingTimeDTO> GetShippingTimes()
+        {
+            var shippingTimes = Enum.GetValues(typeof(ShippingType))
+                                       .Cast<ShippingType>().Select(x => new ShippingTimeDTO() { Id = (int)x, Name = x.ToString() })
+                                       .ToList();
+
+            return shippingTimes;
+        }
+
+        public bool ChangeOrderStatus( int orderId, OrderStatus status)
+        {
+            try
+            {
+                var order = unit.OrderRipository.GetById(orderId);
+                if (order != null)
+                {
+                    order.Status = status;
+                    unit.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+            }
+            return false;
+        }
 
     }
 }

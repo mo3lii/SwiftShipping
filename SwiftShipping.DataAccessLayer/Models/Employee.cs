@@ -17,8 +17,10 @@ namespace SwiftShipping.DataAccessLayer.Models
 
         [ForeignKey("Branch")]
         public int BranchId { get; set; }
-
         public bool IsDeleted { get; set; } = false;
+
+
+        public bool IsActive { get; set; } = false;
 
         public virtual ApplicationUser User { get; set; }
         public virtual Branch Branch { get; set; }

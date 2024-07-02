@@ -154,5 +154,21 @@ namespace SwiftShipping.ServiceLayer.Services
             return true;
         }
 
+        public bool ToggleActivityStatus(int id)
+        {
+            try
+            {
+                var existingEmployee = unit.EmployeeRipository.GetById(id);
+                if (existingEmployee == null)
+                    return false;
+                existingEmployee.IsActive = !existingEmployee.IsActive;
+                unit.EmployeeRipository.Update(existingEmployee);
+                unit.SaveChanges();
+                return true;
+            }catch
+            {
+                return false;
+            }
+        }
     }
 }

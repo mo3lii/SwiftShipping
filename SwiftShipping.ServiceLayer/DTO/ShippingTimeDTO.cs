@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace SwiftShipping.ServiceLayer.DTO
 {
-    public  class EnumDTO
+    public class ShippingTimeDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int Count { get; set; }
     }
 }

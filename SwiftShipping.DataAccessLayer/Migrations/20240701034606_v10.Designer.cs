@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SwiftShipping.DataAccessLayer.Models;
 
@@ -11,9 +12,11 @@ using SwiftShipping.DataAccessLayer.Models;
 namespace SwiftShipping.DataAccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20240701034606_v10")]
+    partial class v10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -207,9 +210,6 @@ namespace SwiftShipping.DataAccessLayer.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -301,9 +301,6 @@ namespace SwiftShipping.DataAccessLayer.Migrations
 
                     b.Property<int>("BranchId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -611,7 +608,7 @@ namespace SwiftShipping.DataAccessLayer.Migrations
                         },
                         new
                         {
-                            RoleName = "DeliveryMan",
+                            RoleName = "DliveryMan",
                             DepartmentId = 1,
                             Add = false,
                             Delete = false,
@@ -620,7 +617,7 @@ namespace SwiftShipping.DataAccessLayer.Migrations
                         },
                         new
                         {
-                            RoleName = "DeliveryMan",
+                            RoleName = "DliveryMan",
                             DepartmentId = 2,
                             Add = false,
                             Delete = false,
@@ -629,7 +626,7 @@ namespace SwiftShipping.DataAccessLayer.Migrations
                         },
                         new
                         {
-                            RoleName = "DeliveryMan",
+                            RoleName = "DliveryMan",
                             DepartmentId = 3,
                             Add = false,
                             Delete = false,
@@ -638,7 +635,7 @@ namespace SwiftShipping.DataAccessLayer.Migrations
                         },
                         new
                         {
-                            RoleName = "DeliveryMan",
+                            RoleName = "DliveryMan",
                             DepartmentId = 4,
                             Add = false,
                             Delete = false,
@@ -647,7 +644,7 @@ namespace SwiftShipping.DataAccessLayer.Migrations
                         },
                         new
                         {
-                            RoleName = "DeliveryMan",
+                            RoleName = "DliveryMan",
                             DepartmentId = 5,
                             Add = false,
                             Delete = false,
@@ -656,7 +653,7 @@ namespace SwiftShipping.DataAccessLayer.Migrations
                         },
                         new
                         {
-                            RoleName = "DeliveryMan",
+                            RoleName = "DliveryMan",
                             DepartmentId = 6,
                             Add = false,
                             Delete = false,
@@ -665,7 +662,7 @@ namespace SwiftShipping.DataAccessLayer.Migrations
                         },
                         new
                         {
-                            RoleName = "DeliveryMan",
+                            RoleName = "DliveryMan",
                             DepartmentId = 7,
                             Add = false,
                             Delete = false,
@@ -674,7 +671,7 @@ namespace SwiftShipping.DataAccessLayer.Migrations
                         },
                         new
                         {
-                            RoleName = "DeliveryMan",
+                            RoleName = "DliveryMan",
                             DepartmentId = 8,
                             Add = false,
                             Delete = false,
@@ -683,7 +680,7 @@ namespace SwiftShipping.DataAccessLayer.Migrations
                         },
                         new
                         {
-                            RoleName = "DeliveryMan",
+                            RoleName = "DliveryMan",
                             DepartmentId = 9,
                             Add = false,
                             Delete = false,

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using SwiftShipping.DataAccessLayer.Enum;
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.DTO;
@@ -35,11 +36,14 @@ namespace SwiftShipping.ServiceLayer.Services
             IdentityResult result = await userManager.CreateAsync(appUser, deliveryManDTO.password);
             if (result.Succeeded)
             {
+                //Delivery Man Role as string
+                var DeliveryManRole = RoleTypes.DeliveryMan.ToString();
+
                 // check if the role is exist if not, add it
-                if (await roleManager.FindByNameAsync("deliveryman") == null)
-                    await roleManager.CreateAsync(new IdentityRole() { Name = "deliveryman" });
+                if (await roleManager.FindByNameAsync(DeliveryManRole) == null)
+                    await roleManager.CreateAsync(new IdentityRole() { Name = DeliveryManRole });
                 // assign roles  to created user
-                IdentityResult deliveryManRole = await userManager.AddToRoleAsync(appUser, "deliveryman");
+                IdentityResult deliveryManRole = await userManager.AddToRoleAsync(appUser, DeliveryManRole);
                 if (deliveryManRole.Succeeded)
                 {
                     var deliveryMan = _mapper.Map<DeliveryManDTO, DeliveryMan>(deliveryManDTO);
@@ -85,5 +89,55 @@ namespace SwiftShipping.ServiceLayer.Services
             var deliveryMenData = unit.DeliveryManRipository.GetAll();
             return _mapper.Map<List<DeliveryMan>, List<DeliveryManGetDTO>>(deliveryMenData);
         }
+
+        public bool UpdateDeliveryMan(int id, DeliveryManDTO deliveryManDTO)
+        {
+            try
+            {
+                var existingDeliveryMan = unit.DeliveryManRipository.GetById(id);
+                if (existingDeliveryMan == null)
+                {
+                    return false; 
+                }
+                var DeliveryManUser = unit.AppUserRepository.GetById(existingDeliveryMan.UserId);
+                _mapper.Map(deliveryManDTO, existingDeliveryMan);
+                _mapper.Map(existingDeliveryMan, DeliveryManUser);
+                unit.DeliveryManRipository.Update(existingDeliveryMan);
+                unit.AppUserRepository.Update(DeliveryManUser);
+
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool DeleteDeliveryMan(int id)
+        {
+            try
+            {
+                var existingDeliveryMan = unit.DeliveryManRipository.GetById(id);
+                if (existingDeliveryMan == null)
+                {
+                    return false;
+                }
+                var existingUser = unit.AppUserRepository.GetById(existingDeliveryMan.UserId);
+
+                existingDeliveryMan.IsDeleted = true;
+                existingUser.IsDeleted = true;
+
+                unit.DeliveryManRipository.Update(existingDeliveryMan);
+                unit.AppUserRepository.Update(existingUser);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
     }
 }

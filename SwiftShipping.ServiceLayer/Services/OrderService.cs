@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using SwiftShipping.DataAccessLayer.Enum;
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.DTO;
@@ -118,13 +119,11 @@ namespace SwiftShipping.ServiceLayer.Services
         {
              int count = unit.OrderRipository.GetAll(o => o.Status == orderStatus).Count;
 
-            return (new EnumDTO() { Name = StatusMapper.StatusDictionary[orderStatus], Count =  count});
+            return (new EnumDTO() { Name = StatusMapper.StatusDictionary[orderStatus], Count =  count, Id =  (int) orderStatus });
         }
 
         public List<EnumDTO> GetAllOrderStatusCount()
         {
-
-
             // get status, count
             var res = unit.OrderRipository.GetAll().GroupBy(x => x.Status).ToDictionary(g => g.Key, g => g.Count());
 
@@ -135,10 +134,98 @@ namespace SwiftShipping.ServiceLayer.Services
             }
 
             List<EnumDTO> statusWithCount =
-                res.Select(x=> new EnumDTO() { Name = StatusMapper.StatusDictionary[x.Key], Count = x.Value}).ToList();
+                res.Select(x=> new EnumDTO() { Name = StatusMapper.StatusDictionary[x.Key], 
+                    Count = x.Value, Id = (int) x.Key}).ToList();
 
             return statusWithCount;
 
+        }
+
+
+        public List<ShippingTypeDto> GetShippingTypes()
+        {
+            var shippingTypesDto = Enum.GetValues(typeof(OrderType))
+                                       .Cast<OrderType>().Select(x => new ShippingTypeDto() { Id = (int)x, Name = x.ToString()})
+                                       .ToList();
+
+            return shippingTypesDto;
+        }
+        public List<ShippingTimeDTO> GetShippingTimes()
+        {
+            var shippingTimes = Enum.GetValues(typeof(ShippingType))
+                                       .Cast<ShippingType>().Select(x => new ShippingTimeDTO() { Id = (int)x, Name = x.ToString() })
+                                       .ToList();
+
+            return shippingTimes;
+        }
+
+        public bool ChangeOrderStatus(OrderStatus status, int orderId)
+        {
+            try
+            {
+                var order = unit.OrderRipository.GetById(orderId);
+
+                if (order != null)
+                {
+                    order.Status = status;
+                    unit.OrderRipository.Update(order);
+                    unit.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    return false; 
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message); 
+            }
+
+            return false; 
+        }
+
+
+        public bool UpdateOrder(int id, OrderDTO orderDTO)
+        {
+            try
+            {
+                var foundOrder = unit.OrderRipository.GetById(id);
+                //app user
+                if (foundOrder == null)
+                {
+                    return false;
+                }
+
+                mapper.Map(orderDTO, foundOrder);
+                unit.OrderRipository.Update(foundOrder);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool DeleteOrder(int id)
+        {
+            try
+            {
+                var foundOrder = unit.OrderRipository.GetById(id);
+                if (foundOrder == null)
+                {
+                    return false;
+                }
+                foundOrder.IsDeleted = true;
+                unit.OrderRipository.Update(foundOrder);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

@@ -25,16 +25,16 @@ namespace SwiftShipping.API.Controllers
                 await sellerService.addSellerAsync(sellerDTO);
                 return Ok("seller Added Successfully");
             }
-            else
-            {
-                return BadRequest();
-            }
+           
+                return BadRequest(new ApiResponse(400)); 
         }
 
 
         [HttpGet("{id}")]
         public ActionResult<SellerGetDTO> GetById(int id)
         {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
             var seller = sellerService.GetById(id);
             if (seller == null) return NotFound();
             return Ok(seller);
@@ -46,13 +46,37 @@ namespace SwiftShipping.API.Controllers
             var sellers = sellerService.GetAll();
             return Ok(sellers);
         }
+
         [HttpGet("{id}/orders")]
         public ActionResult<List<OrderGetDTO>> getSellerOrders(int id)
         {
             if (id == 0) return BadRequest(new ApiResponse(400,"seller not exist"));
+
             var orders = sellerService.GetSellerOrders(id);
-            if (orders.Count == 0) return NotFound(new ApiResponse(404, "This Seller has no orders"));
+
             return Ok(orders);
         }
+
+        [HttpPut("Edit/{id}")]
+        public IActionResult Edit(int id, SellerDTO sellerDTO)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
+            var result = sellerService.Update(id, sellerDTO);
+            if (!result) return NotFound(new ApiResponse(404));
+            return Ok("Seller Updated Successfully");
+        }
+
+        [HttpDelete("Delete/{id}")]
+        public IActionResult Delete(int id)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
+            var result = sellerService.Delete(id);
+            if (!result) return NotFound(new ApiResponse(404));
+
+            return Ok("Seller Deleted Successfully");
+        }
+
     }
 }

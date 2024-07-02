@@ -48,5 +48,45 @@ namespace SwiftShipping.ServiceLayer.Services
 
         }
 
+        public bool EditRegion(int id, RegionDTO regionDTO)
+        {
+            try
+            {
+                var foundRegion= unit.RegionRipository.GetById(id);
+                if (foundRegion == null)
+                {
+                    return false;
+                }
+
+                mapper.Map(regionDTO, foundRegion);
+                unit.RegionRipository.Update(foundRegion);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool DeleteRegion(int id)
+        {
+            try
+            {
+                var foundRegion = unit.RegionRipository.GetById(id);
+                if (foundRegion == null)
+                {
+                    return false;
+                }
+                foundRegion.IsDeleted = true;
+                unit.RegionRipository.Update(foundRegion);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

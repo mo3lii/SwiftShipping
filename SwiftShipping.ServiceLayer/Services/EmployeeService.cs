@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using SwiftShipping.DataAccessLayer.Enum;
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.DTO;
@@ -33,16 +34,19 @@ namespace SwiftShipping.ServiceLayer.Services
         {
           
             var appUser = mapper.Map<EmployeeDTO, ApplicationUser>(employeeDTO);
+
             IdentityResult result = await userManager.CreateAsync(appUser, employeeDTO.password);
             if (result.Succeeded)
             {
+                //Employee Role as String
+                var EmployeeRole = RoleTypes.Employee.ToString();
 
                 // check if the role is exist if not, add it
-                if (await roleManager.FindByNameAsync("employee") == null)
-                    await roleManager.CreateAsync(new IdentityRole() { Name = "employee" });
+                if (await roleManager.FindByNameAsync(EmployeeRole) == null)
+                    await roleManager.CreateAsync(new IdentityRole() { Name = EmployeeRole });
 
                 // assign roles  to created user
-                IdentityResult employeeRole = await userManager.AddToRoleAsync(appUser, "employee");
+                IdentityResult employeeRole = await userManager.AddToRoleAsync(appUser, EmployeeRole);
 
 
                 if (employeeRole.Succeeded)
@@ -90,6 +94,7 @@ namespace SwiftShipping.ServiceLayer.Services
 
         public EmployeeDTO GetById(int id)
         {
+
             var employee = unit.EmployeeRipository.GetById(id);
             return mapper.Map<Employee, EmployeeDTO>(employee);
 
@@ -99,6 +104,54 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             var employeesData = unit.EmployeeRipository.GetAll();
             return mapper.Map<List<Employee>, List<EmployeeDTO>>(employeesData);
+        }
+
+        public bool UpdateEmployee(int id, EmployeeDTO employeeDTO)
+        {
+            try
+            {
+                var existingEmployee = unit.EmployeeRipository.GetById(id);
+                //app user
+                if (existingEmployee == null)
+                {
+                    return false;
+                }
+                var existingEmployeeUser = unit.AppUserRepository.GetById(existingEmployee.UserId);
+
+                mapper.Map(employeeDTO, existingEmployee);
+                mapper.Map(employeeDTO, existingEmployeeUser);
+                unit.EmployeeRipository.Update(existingEmployee);
+                unit.AppUserRepository.Update(existingEmployeeUser);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool DeleteEmployee(int id)
+        {
+            try
+            {
+                var existingEmployee = unit.EmployeeRipository.GetById(id);
+                var existingEmployeeUser = unit.AppUserRepository.GetById(existingEmployee.UserId);
+                if (existingEmployee == null)
+                {
+                    return false;
+                }
+                existingEmployee.IsDeleted = true;
+                existingEmployeeUser.IsDeleted = true;  
+                unit.EmployeeRipository.Update(existingEmployee);
+                unit.AppUserRepository.Update(existingEmployeeUser);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
 
     }

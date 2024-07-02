@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SwiftShipping.DataAccessLayer.Enum;
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.DTO;
@@ -23,7 +25,7 @@ namespace SwiftShipping.API.Controllers
         private readonly UnitOfWork unit;
         public TestController(SellerService _sellerService, DeliveryManService _deliveryManService, OrderService _orderService
             , GovernmentService _governmentService, RegionService _regionService,
-            IMapper mapper,UnitOfWork unit)
+            IMapper mapper, UnitOfWork unit)
         {
 
             sellerService = _sellerService;
@@ -42,10 +44,10 @@ namespace SwiftShipping.API.Controllers
 
             if (ModelState.IsValid)
             {
-              await sellerService.addSellerAsync(sellerDTO);
-          
+                await sellerService.addSellerAsync(sellerDTO);
+
                 return Ok("seller Added Successfully");
-             
+
 
             }
             else
@@ -77,8 +79,8 @@ namespace SwiftShipping.API.Controllers
             if (ModelState.IsValid)
             {
 
-                 orderService.AddOrder(orderData);
-                 return Ok("Order Added Successfully");
+                orderService.AddOrder(orderData);
+                return Ok("Order Added Successfully");
             }
             else
             {
@@ -109,7 +111,7 @@ namespace SwiftShipping.API.Controllers
             if (ModelState.IsValid)
             {
 
-               regionService.Add(regionDTO);
+                regionService.Add(regionDTO);
                 return Ok("Region Added Successfully");
             }
             else
@@ -118,11 +120,27 @@ namespace SwiftShipping.API.Controllers
             }
         }
         [HttpGet("testGetById")]
+
         public IActionResult TestGetById()
         {
             //var deliveryRegions = unit.DeliveryManRegionsRipository.GetById(5, 1);
             var user = unit.AppUserRepository.GetById("b8e197ce-0bc5-4aaf-9212-e42ef29b6bc8");
-            return Ok(new {Name= user.Name });
+            return Ok(new { Name = user.Name });
+        }
+
+        [HttpGet("auth")]
+        [Authorize(Roles = "Employee")]
+        [Authorize(Policy = "Employees/View")]
+        public ActionResult TestAuth()
+        {
+            return Ok("You Are Authorized");
+        }
+
+        [HttpGet("enum")]
+        public IActionResult TestEnum()
+        {
+            return Ok(RoleTypes.GetNames(typeof(RoleTypes)).ToList()
+);
         }
 
     }

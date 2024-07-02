@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SwiftShipping.DataAccessLayer.Models;
+using SwiftShipping.DataAccessLayer.Enum;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.Helper;
 using SwiftShipping.ServiceLayer.Services;
@@ -31,7 +31,6 @@ namespace SwiftShipping.API.Controllers
         {
            return Ok(orderService.GetAllOrderStatusCount());
         }
-
 
 
     }

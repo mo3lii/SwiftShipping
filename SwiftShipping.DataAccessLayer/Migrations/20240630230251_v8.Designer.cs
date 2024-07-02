@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SwiftShipping.DataAccessLayer.Models;
 
@@ -11,9 +12,11 @@ using SwiftShipping.DataAccessLayer.Models;
 namespace SwiftShipping.DataAccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20240630230251_v8")]
+    partial class v8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -207,9 +210,6 @@ namespace SwiftShipping.DataAccessLayer.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -301,9 +301,6 @@ namespace SwiftShipping.DataAccessLayer.Migrations
 
                     b.Property<int>("BranchId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -526,332 +523,6 @@ namespace SwiftShipping.DataAccessLayer.Migrations
                     b.HasKey("RoleName", "DepartmentId");
 
                     b.ToTable("RolePermissions");
-
-                    b.HasData(
-                        new
-                        {
-                            RoleName = "Employee",
-                            DepartmentId = 1,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Employee",
-                            DepartmentId = 2,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Employee",
-                            DepartmentId = 3,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Employee",
-                            DepartmentId = 4,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Employee",
-                            DepartmentId = 5,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Employee",
-                            DepartmentId = 6,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Employee",
-                            DepartmentId = 7,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Employee",
-                            DepartmentId = 8,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Employee",
-                            DepartmentId = 9,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "DeliveryMan",
-                            DepartmentId = 1,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "DeliveryMan",
-                            DepartmentId = 2,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "DeliveryMan",
-                            DepartmentId = 3,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "DeliveryMan",
-                            DepartmentId = 4,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "DeliveryMan",
-                            DepartmentId = 5,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "DeliveryMan",
-                            DepartmentId = 6,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "DeliveryMan",
-                            DepartmentId = 7,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "DeliveryMan",
-                            DepartmentId = 8,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "DeliveryMan",
-                            DepartmentId = 9,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Seller",
-                            DepartmentId = 1,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Seller",
-                            DepartmentId = 2,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Seller",
-                            DepartmentId = 3,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Seller",
-                            DepartmentId = 4,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Seller",
-                            DepartmentId = 5,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Seller",
-                            DepartmentId = 6,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Seller",
-                            DepartmentId = 7,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Seller",
-                            DepartmentId = 8,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Seller",
-                            DepartmentId = 9,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Admin",
-                            DepartmentId = 1,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Admin",
-                            DepartmentId = 2,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Admin",
-                            DepartmentId = 3,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Admin",
-                            DepartmentId = 4,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Admin",
-                            DepartmentId = 5,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Admin",
-                            DepartmentId = 6,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Admin",
-                            DepartmentId = 7,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Admin",
-                            DepartmentId = 8,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        },
-                        new
-                        {
-                            RoleName = "Admin",
-                            DepartmentId = 9,
-                            Add = false,
-                            Delete = false,
-                            Edit = false,
-                            View = false
-                        });
                 });
 
             modelBuilder.Entity("SwiftShipping.DataAccessLayer.Models.Seller", b =>

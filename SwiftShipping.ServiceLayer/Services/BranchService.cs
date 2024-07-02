@@ -38,13 +38,10 @@ namespace SwiftShipping.ServiceLayer.Services
             return true;
         }
     
-        public List<BranchGetDTO> GetAll()
+        public IEnumerable<BranchGetDTO> GetAll()
         {
             var branches = unit.BranchRipository.GetAll();
-
-            if (branches.Count == 0) return null;
-            
-            return mapper.Map<List<Branch>, List<BranchGetDTO>>(branches);
+            return mapper.Map<IEnumerable<Branch>, IEnumerable<BranchGetDTO>>(branches);
         }
 
         public BranchGetDTO GetById(int id)
@@ -60,6 +57,7 @@ namespace SwiftShipping.ServiceLayer.Services
             try
             {
                 var existingBranch = unit.BranchRipository.GetById(id);
+
                 if (existingBranch == null)
                 {
                     return false;

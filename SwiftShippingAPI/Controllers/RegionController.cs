@@ -33,11 +33,16 @@ namespace SwiftShipping.API.Controllers
         [HttpGet("{id}")]
         public ActionResult<RegionGetDTO> GetById(int id)
         {
+            if (id == 0)
+                return BadRequest(new ApiResponse(400));
+
             var region = regionService.GetById(id);
+
             if (region == null)
             {
-                return NotFound();
+                return NotFound(new ApiResponse(404));
             }
+
             return Ok(region);
         }
 

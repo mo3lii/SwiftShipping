@@ -70,7 +70,7 @@ namespace SwiftShipping.API.Controllers
             }
             else
             {
-                return BadRequest(new ApiResponse(400)); 
+                return NotFound(new ApiResponse(404, "Employee does not exist")); 
             }    
         }
 
@@ -80,9 +80,6 @@ namespace SwiftShipping.API.Controllers
         public ActionResult<List<EmployeeDTO>> GetAll()
         {
             var employees = employeeService.GetAll();
-
-            if (employees.Count == 0) { return NotFound(new ApiResponse(404)); }
-
             return Ok(employees);
         }
 
@@ -93,7 +90,7 @@ namespace SwiftShipping.API.Controllers
 
             var employee = employeeService.GetById(id);
 
-            if ( employee == null) { return NotFound(new ApiResponse(404)); }
+            if ( employee == null) { return NotFound(new ApiResponse(404, "Employee does not exist")); }
             return Ok(employee);
         }
 

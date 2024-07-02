@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using SwiftShipping.DataAccessLayer.Enum;
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.DTO;
@@ -36,13 +37,15 @@ namespace SwiftShipping.ServiceLayer.Services
             IdentityResult result = await userManager.CreateAsync(appUser, sellerDTO.password);
             if (result.Succeeded)
             {
-       
+                //Seller Role as string
+                var SellerRole = RoleTypes.Seller.ToString();
+
                 // check if the role is exist if not, add it
-                if (await roleManager.FindByNameAsync("seller") == null)
-                    await roleManager.CreateAsync(new IdentityRole() { Name = "seller" });
+                if (await roleManager.FindByNameAsync(SellerRole) == null)
+                    await roleManager.CreateAsync(new IdentityRole() { Name = SellerRole });
 
                 // assign roles  to created user
-                IdentityResult sellerRole = await userManager.AddToRoleAsync(appUser, "seller");
+                IdentityResult sellerRole = await userManager.AddToRoleAsync(appUser, SellerRole);
             
 
                 if (sellerRole.Succeeded ) {
@@ -79,5 +82,57 @@ namespace SwiftShipping.ServiceLayer.Services
             var sellerOrders = seller?.Orders;
             return mapper.Map<List<Order>, List<OrderGetDTO>>(sellerOrders);
         }
+
+        public bool Update(int id, SellerDTO sellerDTO)
+        {
+            try
+            {
+                var foundSeller = unit.SellerRipository.GetById(id);
+                //app user
+                if (foundSeller == null)
+                {
+                    return false;
+                }
+                var existingSellerUser = unit.AppUserRepository.GetById(foundSeller.UserId);
+
+                mapper.Map(sellerDTO, foundSeller);
+                mapper.Map(sellerDTO, existingSellerUser);
+                unit.SellerRipository.Update(foundSeller);
+                unit.AppUserRepository.Update(existingSellerUser);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool Delete(int id)
+        {
+            try
+            {
+                var foundSeller = unit.SellerRipository.GetById(id);
+                var existingSellerUser = unit.AppUserRepository.GetById(foundSeller.UserId);
+                if (foundSeller == null)
+                {
+                    return false;
+                }
+                foundSeller.IsDeleted = true;
+                existingSellerUser.IsDeleted = true;
+
+                unit.SellerRipository.Update(foundSeller);
+                unit.AppUserRepository.Update(existingSellerUser);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+
+
     }
 }

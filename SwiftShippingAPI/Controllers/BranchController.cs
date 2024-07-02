@@ -19,9 +19,7 @@ namespace SwiftShipping.API.Controllers
         public IActionResult getAllBranches()
         {
             var branches = branchService.GetAll();
-            if (branches == null) NotFound(new ApiResponse(404));
             return Ok(branches);
-
         }
 
         [HttpPost("Add")]
@@ -40,6 +38,30 @@ namespace SwiftShipping.API.Controllers
 
             if (branch == null) { return NotFound(new ApiResponse(404)); }
             return Ok(branch);
+        }
+
+        [HttpPut("Edit/{id}")]
+        public IActionResult EditBranch(int id, BranchDTO branchDTO)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
+            var result = branchService.EditBranch(id, branchDTO);
+
+            if (!result) return NotFound(new ApiResponse(404));
+
+            return Ok("Branch Updated Successfully");
+        }
+
+        [HttpDelete("Delete/{id}")]
+        public IActionResult DeleteBranch(int id)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
+            var result = branchService.DeleteBranch(id);
+
+            if (!result) return NotFound(new ApiResponse(404));
+
+            return Ok("Branch Deleted Successfully");
         }
 
 

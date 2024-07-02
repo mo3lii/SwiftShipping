@@ -20,8 +20,10 @@ namespace SwiftShipping.ServiceLayer.DTO
         public float weight { get; set; }
         public decimal orderPrice { get; set; }
         public string note { get; set; }
+        public int SellerId { get; set; }
         public ShippingType shippingType { get; set; }
         public OrderType orderType { get; set; }
         public PaymentType PaymentType { get; set; }
+
     }
 }

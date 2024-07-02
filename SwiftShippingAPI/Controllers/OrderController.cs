@@ -31,8 +31,6 @@ namespace SwiftShipping.API.Controllers
         
             var orders = orderService.GetAll();
 
-            if (orders.Count == 0) { return NotFound(new ApiResponse(404)); }
-
             return Ok(orders);
         }
 
@@ -43,7 +41,7 @@ namespace SwiftShipping.API.Controllers
 
             var order = orderService.GetById(id);
 
-            if (order == null) { return NotFound(new ApiResponse(404)); }
+            if (order == null) { return NotFound(new ApiResponse(404, "Order Not Fond")); }
 
             return Ok(order);
         }
@@ -56,20 +54,71 @@ namespace SwiftShipping.API.Controllers
             {
                 return Ok("Order Assigned Successfully to Delivery man");
             }
-            else
-            {
-                return BadRequest("Fail To assign order to Delivery Man");
-            }
+           
+             return BadRequest(new ApiResponse(400, "Fail To assign order to Delivery Man"));
+          
 
         }
 
         [HttpGet("GetByStatus")]
         public IActionResult getByStatus(OrderStatus status)
         {
+            if (status == null) return BadRequest(new ApiResponse(400));
+
             var orders = orderService.GetByStatus(status);
             return Ok(orders);
         }
-            
+
+        [HttpGet("GetShippingType")]
+        public IActionResult GetShippingTypes()
+        {
+            var shipingTypes = orderService.GetShippingTypes();
+            return Ok(shipingTypes);
+        }
+
+
+        [HttpGet("GetShippingTime")]
+        public IActionResult GetShippingTime()
+        {
+            var shipingTime = orderService.GetShippingTimes();
+            return Ok(shipingTime);
+        }
+
+        [HttpPut("ChangeOrderStatus")]
+        public IActionResult ChangeOrderStatus([FromBody] OrderStatus status, int id)
+        {
+            var result = orderService.ChangeOrderStatus(status, id);
+
+            if (result)
+            {
+                return Ok("Status changed successfully");
+            }
+          
+             return BadRequest(new ApiResponse(400, "Failed to change status"));
+        }
+
+        [HttpPut("Edit/{id}")]
+        public IActionResult Edit(int id, OrderDTO order)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
+            var result = orderService.UpdateOrder(id, order);
+
+            if (!result) return NotFound(new ApiResponse(404));
+
+            return Ok("Order Updated Successfully");
+        }
+
+        [HttpDelete("Delete/{id}")]
+        public IActionResult DeleteOrder(int id)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
+            var result = orderService.DeleteOrder(id);
+            if (!result) return NotFound(new ApiResponse(404));
+
+            return Ok("Order Deleted Successfully");
+        }
 
     }
 }

@@ -142,7 +142,90 @@ namespace SwiftShipping.ServiceLayer.Services
         }
 
 
+        public List<ShippingTypeDto> GetShippingTypes()
+        {
+            var shippingTypesDto = Enum.GetValues(typeof(OrderType))
+                                       .Cast<OrderType>().Select(x => new ShippingTypeDto() { Id = (int)x, Name = x.ToString()})
+                                       .ToList();
+
+            return shippingTypesDto;
+        }
+        public List<ShippingTimeDTO> GetShippingTimes()
+        {
+            var shippingTimes = Enum.GetValues(typeof(ShippingType))
+                                       .Cast<ShippingType>().Select(x => new ShippingTimeDTO() { Id = (int)x, Name = x.ToString() })
+                                       .ToList();
+
+            return shippingTimes;
+        }
+
+        public bool ChangeOrderStatus(OrderStatus status, int orderId)
+        {
+            try
+            {
+                var order = unit.OrderRipository.GetById(orderId);
+
+                if (order != null)
+                {
+                    order.Status = status;
+                    unit.OrderRipository.Update(order);
+                    unit.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    return false; 
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message); 
+            }
+
+            return false; 
+        }
 
 
+        public bool UpdateOrder(int id, OrderDTO orderDTO)
+        {
+            try
+            {
+                var foundOrder = unit.OrderRipository.GetById(id);
+                //app user
+                if (foundOrder == null)
+                {
+                    return false;
+                }
+
+                mapper.Map(orderDTO, foundOrder);
+                unit.OrderRipository.Update(foundOrder);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool DeleteOrder(int id)
+        {
+            try
+            {
+                var foundOrder = unit.OrderRipository.GetById(id);
+                if (foundOrder == null)
+                {
+                    return false;
+                }
+                foundOrder.IsDeleted = true;
+                unit.OrderRipository.Update(foundOrder);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

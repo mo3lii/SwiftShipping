@@ -1,4 +1,5 @@
 ﻿
+using E_CommerceAPI.Errors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SwiftShipping.DataAccessLayer.Models;
@@ -21,7 +22,7 @@ namespace SwiftShipping.API.Controllers
         [HttpGet("{role}")]
         public ActionResult<List<RolePermissions>> GetPermissionsByRole(string role){
             var PermissionsDTOList = _rolesService.GetAllRolePermissions(role);
-            if(PermissionsDTOList == null || PermissionsDTOList.Count()==0) return NotFound();
+            if(PermissionsDTOList == null || PermissionsDTOList.Count()==0) return NotFound(new ApiResponse(404));
             return Ok(PermissionsDTOList);
         }
 
@@ -29,7 +30,7 @@ namespace SwiftShipping.API.Controllers
         public ActionResult<List<RolePermissions>> updatePermissionsByRole(string role,[FromBody]List<PermissionDTO> permissionsDTOList)
         {
             var result = _rolesService.updateRolePermissions(role, permissionsDTOList);
-            if (!result) return NotFound();
+            if (!result) return NotFound(new ApiResponse(404));
             return Ok("updated successfully");
         }
     }

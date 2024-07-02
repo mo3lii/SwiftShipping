@@ -43,11 +43,11 @@ namespace SwiftShipping.API.Controllers
 
             var deliveryMan = deliveryManService.GetById(deliveryManId);
 
-            if (deliveryMan == null) return NotFound(new ApiResponse(404));
+            if (deliveryMan == null) return NotFound(new ApiResponse(404, "Delivary man does not exist"));
 
             var region = regionService.GetById(regionId);
 
-            if (region == null) return NotFound(new ApiResponse(404));
+            if (region == null) return NotFound(new ApiResponse(404, "Redion does not exist"));
 
             var result = deliveryManService.assignDeliveryManTORegion(deliveryManId, regionId);
 
@@ -62,11 +62,9 @@ namespace SwiftShipping.API.Controllers
 
             var deliveryMan = deliveryManService.GetById(id);
 
-            if (deliveryMan == null) { return NotFound(new ApiResponse(404)); } 
+            if (deliveryMan == null) { return NotFound(new ApiResponse(404, "Delivary man does not exist")); } 
 
             var orders = deliveryManService.getDeliveryManOrders(id);
-
-            if (orders.Count == 0) { return NotFound(new ApiResponse(404)); }
 
             return Ok(orders);
         }
@@ -75,8 +73,6 @@ namespace SwiftShipping.API.Controllers
         public ActionResult<List<DeliveryManGetDTO>> GetAll()
         {
             var deliveryMen = deliveryManService.GetAll();
-
-            if (deliveryMen.Count == 0) { return NotFound(new ApiResponse(404)); }
 
             return Ok(deliveryMen);
         }
@@ -88,11 +84,33 @@ namespace SwiftShipping.API.Controllers
             if (id == 0) return BadRequest(new ApiResponse(400));
 
             var deliveryMan = deliveryManService.GetById(id);
-            if (deliveryMan == null) {  return NotFound(new ApiResponse(404)); }
+
+            if (deliveryMan == null) {  return NotFound(new ApiResponse(404, "Delivary man does not exist")); }
 
             return Ok(deliveryMan);
         }
 
+        [HttpPut("Update/{id}")]
+        public IActionResult UpdateDeliveryMan(int id, DeliveryManDTO deliveryManDTO)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
+            var result = deliveryManService.UpdateDeliveryMan(id, deliveryManDTO);
+            if (!result) return NotFound(new ApiResponse(404));
+
+            return Ok("Delivery Man Updated Successfully");
+        }
+
+        [HttpDelete("Delete/{id}")]
+        public IActionResult DeleteDeliveryMan(int id)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
+            var result = deliveryManService.DeleteDeliveryMan(id);
+            if (!result) return NotFound(new ApiResponse(404));
+
+            return Ok("Delivery Man Deleted Successfully");
+        }
 
     }
 }

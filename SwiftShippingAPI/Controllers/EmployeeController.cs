@@ -70,7 +70,7 @@ namespace SwiftShipping.API.Controllers
             }
             else
             {
-                return BadRequest(new ApiResponse(400)); 
+                return NotFound(new ApiResponse(404, "Employee does not exist")); 
             }    
         }
 
@@ -80,9 +80,6 @@ namespace SwiftShipping.API.Controllers
         public ActionResult<List<EmployeeDTO>> GetAll()
         {
             var employees = employeeService.GetAll();
-
-            if (employees.Count == 0) { return NotFound(new ApiResponse(404)); }
-
             return Ok(employees);
         }
 
@@ -93,8 +90,31 @@ namespace SwiftShipping.API.Controllers
 
             var employee = employeeService.GetById(id);
 
-            if ( employee == null) { return NotFound(new ApiResponse(404)); }
+            if ( employee == null) { return NotFound(new ApiResponse(404, "Employee does not exist")); }
             return Ok(employee);
         }
+
+        [HttpPut("Update/{id}")]
+        public IActionResult UpdateEmployee(int id, EmployeeDTO employee)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
+            var result = employeeService.UpdateEmployee(id, employee);
+            if (!result) return NotFound(new ApiResponse(404));
+
+            return Ok("Employee Updated Successfully");
+        }
+
+        [HttpDelete("Delete/{id}")]
+        public IActionResult DeleteEmployee(int id)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
+            var result = employeeService.DeleteEmployee(id);
+            if (!result) return NotFound(new ApiResponse(404));
+
+            return Ok("Employee Deleted Successfully");
+        }
+
     }
 }

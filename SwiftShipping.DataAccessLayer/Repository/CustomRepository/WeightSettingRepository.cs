@@ -21,6 +21,7 @@ namespace SwiftShipping.DataAccessLayer.Repository.CustomRepository
             {
                 setting.DefaultWeight = weightSettings.DefaultWeight;
                 setting.KGPrice = weightSettings.KGPrice;
+                _context.WeightSettings.Update(setting);
                 _context.SaveChanges();
             }
         }

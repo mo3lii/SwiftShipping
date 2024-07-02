@@ -1,10 +1,12 @@
 ﻿using E_CommerceAPI.Errors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SwiftShipping.DataAccessLayer.Enum;
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.DTO;
 using SwiftShipping.ServiceLayer.Services;
+using System.Security.Claims;
 
 namespace SwiftShipping.API.Controllers
 {
@@ -14,10 +16,14 @@ namespace SwiftShipping.API.Controllers
     {
         DeliveryManService deliveryManService;
         RegionService regionService;
-        public DeliveryManController(DeliveryManService _deliveryManService,RegionService _regionService)
+        private OrderService _orderService;
+        public DeliveryManController(DeliveryManService _deliveryManService,
+            RegionService _regionService,
+            OrderService orderService)
         {
             deliveryManService = _deliveryManService;
             regionService = _regionService;
+            _orderService = orderService;
         }
 
         [HttpPost("Register")]
@@ -34,6 +40,34 @@ namespace SwiftShipping.API.Controllers
             {
                 return BadRequest(new ApiResponse(400));
             }
+        }
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login(LoginDTO loginDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await deliveryManService.Login(loginDTO);
+
+                if (result.Success == true)
+                {
+                    // Create the claims
+                    var claims = new List<Claim>
+                    {
+                       new Claim("UserId", result.UserId),
+                       new Claim(ClaimTypes.Role, result.Role),
+                       //new Claim("Policy", "CanView")
+                    };
+
+                    var Token = JwtTokenHelper.GenerateToken(claims);
+                    return Created("Login Successfully", new { token = Token, role = result.Role });
+
+                }
+
+                return NotFound(new ApiResponse(404, "Delivary Man does not exist"));
+            }
+
+            return BadRequest(new ApiResponse(400, "Login Faild"));
         }
 
         [HttpPost("AssignToRegion")]
@@ -55,6 +89,7 @@ namespace SwiftShipping.API.Controllers
 
             return BadRequest(new ApiResponse(400));
         }
+
         [HttpGet("{id}/orders")]
         public ActionResult<List<OrderGetDTO>> GetDeliveryManOrders(int id)
         {
@@ -110,6 +145,19 @@ namespace SwiftShipping.API.Controllers
             if (!result) return NotFound(new ApiResponse(404));
 
             return Ok("Delivery Man Deleted Successfully");
+        }
+
+        [HttpGet("Count")]
+        public IActionResult getOrderStatusCount(OrderStatus status, int delivaryId)
+        {
+            var res = _orderService.GetOrderStatusCountForSeller(status, delivaryId);
+            return Ok(res);
+        }
+
+        [HttpGet("AllStatusCount/{delivaryId}")]
+        public IActionResult GetAllStatusCount(int delivaryId)
+        {
+            return Ok(_orderService.GetAllOrderStatusCountForSeller(delivaryId));
         }
 
     }

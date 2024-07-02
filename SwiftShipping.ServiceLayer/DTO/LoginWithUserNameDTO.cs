@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace SwiftShipping.ServiceLayer.DTO
 {
-    public class LoginDTO
+    public class LoginWithUserNameDTO
     {
-        public string? email { get; set; }
-        public string? userName { get; set; }
+        public string userName { get; set; }
         public string password { get; set; }
-        public bool RemembreMe {  get; set; }
-
+        public bool RemembreMe { get; set; }
     }
 }

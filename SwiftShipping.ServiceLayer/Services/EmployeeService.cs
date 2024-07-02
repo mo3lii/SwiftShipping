@@ -71,7 +71,7 @@ namespace SwiftShipping.ServiceLayer.Services
 
             if (user == null)
             {
-                user = await userManager.FindByNameAsync(loginDTO.email);
+                user = await userManager.FindByNameAsync(loginDTO.userName);
             }
 
             if (user != null)

@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace SwiftShipping.DataAccessLayer.Enum
 {
-    public enum ShippingType
+    public enum OrderType
     {
-        SameDay = 1,
-        In24H,
-        In2to5Days
+        Normal = 1,
+        PickUp = 2
     }
 }

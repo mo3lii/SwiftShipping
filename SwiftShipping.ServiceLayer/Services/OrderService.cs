@@ -21,6 +21,50 @@ namespace SwiftShipping.ServiceLayer.Services
             unit = _unit;
             this.mapper = mapper;
         }
+
+        public decimal CalculateOrderCost(OrderCostDTO order )
+        {
+            var settings = unit.WeightSettingRepository.GetSetting();
+            float MaxFreeWeight = settings.DefaultWeight;
+            decimal extraKiloPrice = settings.KGPrice;
+            decimal calculatedPrice = 0;
+
+            var Region = unit.RegionRipository.GetById(order.RegionId);
+            if (order.OrderType == OrderType.PickUp)
+            {
+                calculatedPrice = Region.PickupPrice;
+            }
+            else if (order.OrderType == OrderType.Normal)
+            {
+                calculatedPrice = Region.NormalPrice;
+            }
+
+            switch (order.ShippingType)
+            {
+                case ShippingType.SameDay:
+                    calculatedPrice += 50m;
+                    break;
+                case ShippingType.In24H:
+                    calculatedPrice += 30m;
+                    break;
+                    //case ShippingType.In2to5Days:
+                    //    calculatedPrice += 15m;
+                    //    break;
+            }
+
+            if (order.IsShippedToVillage)
+            {
+                calculatedPrice += 15m;
+            }
+
+
+            if (order.Weight > MaxFreeWeight)
+            {
+                float extraWeight = order.Weight - MaxFreeWeight;
+                calculatedPrice += (decimal)extraWeight * extraKiloPrice;
+            }
+            return calculatedPrice;
+        }
         public decimal CalculateOrderCost(Order order)
         {
             var settings = unit.WeightSettingRepository.GetSetting();
@@ -45,6 +89,9 @@ namespace SwiftShipping.ServiceLayer.Services
                 case ShippingType.In24H:
                     calculatedPrice += 30m;
                     break;
+                //case ShippingType.In2to5Days:
+                //    calculatedPrice += 15m;
+                //    break;
             }
 
             if(order.isShippedToVillage)
@@ -144,19 +191,23 @@ namespace SwiftShipping.ServiceLayer.Services
 
         public List<ShippingTypeDto> GetShippingTypes()
         {
-            var shippingTypesDto = Enum.GetValues(typeof(OrderType))
-                                       .Cast<OrderType>().Select(x => new ShippingTypeDto() { Id = (int)x, Name = x.ToString()})
-                                       .ToList();
-
+            var shippingTypesDto = Enum.GetValues(typeof(ShippingType)).Cast<ShippingType>()
+                .Select(x => new ShippingTypeDto() 
+                { 
+                    Id = (int)x, 
+                    Name = ShippingTypeMapper.ShippingTypeDictionary[x],
+                })
+                .ToList();
             return shippingTypesDto;
         }
-        public List<ShippingTimeDTO> GetShippingTimes()
+        public List<OrderTypeDTO> GetOrderTypes()
         {
-            var shippingTimes = Enum.GetValues(typeof(ShippingType))
-                                       .Cast<ShippingType>().Select(x => new ShippingTimeDTO() { Id = (int)x, Name = x.ToString() })
-                                       .ToList();
-
-            return shippingTimes;
+            var orderTypes = 
+                Enum.GetValues(typeof(OrderType)).Cast<OrderType>().Select(
+                    x => new OrderTypeDTO() { 
+                        Id = (int)x,
+                        Name = OrderTypeMapper.OrderTypeDictionary[x] }).ToList();
+            return orderTypes;
         }
 
         public bool ChangeOrderStatus(OrderStatus status, int orderId)
@@ -184,7 +235,6 @@ namespace SwiftShipping.ServiceLayer.Services
 
             return false; 
         }
-
 
         public bool UpdateOrder(int id, OrderDTO orderDTO)
         {
@@ -227,5 +277,7 @@ namespace SwiftShipping.ServiceLayer.Services
             }
             return true;
         }
+    
+    
     }
 }

@@ -140,7 +140,67 @@ namespace SwiftShipping.ServiceLayer.Services
             return statusWithCount;
 
         }
+        public EnumDTO GetOrderStatusCountForSeller(OrderStatus orderStatus, int sellerId)
+        {
+            int count = unit.OrderRipository.GetAll(order => order.Status == orderStatus && order.SellerId == sellerId).Count;
 
+            return (new EnumDTO() { Name = StatusMapper.StatusDictionary[orderStatus], Count = count, Id = (int)orderStatus });
+        }
+
+        public List<EnumDTO> GetAllOrderStatusCountForSeller(int sellerId)
+        {
+            // get status, count
+            var res = unit.OrderRipository.GetAll(order => order.SellerId == sellerId)
+                .GroupBy(x => x.Status)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            foreach (var status in StatusMapper.StatusDictionary)
+            {
+                if (res.ContainsKey(status.Key) == false)
+                    res.Add(status.Key, 0);
+            }
+
+            List<EnumDTO> statusWithCount =
+                res.Select(x => new EnumDTO()
+                {
+                    Name = StatusMapper.StatusDictionary[x.Key],
+                    Count = x.Value,
+                    Id = (int)x.Key
+                }).ToList();
+
+            return statusWithCount;
+        }
+
+        public EnumDTO GetOrderStatusCountForDelivary(OrderStatus orderStatus, int delivaryId)
+        {
+            int count = unit.OrderRipository.GetAll(order => order.Status == orderStatus && order.DeliveryId == delivaryId).Count;
+
+            return (new EnumDTO() { Name = StatusMapper.StatusDictionary[orderStatus], Count = count, Id = (int)orderStatus });
+        }
+
+        public List<EnumDTO> GetAllOrderStatusCountForDelivary(int delivaryId)
+        {
+            // get status, count
+            var res = unit.OrderRipository.GetAll(order => order.DeliveryId == delivaryId)
+                .GroupBy(x => x.Status)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            foreach (var status in StatusMapper.StatusDictionary)
+            {
+                if (res.ContainsKey(status.Key) == false)
+                    res.Add(status.Key, 0);
+            }
+
+            List<EnumDTO> statusWithCount =
+                res.Select(x => new EnumDTO()
+                {
+                    Name = StatusMapper.StatusDictionary[x.Key],
+                    Count = x.Value,
+                    Id = (int)x.Key
+                }).ToList();
+
+            return statusWithCount;
+        }
 
         public List<ShippingTypeDto> GetShippingTypes()
         {
@@ -184,7 +244,6 @@ namespace SwiftShipping.ServiceLayer.Services
 
             return false; 
         }
-
 
         public bool UpdateOrder(int id, OrderDTO orderDTO)
         {

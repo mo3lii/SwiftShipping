@@ -18,18 +18,47 @@ namespace SwiftShipping.ServiceLayer.Services
         private readonly IMapper mapper;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
         public SellerService(
             UnitOfWork _unit, 
             UserManager<ApplicationUser> _userManager, 
-            RoleManager<IdentityRole> _roleManager,
+            RoleManager<IdentityRole> _roleManager, SignInManager<ApplicationUser> signInManager,
             IMapper _mapper)
         {
             unit = _unit;
             mapper = _mapper;
             userManager = _userManager;
+            _signInManager = signInManager;
             roleManager = _roleManager;
         }
+
+        public async Task<(bool Success, string UserId, string Role)> Login(LoginDTO loginDTO)
+        {
+            ApplicationUser user = await userManager.FindByEmailAsync(loginDTO.email);
+
+            if (user == null)
+            {
+                user = await userManager.FindByNameAsync(loginDTO.userName);
+            }
+
+            if (user != null)
+            {
+                bool found = await userManager.CheckPasswordAsync(user, loginDTO.password);
+                if (found)
+                {
+                    await _signInManager.SignInAsync(user, loginDTO.RemembreMe);
+                    // Fetch user roles
+                    var roles = await userManager.GetRolesAsync(user);
+                    string role = roles.FirstOrDefault();
+
+                    return (true, user.Id, role);
+                }
+            }
+
+            return (false, null, null);
+        }
+
         public async Task<bool> addSellerAsync(SellerDTO sellerDTO)
         {
             var appUser = mapper.Map<SellerDTO, ApplicationUser>(sellerDTO);

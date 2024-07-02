@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Permissions;
 using SwiftShipping.DataAccessLayer.Repository;
@@ -13,13 +14,19 @@ namespace SwiftShipping.ServiceLayer.Services
 {
     public class RolesService
     {
+        private readonly RoleManager<IdentityRole> _roleManager;
         UnitOfWork unit;
         IMapper mapper;
-        public RolesService(UnitOfWork _unit,IMapper _mapper)
+        public RolesService(UnitOfWork _unit,IMapper _mapper,
+            RoleManager<IdentityRole> roleManager)
         {
             unit = _unit;
             mapper = _mapper;
+            _roleManager = roleManager;
+
         }
+
+
         public List<PermissionDTO> GetAllRolePermissions(string role)
         {
 
@@ -48,6 +55,43 @@ namespace SwiftShipping.ServiceLayer.Services
                 return true;
             }
             catch{return false;}
+        }
+
+        public async Task<IdentityRole> GetRole(string role)
+        {
+            var roleEntity = await _roleManager.FindByNameAsync(role);
+
+            return roleEntity;
+        }
+
+        public async Task<bool> UpdateRole(string role, string updatedRole)
+        {
+            var roleEntity = await _roleManager.FindByNameAsync(role);
+
+            if (roleEntity == null)
+            {
+                return false;
+            }
+
+            roleEntity.Name = updatedRole;
+            roleEntity.NormalizedName = _roleManager.NormalizeKey(updatedRole);
+
+            var result = await _roleManager.UpdateAsync(roleEntity);
+
+            if (!result.Succeeded)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        public async Task<bool> RoleExists(string role)
+        {
+            var roleEntity = await _roleManager.FindByNameAsync(role);
+
+            if (roleEntity == null) return false;
+
+            return true;
         }
     }
 }

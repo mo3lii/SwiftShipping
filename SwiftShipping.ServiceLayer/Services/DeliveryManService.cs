@@ -16,18 +16,48 @@ namespace SwiftShipping.ServiceLayer.Services
     {
         private UnitOfWork unit;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IMapper _mapper;
 
         public DeliveryManService(UnitOfWork _unit, UserManager<ApplicationUser> _userManager,
-           RoleManager<IdentityRole> _roleManager,
+           RoleManager<IdentityRole> _roleManager, SignInManager<ApplicationUser> signInManager,
            IMapper mapper)
         {
             unit = _unit;
             userManager = _userManager;
             roleManager = _roleManager;
             _mapper = mapper;
+            _signInManager = signInManager;
 
+
+        }
+
+        public async Task<(bool Success, string UserId, string Role)> Login(LoginDTO loginDTO)
+        {
+            ApplicationUser user = await userManager.FindByEmailAsync(loginDTO.email);
+
+            if (user == null)
+            {
+                user = await userManager.FindByNameAsync(loginDTO.userName);
+            }
+
+            if (user != null)
+            {
+                bool found = await userManager.CheckPasswordAsync(user, loginDTO.password);
+                if (found)
+                {
+                    await _signInManager.SignInAsync(user, loginDTO.RemembreMe);
+                    // Fetch user roles
+                    var roles = await userManager.GetRolesAsync(user);
+                    string role = roles.FirstOrDefault();
+
+                    return (true, user.Id, role);
+                }
+            }
+
+            return (false, null, null);
         }
 
         public async Task<bool> AddDliveryManAsync(DeliveryManDTO deliveryManDTO)

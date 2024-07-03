@@ -96,6 +96,16 @@ namespace SwiftShipping.ServiceLayer.Helper
 
             CreateMap<GovernmentDTO, Government>().ReverseMap();
 
+            CreateMap<DeliveryManRegions, RegionGetDTO>()
+                    .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Region.Id))
+                     .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Region.Name))
+                     .ForMember(dest => dest.PickupPrice, opt => opt.MapFrom(src => src.Region.PickupPrice))
+                     .ForMember(dest => dest.NormalPrice, opt => opt.MapFrom(src => src.Region.NormalPrice))
+                     .ForMember(dest => dest.GovernmentName, opt => opt.MapFrom(src => src.Region.Government.Name));
+
+
+
+
         }
     }
 }

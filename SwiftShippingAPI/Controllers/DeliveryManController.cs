@@ -1,4 +1,5 @@
-﻿using E_CommerceAPI.Errors;
+﻿using AutoMapper;
+using E_CommerceAPI.Errors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SwiftShipping.DataAccessLayer.Models;
@@ -14,10 +15,13 @@ namespace SwiftShipping.API.Controllers
     {
         DeliveryManService deliveryManService;
         RegionService regionService;
-        public DeliveryManController(DeliveryManService _deliveryManService,RegionService _regionService)
+        private readonly IMapper mapper;
+
+        public DeliveryManController(DeliveryManService _deliveryManService,RegionService _regionService, IMapper _mapper)
         {
             deliveryManService = _deliveryManService;
             regionService = _regionService;
+            mapper = _mapper;
         }
 
         [HttpPost("Register")]
@@ -112,5 +116,23 @@ namespace SwiftShipping.API.Controllers
             return Ok("Delivery Man Deleted Successfully");
         }
 
+        [HttpPost("AssignRegions/{deliveryManId}")]
+        public IActionResult AssignRegions(int deliveryManId, int[] regionsId)
+        {
+            var res = deliveryManService.AssignRegionsToDeliveryMan(deliveryManId, regionsId);
+            if (res == true)
+                return Ok("regions assigned successfully");
+            return BadRequest(new ApiResponse(400));
+        }
+
+        [HttpGet("DeliveryManRegions/{deliveryManId}")]
+        public IActionResult GetDeliveryManRegions(int deliveryManId)
+        {
+            List<DeliveryManRegions> res =  deliveryManService.GetDeliveryManRegions(deliveryManId);
+            var regions = mapper.Map<List<DeliveryManRegions>, List<RegionGetDTO>>(res);
+
+            return Ok(regions);
+
+        }
     }
 }

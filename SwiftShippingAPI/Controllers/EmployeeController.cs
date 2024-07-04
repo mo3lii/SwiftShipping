@@ -24,7 +24,7 @@ namespace SwiftShipping.API.Controllers
             this.employeeService = _employeeService;
         }
 
-        [HttpPost]
+        [HttpPost("Add")]
         public async Task<IActionResult> Register(EmployeeDTO employeeDTO)
         {
 
@@ -70,7 +70,7 @@ namespace SwiftShipping.API.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("All")]
         [Authorize(Roles = "Employee")]
         //[Authorize(Policy = "CanView")]
         public ActionResult<List<EmployeeDTO>> GetAll()

@@ -19,11 +19,14 @@ namespace SwiftShipping.API.Controllers
             unitOfWork = _unitOfWork;
             orderService = _orderService;
         }
+
         [HttpPost("Add")]
         public IActionResult Add(OrderDTO orderDTO)
         {
+            if (!ModelState.IsValid) return BadRequest(400);
+
             orderService.AddOrder(orderDTO);
-            return Created();
+            return Ok("Order Addes Successfully");
         }
 
         [HttpGet]

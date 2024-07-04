@@ -74,7 +74,7 @@ namespace SwiftShipping.API.Controllers
             return Ok(seller);
         }
 
-        [HttpGet]
+        [HttpGet("All")]
         public ActionResult<List<SellerGetDTO>> GetAll()
         {
             var sellers = _sellerService.GetAll();

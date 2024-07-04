@@ -16,7 +16,7 @@ namespace SwiftShipping.API.Controllers
             governmentService = _governmentService;
         }
 
-        [HttpGet]
+        [HttpGet("All")]
         public ActionResult<List<GovernmentGetDTO>> GetAll()
         {
             var governemnts = governmentService.GetAll();

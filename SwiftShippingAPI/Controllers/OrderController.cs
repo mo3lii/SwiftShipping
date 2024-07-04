@@ -29,7 +29,7 @@ namespace SwiftShipping.API.Controllers
             return Ok("Order Addes Successfully");
         }
 
-        [HttpGet]
+        [HttpGet("All")]
         public ActionResult<OrderGetDTO> GetAll() { 
         
             var orders = orderService.GetAll();

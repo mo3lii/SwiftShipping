@@ -121,6 +121,9 @@ namespace SwiftShipping.ServiceLayer.Services
                 mapper.Map(employeeDTO, existingEmployee);
                 mapper.Map(employeeDTO, existingEmployeeUser);
                 unit.EmployeeRipository.Update(existingEmployee);
+
+                existingEmployeeUser.NormalizedUserName = userManager.NormalizeName(employeeDTO.userName);
+                existingEmployeeUser.NormalizedEmail = userManager.NormalizeEmail(employeeDTO.email);
                 unit.AppUserRepository.Update(existingEmployeeUser);
                 unit.SaveChanges();
             }

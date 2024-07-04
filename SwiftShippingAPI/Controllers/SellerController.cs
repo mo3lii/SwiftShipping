@@ -97,7 +97,7 @@ namespace SwiftShipping.API.Controllers
             if (id == 0) return BadRequest(new ApiResponse(400));
 
             var result = _sellerService.Update(id, sellerDTO);
-            if (!result) return NotFound(new ApiResponse(404));
+            if (!result) return NotFound(new ApiResponse(404, "Seller Does not exixt"));
             return Ok("Seller Updated Successfully");
         }
 

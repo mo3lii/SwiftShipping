@@ -96,7 +96,7 @@ namespace SwiftShipping.API.Controllers
             if (id == 0) return BadRequest(new ApiResponse(400));
 
             var result = employeeService.UpdateEmployee(id, employee);
-            if (!result) return NotFound(new ApiResponse(404));
+            if (!result) return NotFound(new ApiResponse(404, "Employee Does not exixt"));
 
             return Ok("Employee Updated Successfully");
         }

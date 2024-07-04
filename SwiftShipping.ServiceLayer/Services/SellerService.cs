@@ -127,6 +127,10 @@ namespace SwiftShipping.ServiceLayer.Services
                 mapper.Map(sellerDTO, foundSeller);
                 mapper.Map(sellerDTO, existingSellerUser);
                 unit.SellerRipository.Update(foundSeller);
+
+                existingSellerUser.NormalizedUserName = userManager.NormalizeName(sellerDTO.userName);
+                existingSellerUser.NormalizedEmail = userManager.NormalizeEmail(sellerDTO.email);
+
                 unit.AppUserRepository.Update(existingSellerUser);
                 unit.SaveChanges();
             }

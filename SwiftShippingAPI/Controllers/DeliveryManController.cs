@@ -131,7 +131,7 @@ namespace SwiftShipping.API.Controllers
             if (id == 0) return BadRequest(new ApiResponse(400));
 
             var result = deliveryManService.UpdateDeliveryMan(id, deliveryManDTO);
-            if (!result) return NotFound(new ApiResponse(404));
+            if (!result) return NotFound(new ApiResponse(404, "delivary Does not exixt"));
 
             return Ok("Delivery Man Updated Successfully");
         }

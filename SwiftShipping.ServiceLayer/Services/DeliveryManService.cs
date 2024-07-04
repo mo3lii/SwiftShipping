@@ -133,6 +133,10 @@ namespace SwiftShipping.ServiceLayer.Services
                 _mapper.Map(deliveryManDTO, existingDeliveryMan);
                 _mapper.Map(existingDeliveryMan, DeliveryManUser);
                 unit.DeliveryManRipository.Update(existingDeliveryMan);
+
+                DeliveryManUser.NormalizedUserName = userManager.NormalizeName(deliveryManDTO.userName);
+                DeliveryManUser.NormalizedEmail = userManager.NormalizeEmail(deliveryManDTO.email);
+
                 unit.AppUserRepository.Update(DeliveryManUser);
 
                 unit.SaveChanges();

@@ -37,31 +37,9 @@ namespace SwiftShipping.DataAccessLayer.Models
         .HasKey(d => new { d.RoleName, d.DepartmentId });
 
             // Seed initial role permissions
-            SeedRolePermissions(builder);
 
         }
 
-        public void SeedRolePermissions(ModelBuilder builder)
-        {
-            var roles = RoleTypes.GetNames(typeof(RoleTypes)).ToList();
-            
-            var departments = Department.GetValues(typeof(Department)).Cast<Department>().ToList();
-
-            foreach (var role in roles)
-            {
-                foreach (var department in departments)
-                {
-                    builder.Entity<RolePermissions>().HasData(new RolePermissions
-                    {
-                        RoleName = role,
-                        DepartmentId = department,
-                        View = false,
-                        Edit = false,
-                        Delete = false,
-                        Add = false
-                    });
-                }
-            }
-        }
+      
     }
 }

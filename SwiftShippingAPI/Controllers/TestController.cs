@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SwiftShipping.DataAccessLayer.Enum;
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Repository;
@@ -139,8 +140,31 @@ namespace SwiftShipping.API.Controllers
         [HttpGet("enum")]
         public IActionResult TestEnum()
         {
-            return Ok(RoleTypes.GetNames(typeof(RoleTypes)).ToList()
-);
+            return Ok(RoleTypes.GetNames(typeof(RoleTypes)).ToList());
+        }
+        [HttpGet("seedPermissions")]
+        public void SeedRolePermissions()
+        {
+            var roles = RoleTypes.GetNames(typeof(RoleTypes)).ToList();
+
+            var departments = Department.GetValues(typeof(Department)).Cast<Department>().ToList();
+
+            foreach (var role in roles)
+            {
+                foreach (var department in departments)
+                {
+                    unit.RolePermissionsRepository.Insert(new RolePermissions
+                    {
+                        RoleName = role,
+                        DepartmentId = department,
+                        View = true,
+                        Edit = false,
+                        Delete = false,
+                        Add = false
+                    });
+                    unit.SaveChanges();
+                }
+            }
         }
 
     }

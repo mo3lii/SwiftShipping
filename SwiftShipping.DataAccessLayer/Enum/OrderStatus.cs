@@ -12,6 +12,7 @@ namespace SwiftShipping.DataAccessLayer.Enum
         AcceptedByDeliveryCompany,
         RejectedByDeliveryCompany,
         Pending,
+        Delivered,
         DeliveredToDeliveryMan,
         CanNotBeReached,
         Postponed,

@@ -112,7 +112,7 @@ namespace SwiftShipping.ServiceLayer.Services
                 return _mapper.Map<List<Order>, List<OrderGetDTO>>(ordersByStatus);
             }
 
-            var orders =  unit.OrderRipository.GetAll(o => o.DeliveryId == deliveryManId);
+            var orders =  unit.OrderRipository.GetAll(order => order.DeliveryId == deliveryManId);
             return _mapper.Map<List<Order>, List<OrderGetDTO>>(orders);
         }
 

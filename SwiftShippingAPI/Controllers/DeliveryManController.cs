@@ -104,7 +104,7 @@ namespace SwiftShipping.API.Controllers
             return Ok(orders);
         }
 
-        [HttpGet]
+        [HttpGet("All")]
         public ActionResult<List<DeliveryManGetDTO>> GetAll()
         {
             var deliveryMen = deliveryManService.GetAll();

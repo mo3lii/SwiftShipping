@@ -51,8 +51,8 @@ namespace SwiftShipping.API.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> addSeller(SellerDTO sellerDTO)
+        [HttpPost("Add")]
+        public async Task<IActionResult> AddSeller(SellerDTO sellerDTO)
         {
             if (ModelState.IsValid)
             {

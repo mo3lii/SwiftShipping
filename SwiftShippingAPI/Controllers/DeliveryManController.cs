@@ -26,7 +26,7 @@ namespace SwiftShipping.API.Controllers
             _orderService = orderService;
         }
 
-        [HttpPost("Register")]
+        [HttpPost("Add")]
         public async Task<IActionResult> Register(DeliveryManDTO deliveryManDTO)
         {
 

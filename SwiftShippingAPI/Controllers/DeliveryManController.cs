@@ -91,7 +91,7 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpGet("{id}/orders")]
-        public ActionResult<List<OrderGetDTO>> GetDeliveryManOrders(int id)
+        public ActionResult<List<OrderGetDTO>> GetDeliveryManOrders(int id, OrderStatus? status = null)
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
 
@@ -99,7 +99,7 @@ namespace SwiftShipping.API.Controllers
 
             if (deliveryMan == null) { return NotFound(new ApiResponse(404, "Delivary man does not exist")); } 
 
-            var orders = deliveryManService.getDeliveryManOrders(id);
+            var orders = deliveryManService.GetDeliveryManOrders(id, status);
 
             return Ok(orders);
         }

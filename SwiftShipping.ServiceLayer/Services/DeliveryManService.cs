@@ -102,9 +102,17 @@ namespace SwiftShipping.ServiceLayer.Services
             catch { return false; }
         }
 
-        public List<OrderGetDTO> getDeliveryManOrders(int deliveryManId)
+        public List<OrderGetDTO> GetDeliveryManOrders(int deliveryManId , OrderStatus? status = null)
         {
-            var orders =  unit.OrderRipository.GetAll(o => o.DeliveryId==deliveryManId);
+           
+            if (status != null) {
+                var ordersByStatus =  unit.OrderRipository.GetAll(order => order.DeliveryId == deliveryManId 
+                && order.Status == status);
+
+                return _mapper.Map<List<Order>, List<OrderGetDTO>>(ordersByStatus);
+            }
+
+            var orders =  unit.OrderRipository.GetAll(o => o.DeliveryId == deliveryManId);
             return _mapper.Map<List<Order>, List<OrderGetDTO>>(orders);
         }
 

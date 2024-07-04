@@ -23,7 +23,6 @@ namespace SwiftShipping.API.Controllers
         [HttpPost("Add")]
         public IActionResult Add(OrderDTO orderDTO)
         {
-            if (!ModelState.IsValid) return BadRequest(400);
 
             orderService.AddOrder(orderDTO);
             return Ok("Order Addes Successfully");

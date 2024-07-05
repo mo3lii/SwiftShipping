@@ -37,7 +37,7 @@ namespace SwiftShipping.API.Controllers
             {
                 await deliveryManService.AddDliveryManAsync(deliveryManDTO);
 
-                return Ok("Delivery Man Added Successfully");
+                return Ok(new { message = "Delivery Man Added Successfully" });
             }
             else
             {

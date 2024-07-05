@@ -83,6 +83,14 @@ namespace SwiftShipping.API.Controllers
             return Ok(shipingTypes);
         }
 
+        [HttpGet("PaymentTypes")]
+        public IActionResult GetPaymentTypes()
+        {
+            var PaymentTypes = orderService.GetPaymentTypes();
+            return Ok(PaymentTypes);
+        }
+
+
         [HttpPut("ChangeOrderStatus")]
         public IActionResult ChangeOrderStatus([FromBody] OrderStatus status, int id)
         {
@@ -119,12 +127,11 @@ namespace SwiftShipping.API.Controllers
             return Ok("Order Deleted Successfully");
         }
 
-        [HttpGet("OrderCost")]
+        [HttpPost("OrderCost")]
         public IActionResult OrderCost(OrderCostDTO order)
         {
             var orderCost = orderService.CalculateOrderCost(order);
-            return(Ok(orderCost));
-
+            return Ok(orderCost);
         }
     }
 }

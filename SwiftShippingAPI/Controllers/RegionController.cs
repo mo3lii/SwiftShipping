@@ -1,8 +1,10 @@
-﻿using E_CommerceAPI.Errors;
+﻿using AutoMapper;
+using E_CommerceAPI.Errors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SwiftShipping.ServiceLayer.DTO;
 using SwiftShipping.ServiceLayer.Services;
+using SwiftShipping.DataAccessLayer.Models;
 
 namespace SwiftShipping.API.Controllers
 {
@@ -11,9 +13,12 @@ namespace SwiftShipping.API.Controllers
     public class RegionController : ControllerBase
     {
         private readonly RegionService regionService;
-        public RegionController(RegionService _regionService)
+        private readonly IMapper mapper;
+
+        public RegionController(RegionService _regionService, IMapper _mapper)
         {
             regionService = _regionService;
+            mapper = _mapper;
         }
 
         [HttpPost("Add")]
@@ -65,6 +70,17 @@ namespace SwiftShipping.API.Controllers
             if (!result) return NotFound(new ApiResponse(404));
 
             return Ok("Region Deleted Successfully");
+        }
+
+        [HttpGet("Government/{id}")]
+        public IActionResult getRegionsByGovermrntId(int id)
+        {
+            if (id == 0)
+                return BadRequest(new ApiResponse(404));
+            var regions = regionService.GetRegionsByGovernment(id);
+            var res = mapper.Map<List<Region>, List<RegionGetDTO>>(regions);
+            return Ok(res);
+
         }
     }
 }

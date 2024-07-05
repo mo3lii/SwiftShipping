@@ -15,8 +15,8 @@ namespace SwiftShipping.API.Controllers
             branchService = _branchService;
         }
 
-        [HttpGet]
-        public IActionResult getAllBranches()
+        [HttpGet("All")]
+        public IActionResult GetAllBranches()
         {
             var branches = branchService.GetAll();
             return Ok(branches);

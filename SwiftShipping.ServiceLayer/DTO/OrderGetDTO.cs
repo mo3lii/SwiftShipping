@@ -1,4 +1,5 @@
-﻿using SwiftShipping.DataAccessLayer.Models;
+﻿using SwiftShipping.DataAccessLayer.Enum;
+using SwiftShipping.DataAccessLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,5 +26,7 @@ namespace SwiftShipping.ServiceLayer.DTO
         public string OrderType { get; set; }
         public string PaymentType { get; set; }
         public string Status { get; set;}
+        public DateTime CreationDate { get; set; }
+        public OrderStatus OrderStatus { get; set; }
     }
 }

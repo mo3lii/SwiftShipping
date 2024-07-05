@@ -102,9 +102,17 @@ namespace SwiftShipping.ServiceLayer.Services
             catch { return false; }
         }
 
-        public List<OrderGetDTO> getDeliveryManOrders(int deliveryManId)
+        public List<OrderGetDTO> GetDeliveryManOrders(int deliveryManId , OrderStatus? status = null)
         {
-            var orders =  unit.OrderRipository.GetAll(o => o.DeliveryId==deliveryManId);
+           
+            if (status != null) {
+                var ordersByStatus =  unit.OrderRipository.GetAll(order => order.DeliveryId == deliveryManId 
+                && order.Status == status);
+
+                return _mapper.Map<List<Order>, List<OrderGetDTO>>(ordersByStatus);
+            }
+
+            var orders =  unit.OrderRipository.GetAll(order => order.DeliveryId == deliveryManId);
             return _mapper.Map<List<Order>, List<OrderGetDTO>>(orders);
         }
 
@@ -133,6 +141,10 @@ namespace SwiftShipping.ServiceLayer.Services
                 _mapper.Map(deliveryManDTO, existingDeliveryMan);
                 _mapper.Map(existingDeliveryMan, DeliveryManUser);
                 unit.DeliveryManRipository.Update(existingDeliveryMan);
+
+                DeliveryManUser.NormalizedUserName = userManager.NormalizeName(deliveryManDTO.userName);
+                DeliveryManUser.NormalizedEmail = userManager.NormalizeEmail(deliveryManDTO.email);
+
                 unit.AppUserRepository.Update(DeliveryManUser);
 
                 unit.SaveChanges();

@@ -51,8 +51,8 @@ namespace SwiftShipping.API.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> addSeller(SellerDTO sellerDTO)
+        [HttpPost("Add")]
+        public async Task<IActionResult> AddSeller(SellerDTO sellerDTO)
         {
             if (ModelState.IsValid)
             {
@@ -74,7 +74,7 @@ namespace SwiftShipping.API.Controllers
             return Ok(seller);
         }
 
-        [HttpGet]
+        [HttpGet("All")]
         public ActionResult<List<SellerGetDTO>> GetAll()
         {
             var sellers = _sellerService.GetAll();
@@ -97,7 +97,7 @@ namespace SwiftShipping.API.Controllers
             if (id == 0) return BadRequest(new ApiResponse(400));
 
             var result = _sellerService.Update(id, sellerDTO);
-            if (!result) return NotFound(new ApiResponse(404));
+            if (!result) return NotFound(new ApiResponse(404, "Seller Does not exixt"));
             return Ok("Seller Updated Successfully");
         }
 

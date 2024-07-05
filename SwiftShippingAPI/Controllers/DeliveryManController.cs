@@ -29,7 +29,7 @@ namespace SwiftShipping.API.Controllers
             mapper = _mapper;
         }
 
-        [HttpPost("Register")]
+        [HttpPost("Add")]
         public async Task<IActionResult> Register(DeliveryManDTO deliveryManDTO)
         {
 
@@ -94,7 +94,7 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpGet("{id}/orders")]
-        public ActionResult<List<OrderGetDTO>> GetDeliveryManOrders(int id)
+        public ActionResult<List<OrderGetDTO>> GetDeliveryManOrders(int id, OrderStatus? status = null)
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
 
@@ -102,12 +102,12 @@ namespace SwiftShipping.API.Controllers
 
             if (deliveryMan == null) { return NotFound(new ApiResponse(404, "Delivary man does not exist")); } 
 
-            var orders = deliveryManService.getDeliveryManOrders(id);
+            var orders = deliveryManService.GetDeliveryManOrders(id, status);
 
             return Ok(orders);
         }
 
-        [HttpGet]
+        [HttpGet("All")]
         public ActionResult<List<DeliveryManGetDTO>> GetAll()
         {
             var deliveryMen = deliveryManService.GetAll();
@@ -134,7 +134,7 @@ namespace SwiftShipping.API.Controllers
             if (id == 0) return BadRequest(new ApiResponse(400));
 
             var result = deliveryManService.UpdateDeliveryMan(id, deliveryManDTO);
-            if (!result) return NotFound(new ApiResponse(404));
+            if (!result) return NotFound(new ApiResponse(404, "delivary Does not exixt"));
 
             return Ok("Delivery Man Updated Successfully");
         }

@@ -22,7 +22,9 @@ namespace SwiftShipping.ServiceLayer.Helper
                 .ForMember(dest => dest.PaymentType, opt => opt.MapFrom(src => PaymentTypeMapper.PaymentTypeDictionary[src.PaymentType]))
                 .ForMember(dest => dest.Government, opt => opt.MapFrom(src => src.Region.Government.Name))
                 .ForMember(dest => dest.BranchName, opt => opt.MapFrom(src => src.Branch.Name))
-                .ForMember(dest => dest.Region, opt => opt.MapFrom(src => src.Region.Name));
+                .ForMember(dest => dest.Region, opt => opt.MapFrom(src => src.Region.Name))
+                .ForMember(dest => dest.OrderStatus, opt =>opt.MapFrom(src => src.Status));
+
 
             CreateMap<OrderDTO, Order>();
 

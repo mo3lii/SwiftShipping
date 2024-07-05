@@ -28,7 +28,7 @@ namespace SwiftShipping.API.Controllers
             return Created();
         }
 
-        [HttpGet]
+        [HttpGet("All")]
         public ActionResult<List<RegionGetDTO>> GetAll()
         {
             var regions = regionService.GetAll();

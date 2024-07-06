@@ -33,7 +33,7 @@ namespace SwiftShipping.ServiceLayer.Services
         }
         public List<GovernmentGetDTO> GetAll()
         {
-            var governments = unit.GovernmentRipository.GetAll();
+            var governments = unit.GovernmentRipository.GetAll(x=>x.IsDeleted == false);
             return mapper.Map<List<Government>, List<GovernmentGetDTO>>(governments);
         }
 

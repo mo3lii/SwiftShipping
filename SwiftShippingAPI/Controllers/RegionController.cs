@@ -1,4 +1,5 @@
 ﻿using E_CommerceAPI.Errors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SwiftShipping.ServiceLayer.DTO;
@@ -24,6 +25,7 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpGet("All")]
+        [Authorize(Roles ="Employee")]
         public ActionResult<List<RegionGetDTO>> GetAll()
         {
             var regions = regionService.GetAll();

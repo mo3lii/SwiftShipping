@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SwiftShipping.DataAccessLayer.Enum;
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.ServiceLayer.DTO;
 using SwiftShipping.ServiceLayer.Services;
@@ -55,16 +56,17 @@ namespace SwiftShipping.API.Controllers
 
                 if (result.Success == true)
                 {
+                    int Id = await _accountService.getIdByRole(result.UserId, result.Role);
                     // Create the claims
                     var claims = new List<Claim>
                     {
                         new Claim("UserId", result.UserId),
                         new Claim(ClaimTypes.Role, result.Role),
-                        //new Claim("Policy", "CanView")
+                        new Claim(ClaimTypes.NameIdentifier,Id.ToString())
                     };
 
                     var Token = JwtTokenHelper.GenerateToken(claims);
-                    return Created("Login Successfully", new { token = Token, role = result.Role });
+                    return Created("Login Successfully", new { token = Token,id=Id, role = result.Role });
 
                 }
                 else
@@ -87,16 +89,17 @@ namespace SwiftShipping.API.Controllers
 
                 if (result.Success == true)
                 {
+                    int Id = await _accountService.getIdByRole(result.UserId, result.Role);
+
                     // Create the claims
                     var claims = new List<Claim>
                     {
                         new Claim("UserId", result.UserId),
                         new Claim(ClaimTypes.Role, result.Role),
-                        //new Claim("Policy", "CanView")
                     };
 
                     var Token = JwtTokenHelper.GenerateToken(claims);
-                    return Created("Login Successfully", new { token = Token, role = result.Role });
+                    return Created("Login Successfully", new { token = Token, id = Id, role = result.Role });
 
                 }
 

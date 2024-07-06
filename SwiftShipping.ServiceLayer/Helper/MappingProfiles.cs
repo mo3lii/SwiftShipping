@@ -77,6 +77,9 @@ namespace SwiftShipping.ServiceLayer.Helper
 
 
             CreateMap<EmployeeDTO, Employee>();
+            CreateMap< EmployeeGetDTO, Employee>(); 
+            CreateMap<ApplicationUser, EmployeeDTO>();
+            CreateMap<EmployeeDTO, ApplicationUser>();
 
             CreateMap<Employee,EmployeeDTO >()
                 .ForMember(dest => dest.password, opt => opt.MapFrom(src => src.User.PasswordHash))
@@ -86,6 +89,17 @@ namespace SwiftShipping.ServiceLayer.Helper
                 .ForMember(dest => dest.phoneNumber, opt => opt.MapFrom(src => src.User.PhoneNumber))
                 .ForMember(dest => dest.name, opt => opt.MapFrom(src => src.User.Name));
 
+
+                    CreateMap<Employee, EmployeeGetDTO>()
+            .ForMember(dest => dest.address, opt => opt.MapFrom(src => src.User.Address))
+            .ForMember(dest => dest.password, opt => opt.MapFrom(src => src.User.PasswordHash))
+            .ForMember(dest => dest.email, opt => opt.MapFrom(src => src.User.Email))
+            .ForMember(dest => dest.userName, opt => opt.MapFrom(src => src.User.UserName))
+            .ForMember(dest => dest.phoneNumber, opt => opt.MapFrom(src => src.User.PhoneNumber))
+            .ForMember(dest => dest.name, opt => opt.MapFrom(src => src.User.Name))
+            .ForMember(dest => dest.isActive, opt => opt.MapFrom(src => src.IsActive))
+            .ForMember(dest => dest.branchName, opt => opt.MapFrom(src => src.Branch.Name));
+    
 
             CreateMap<ApplicationUser, EmployeeDTO>().ForMember(dest => dest.password, opt => opt.MapFrom(src => src.PasswordHash));
 

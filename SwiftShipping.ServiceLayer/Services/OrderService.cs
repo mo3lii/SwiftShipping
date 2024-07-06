@@ -270,6 +270,18 @@ namespace SwiftShipping.ServiceLayer.Services
             return orderTypes;
         }
 
+        public List<PaymentTypeDTO> GetPaymentTypes()
+        {
+            var orderTypes =
+                Enum.GetValues(typeof(PaymentType)).Cast<PaymentType>().Select(
+                    x => new PaymentTypeDTO()
+                    {
+                        Id = (int)x,
+                        Name = PaymentTypeMapper.PaymentTypeDictionary[x]
+                    }).ToList();
+            return orderTypes;
+        }
+
         public bool ChangeOrderStatus(OrderStatus status, int orderId)
         {
             try

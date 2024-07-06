@@ -127,5 +127,14 @@ namespace SwiftShipping.API.Controllers
             return Ok(_orderService.GetAllOrderStatusCountForSeller(SellerId));
         }
 
+        [HttpGet("{id}/orders/{status}")]
+        public ActionResult<List<OrderGetDTO>> getSellerOrdersByStatus(int id, OrderStatus status)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400, "seller not exist"));
+
+            var orders = _sellerService.GetSellerOrdersByStatus(id,status);
+            return Ok(orders);
+        }
+
     }
 }

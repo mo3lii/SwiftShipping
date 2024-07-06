@@ -88,5 +88,11 @@ namespace SwiftShipping.ServiceLayer.Services
             }
             return true;
         }
+    
+        public List<Region> GetRegionsByGovernment(int governrmrntId)
+        {
+            var regions =   unit.RegionRipository.GetAll(x => x.GovernmentId == governrmrntId);
+            return regions;
+        }
     }
 }

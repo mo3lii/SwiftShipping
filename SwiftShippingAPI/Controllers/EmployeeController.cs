@@ -24,7 +24,7 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpPost("Add")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Register(EmployeeDTO employeeDTO)
         {
 
@@ -65,7 +65,7 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpPut("Update/{id}")]
-        [Authorize(Roles = "Employee")]
+        //[Authorize(Roles = "Employee")]
 
         public IActionResult UpdateEmployee(int id, EmployeeDTO employee)
         {
@@ -78,7 +78,7 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        [Authorize(Roles = "Employee")]
+        //[Authorize(Roles = "Employee")]
 
         public IActionResult DeleteEmployee(int id)
         {
@@ -91,7 +91,7 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpPut("ToggleActivityStatus/{id}")]
-        [Authorize(Roles = "Employee")]
+        //[Authorize(Roles = "Employee")]
 
         public IActionResult ToggleActivityStatus(int id)
         {

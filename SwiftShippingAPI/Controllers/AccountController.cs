@@ -1,4 +1,5 @@
 ﻿using E_CommerceAPI.Errors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +17,12 @@ namespace SwiftShipping.API.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly AccountService _accountService;
-
-        public AccountController(UserManager<ApplicationUser> userManager, AccountService accountService1)
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        public AccountController(UserManager<ApplicationUser> userManager, AccountService accountService1, SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _accountService = accountService1;
+            _signInManager = signInManager;
         }
 
         [HttpGet("CheckEmail")]
@@ -109,6 +111,15 @@ namespace SwiftShipping.API.Controllers
             
                 return BadRequest(new ApiResponse(400));
             
+        }
+
+        [Authorize]
+        [HttpPost("LogOut")]
+        public async Task<IActionResult> LogOut()
+        {
+            await _signInManager.SignOutAsync();
+
+            return Ok();
         }
     }
 }

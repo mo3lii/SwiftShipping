@@ -21,7 +21,9 @@ namespace SwiftShipping.ServiceLayer.Helper
                 .ForMember(dest => dest.OrderType, opt => opt.MapFrom(src => OrderTypeMapper.OrderTypeDictionary[src.OrderType]))
                 .ForMember(dest => dest.PaymentType, opt => opt.MapFrom(src => PaymentTypeMapper.PaymentTypeDictionary[src.PaymentType]))
                 .ForMember(dest => dest.Government, opt => opt.MapFrom(src => src.Region.Government.Name))
-                .ForMember(dest => dest.Region, opt => opt.MapFrom(src => src.Region.Name));
+                .ForMember(dest => dest.Region, opt => opt.MapFrom(src => src.Region.Name))
+                .ForMember(dest => dest.OrderStatus, opt =>opt.MapFrom(src => src.Status));
+
 
             CreateMap<OrderDTO, Order>();
 
@@ -85,12 +87,17 @@ namespace SwiftShipping.ServiceLayer.Helper
                 .ForMember(dest => dest.name, opt => opt.MapFrom(src => src.User.Name));
 
 
-            CreateMap<ApplicationUser, EmployeeDTO>().ForMember(dest => dest.password, opt => opt.MapFrom(src => src.PasswordHash)); ;
+            CreateMap<ApplicationUser, EmployeeDTO>().ForMember(dest => dest.password, opt => opt.MapFrom(src => src.PasswordHash));
 
             CreateMap<SellerDTO, Seller>();
 
+            CreateMap<ApplicationUser, SellerDTO>();
+
             CreateMap<RolePermissions, PermissionDTO>()
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => DepartmentMapper.DepartmentsDictionary[src.DepartmentId])).ReverseMap();
+
+            CreateMap<GovernmentDTO, Government>().ReverseMap();
+
         }
     }
 }

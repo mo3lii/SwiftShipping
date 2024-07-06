@@ -43,5 +43,49 @@ namespace SwiftShipping.ServiceLayer.Services
             return mapper.Map<Government, GovernmentGetDTO>(government);
 
         }
+
+        public bool EditGovernment(int id, GovernmentDTO governmentDTO)
+        {
+            try
+            {
+                var foundgovernment = unit.GovernmentRipository.GetById(id);
+                if (foundgovernment == null)
+                {
+                    return false;
+                }
+
+                mapper.Map(governmentDTO, foundgovernment);
+                unit.GovernmentRipository.Update(foundgovernment);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool Delete(int id)
+        {
+            try
+            {
+                var foundGovernment = unit.GovernmentRipository.GetById(id);
+                if (foundGovernment == null)
+                {
+                    return false;
+                }
+
+                foundGovernment.IsDeleted = true;
+                unit.GovernmentRipository.Update(foundGovernment);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+
     }
 }

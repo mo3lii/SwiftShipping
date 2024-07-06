@@ -13,7 +13,7 @@ namespace SwiftShipping.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   
+
     public class EmployeeController : ControllerBase
     {
         UnitOfWork unitOfWork;
@@ -24,18 +24,14 @@ namespace SwiftShipping.API.Controllers
             this.employeeService = _employeeService;
         }
 
-        [HttpPost("Register")]
+        [HttpPost("Add")]
         public async Task<IActionResult> Register(EmployeeDTO employeeDTO)
         {
 
             if (ModelState.IsValid)
             {
                 await employeeService.addEmployeeAsync(employeeDTO);
-
-
                 return Ok("Employee Added Successfully");
-
-
             }
             else
             {
@@ -48,7 +44,7 @@ namespace SwiftShipping.API.Controllers
         {
             if (ModelState.IsValid)
             {
-               var result =  await employeeService.Login(loginDTO);
+                var result = await employeeService.Login(loginDTO);
                 if (result.Success == true)
                 {
                     // Create the claims
@@ -60,7 +56,7 @@ namespace SwiftShipping.API.Controllers
                     };
 
                     var Token = JwtTokenHelper.GenerateToken(claims);
-                    return Created("Login Successfully", new {token = Token, role=result.Role});
+                    return Created("Login Successfully", new { token = Token, role = result.Role });
 
                 }
                 else
@@ -70,19 +66,16 @@ namespace SwiftShipping.API.Controllers
             }
             else
             {
-                return BadRequest(new ApiResponse(400)); 
-            }    
+                return NotFound(new ApiResponse(404, "Employee does not exist"));
+            }
         }
 
-        [HttpGet]
+        [HttpGet("All")]
         [Authorize(Roles = "Employee")]
         //[Authorize(Policy = "CanView")]
         public ActionResult<List<EmployeeDTO>> GetAll()
         {
             var employees = employeeService.GetAll();
-
-            if (employees.Count == 0) { return NotFound(new ApiResponse(404)); }
-
             return Ok(employees);
         }
 
@@ -93,8 +86,40 @@ namespace SwiftShipping.API.Controllers
 
             var employee = employeeService.GetById(id);
 
-            if ( employee == null) { return NotFound(new ApiResponse(404)); }
+            if (employee == null) { return NotFound(new ApiResponse(404, "Employee does not exist")); }
             return Ok(employee);
+        }
+
+        [HttpPut("Update/{id}")]
+        public IActionResult UpdateEmployee(int id, EmployeeDTO employee)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
+            var result = employeeService.UpdateEmployee(id, employee);
+            if (!result) return NotFound(new ApiResponse(404, "Employee Does not exixt"));
+
+            return Ok("Employee Updated Successfully");
+        }
+
+        [HttpDelete("Delete/{id}")]
+        public IActionResult DeleteEmployee(int id)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400));
+
+            var result = employeeService.DeleteEmployee(id);
+            if (!result) return NotFound(new ApiResponse(404));
+
+            return Ok("Employee Deleted Successfully");
+        }
+
+        [HttpPut("ToggleActivityStatus/{id}")]
+        public IActionResult ToggleActivityStatus(int id)
+        {
+            var res = employeeService.ToggleActivityStatus(id);
+            if (res)
+                return Ok("Activity Status Changed");
+            else
+                return BadRequest(new ApiResponse(400));
         }
     }
 }

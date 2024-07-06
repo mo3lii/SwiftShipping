@@ -48,6 +48,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(
     )
     .AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders();
 
+
 builder.Services.Configure<IdentityOptions>(options =>
 {
     options.User.AllowedUserNameCharacters = null; // Example option, adjust as needed
@@ -100,6 +101,7 @@ builder.Services.AddAuthorization(options =>
     //AuthorizationPolicies.AddDepartmentsPolicies(options);
 });
 
+
 // Register services required for authorization
 builder.Services.AddScoped<IRolePermissionsService, RolePermissionsService>();
 builder.Services.AddScoped<IAuthorizationHandler, PermissionHandler>();
@@ -117,6 +119,8 @@ builder.Services.AddScoped<RegionService>();
 builder.Services.AddScoped<WeightSettingService>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<EmployeeService>();
+builder.Services.AddScoped<AdminService>();
+builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<BranchService>();
 builder.Services.AddScoped<RolesService>();
 

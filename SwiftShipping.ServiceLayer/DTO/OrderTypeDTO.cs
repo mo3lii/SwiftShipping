@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace SwiftShipping.ServiceLayer.DTO
 {
-    public class GovernmentGetDTO
+    public class OrderTypeDTO
     {
         public int Id { get; set; }
-        public bool IsActive { get; set; }
         public string Name { get; set; }
-
     }
 }

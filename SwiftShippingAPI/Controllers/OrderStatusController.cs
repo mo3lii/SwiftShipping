@@ -19,6 +19,12 @@ namespace SwiftShipping.API.Controllers
             orderService = _orderService;
         }
 
+        [HttpGet("All")]
+        public IActionResult GetAllStatuses()
+        {
+            return Ok(StatusMapper.StatusDictionary);
+        }
+
         [HttpGet("getCount")] 
         public IActionResult getOrderStatusCount(OrderStatus status)
         {
@@ -31,7 +37,6 @@ namespace SwiftShipping.API.Controllers
         {
            return Ok(orderService.GetAllOrderStatusCount());
         }
-
 
 
     }

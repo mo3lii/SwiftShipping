@@ -25,5 +25,9 @@ namespace SwiftShipping.ServiceLayer.DTO
         public OrderType orderType { get; set; }
         public PaymentType paymentType { get; set; }
 
+        //delivery man id
+        public int? DeliveryId { get; set; }
+
+
     }
 }

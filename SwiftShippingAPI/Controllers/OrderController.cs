@@ -90,19 +90,17 @@ namespace SwiftShipping.API.Controllers
             var PaymentTypes = orderService.GetPaymentTypes();
             return Ok(PaymentTypes);
         }
-
-
-        [HttpPut("ChangeOrderStatus")]
-        public IActionResult ChangeOrderStatus([FromBody] OrderStatus status, int id)
+        [HttpPut("ChangeOrderStatus/{id}")]
+        public IActionResult ChangeOrderStatus(int id, [FromBody] OrderStatus status)
         {
             var result = orderService.ChangeOrderStatus(status, id);
 
             if (result)
             {
-                return Ok("Status changed successfully");
+                return Ok(new { message = "Status changed successfully" });
             }
-          
-             return BadRequest(new ApiResponse(400, "Failed to change status"));
+
+            return BadRequest(new ApiResponse(400, "Failed to change status"));
         }
 
         [HttpPut("Edit/{id}")]

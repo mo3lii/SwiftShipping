@@ -1,4 +1,5 @@
 ﻿using E_CommerceAPI.Errors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SwiftShipping.DataAccessLayer.Enum;
@@ -10,6 +11,7 @@ namespace SwiftShipping.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class SellerController : ControllerBase
     {
         private SellerService _sellerService; 

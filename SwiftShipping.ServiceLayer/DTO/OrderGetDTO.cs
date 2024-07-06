@@ -30,5 +30,10 @@ namespace SwiftShipping.ServiceLayer.DTO
         public OrderStatus OrderStatus { get; set; }
         public decimal DeliveryCost { get; set; }
 
+
+
+        //delivery man id
+        public int? DeliveryId { get; set; }
+
     }
 }

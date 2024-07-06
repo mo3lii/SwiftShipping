@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using SwiftShipping.DataAccessLayer.Enum;
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.DTO;
@@ -68,5 +69,33 @@ namespace SwiftShipping.ServiceLayer.Services
 
             return (false, null, null);
         }
+
+        public async Task<int> getIdByRole(string userId, string role)
+        {
+
+            if (!Enum.TryParse(role, true, out RoleTypes roleType))
+            {
+                throw new InvalidOperationException("Unknown role type");
+            }
+
+            switch (roleType)
+            {
+                case RoleTypes.Employee:
+                    return unit.EmployeeRipository.GetFirstByFilter(e => e.UserId == userId).Id;
+
+                case RoleTypes.Seller:
+                    return unit.SellerRipository.GetFirstByFilter(e => e.UserId == userId).Id;
+
+                case RoleTypes.DeliveryMan:
+                    return unit.DeliveryManRipository.GetFirstByFilter(e => e.UserId == userId).Id;
+
+                case RoleTypes.Admin:
+                    return unit.AdminRipository.GetFirstByFilter(e => e.userId == userId).Id;
+
+                default:
+                    throw new InvalidOperationException("Unknown role type");
+            }
+        }
+
     }
 }

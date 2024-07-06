@@ -136,6 +136,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(MyAllowSpecificOrigins);
+
 app.UseMiddleware<ExceptionMeddleware>();
 
 app.UseHttpsRedirection();
@@ -145,8 +147,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-//Add UseCors Middleware in Configure method
-app.UseCors(MyAllowSpecificOrigins);
 
 app.Run();

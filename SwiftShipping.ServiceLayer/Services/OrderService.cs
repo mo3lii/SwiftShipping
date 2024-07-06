@@ -285,15 +285,14 @@ namespace SwiftShipping.ServiceLayer.Services
                 }
                 else
                 {
-                    return false; 
+                    return false;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message); 
+                Console.WriteLine(ex.Message);
+                return false;
             }
-
-            return false; 
         }
 
         public bool UpdateOrder(int id, OrderDTO orderDTO)

@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SwiftShipping.DataAccessLayer.Models
+namespace SwiftShipping.DataAccessLayer.Enum
 {
     public enum OrderStatus
     {
-        New=1,
+        New = 1,
         AcceptedByDeliveryCompany,
         RejectedByDeliveryCompany,
         Pending,
+        Delivered,
         DeliveredToDeliveryMan,
         CanNotBeReached,
         Postponed,

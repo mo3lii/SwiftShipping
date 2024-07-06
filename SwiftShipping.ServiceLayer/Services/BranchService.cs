@@ -38,10 +38,10 @@ namespace SwiftShipping.ServiceLayer.Services
             return true;
         }
     
-        public List<BranchGetDTO> GetAll()
+        public IEnumerable<BranchGetDTO> GetAll()
         {
             var branches = unit.BranchRipository.GetAll();
-            return mapper.Map<List<Branch>, List<BranchGetDTO>>(branches);
+            return mapper.Map<IEnumerable<Branch>, IEnumerable<BranchGetDTO>>(branches);
         }
 
         public BranchGetDTO GetById(int id)
@@ -50,6 +50,52 @@ namespace SwiftShipping.ServiceLayer.Services
             return mapper.Map<Branch, BranchGetDTO>(branch);
 
         }
+
+
+        public bool EditBranch(int id, BranchDTO branchDTO)
+        {
+            try
+            {
+                var existingBranch = unit.BranchRipository.GetById(id);
+
+                if (existingBranch == null)
+                {
+                    return false;
+                }
+
+                mapper.Map(branchDTO, existingBranch);
+                unit.BranchRipository.Update(existingBranch);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool DeleteBranch(int id)
+        {
+            try
+            {
+                var existingBranch = unit.BranchRipository.GetById(id);
+                if (existingBranch == null)
+                {
+                    return false; 
+                }
+
+                existingBranch.IsDeleted = true;
+                existingBranch.IsActive = false;
+                unit.BranchRipository.Update(existingBranch);
+                unit.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
 
     }
 }

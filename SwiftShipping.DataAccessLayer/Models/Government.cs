@@ -14,5 +14,6 @@ namespace SwiftShipping.DataAccessLayer.Models
         public bool IsDeleted { get; set; } = false;
         public virtual List<Region> Regions {  get; set; }
         public virtual List<Branch> Branches { get; set; }
+
     }
 }

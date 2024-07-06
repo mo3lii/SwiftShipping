@@ -207,6 +207,9 @@ namespace SwiftShipping.DataAccessLayer.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -299,6 +302,9 @@ namespace SwiftShipping.DataAccessLayer.Migrations
                     b.Property<int>("BranchId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -341,6 +347,9 @@ namespace SwiftShipping.DataAccessLayer.Migrations
 
                     b.Property<int>("BranchId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -495,6 +504,357 @@ namespace SwiftShipping.DataAccessLayer.Migrations
                     b.HasIndex("GovernmentId");
 
                     b.ToTable("Regions");
+                });
+
+            modelBuilder.Entity("SwiftShipping.DataAccessLayer.Models.RolePermissions", b =>
+                {
+                    b.Property<string>("RoleName")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Add")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Delete")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Edit")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("View")
+                        .HasColumnType("bit");
+
+                    b.HasKey("RoleName", "DepartmentId");
+
+                    b.ToTable("RolePermissions");
+
+                    b.HasData(
+                        new
+                        {
+                            RoleName = "Employee",
+                            DepartmentId = 1,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Employee",
+                            DepartmentId = 2,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Employee",
+                            DepartmentId = 3,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Employee",
+                            DepartmentId = 4,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Employee",
+                            DepartmentId = 5,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Employee",
+                            DepartmentId = 6,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Employee",
+                            DepartmentId = 7,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Employee",
+                            DepartmentId = 8,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Employee",
+                            DepartmentId = 9,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "DeliveryMan",
+                            DepartmentId = 1,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "DeliveryMan",
+                            DepartmentId = 2,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "DeliveryMan",
+                            DepartmentId = 3,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "DeliveryMan",
+                            DepartmentId = 4,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "DeliveryMan",
+                            DepartmentId = 5,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "DeliveryMan",
+                            DepartmentId = 6,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "DeliveryMan",
+                            DepartmentId = 7,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "DeliveryMan",
+                            DepartmentId = 8,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "DeliveryMan",
+                            DepartmentId = 9,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Seller",
+                            DepartmentId = 1,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Seller",
+                            DepartmentId = 2,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Seller",
+                            DepartmentId = 3,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Seller",
+                            DepartmentId = 4,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Seller",
+                            DepartmentId = 5,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Seller",
+                            DepartmentId = 6,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Seller",
+                            DepartmentId = 7,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Seller",
+                            DepartmentId = 8,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Seller",
+                            DepartmentId = 9,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Admin",
+                            DepartmentId = 1,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Admin",
+                            DepartmentId = 2,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Admin",
+                            DepartmentId = 3,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Admin",
+                            DepartmentId = 4,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Admin",
+                            DepartmentId = 5,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Admin",
+                            DepartmentId = 6,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Admin",
+                            DepartmentId = 7,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Admin",
+                            DepartmentId = 8,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        },
+                        new
+                        {
+                            RoleName = "Admin",
+                            DepartmentId = 9,
+                            Add = false,
+                            Delete = false,
+                            Edit = false,
+                            View = false
+                        });
                 });
 
             modelBuilder.Entity("SwiftShipping.DataAccessLayer.Models.Seller", b =>

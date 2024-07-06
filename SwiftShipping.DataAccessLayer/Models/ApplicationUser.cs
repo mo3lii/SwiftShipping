@@ -11,5 +11,7 @@ namespace SwiftShipping.DataAccessLayer.Models
     {
         public string Address { get; set; }
         public string Name { get; set; }
+        public bool IsDeleted { get; set; } = false;
+
     }
 }

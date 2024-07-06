@@ -16,7 +16,7 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             unit = _unit;
         }
-        public bool UpdateSetting(WeightSetting weightSetting )
+        public async Task<bool> UpdateSetting(WeightSetting weightSetting )
         {
             try
             {
@@ -28,6 +28,11 @@ namespace SwiftShipping.ServiceLayer.Services
                 return false;
             }
             return true;
+        }
+
+        public async Task<WeightSetting> GetSettingAsync()
+        {
+            return unit.WeightSettingRepository.GetSetting();
         }
     }
 }

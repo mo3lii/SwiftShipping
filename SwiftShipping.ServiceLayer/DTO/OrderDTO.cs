@@ -1,4 +1,4 @@
-﻿using SwiftShipping.DataAccessLayer.Models;
+﻿using SwiftShipping.DataAccessLayer.Enum;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -20,8 +20,14 @@ namespace SwiftShipping.ServiceLayer.DTO
         public float weight { get; set; }
         public decimal orderPrice { get; set; }
         public string note { get; set; }
+        public int SellerId { get; set; }
         public ShippingType shippingType { get; set; }
         public OrderType orderType { get; set; }
         public PaymentType PaymentType { get; set; }
+
+        //delivery man id
+        public int? DeliveryId { get; set; }
+
+
     }
 }

@@ -31,7 +31,7 @@ namespace SwiftShipping.API.Controllers
             if (ModelState.IsValid)
             {
                 await employeeService.addEmployeeAsync(employeeDTO);
-                return Ok("Employee Added Successfully");
+                return Ok(new { Message = " Employee Added Successfully" });
             }
             else
             {
@@ -70,17 +70,27 @@ namespace SwiftShipping.API.Controllers
             }
         }
 
+        //[HttpGet("All")]
+        //[Authorize(Roles = "Employee")]
+        ////[Authorize(Policy = "CanView")]
+        //public ActionResult<List<EmployeeGetDTO>> GetAll()
+        //{
+        //    var employees = employeeService.GetAll();
+        //    return Ok(employees);
+        //}
+
         [HttpGet("All")]
-        [Authorize(Roles = "Employee")]
+        //[Authorize(Roles = "Employee")]
         //[Authorize(Policy = "CanView")]
-        public ActionResult<List<EmployeeDTO>> GetAll()
+        public ActionResult<List<EmployeeGetDTO>> GetAllEmployees()
         {
             var employees = employeeService.GetAll();
             return Ok(employees);
         }
 
+
         [HttpGet("{id}")]
-        public ActionResult<EmployeeDTO> GetById(int id)
+        public ActionResult<EmployeeGetDTO> GetById(int id)
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
 
@@ -98,7 +108,7 @@ namespace SwiftShipping.API.Controllers
             var result = employeeService.UpdateEmployee(id, employee);
             if (!result) return NotFound(new ApiResponse(404, "Employee Does not exixt"));
 
-            return Ok("Employee Updated Successfully");
+            return Ok(new { Message = " Employee Updated Successfully" });
         }
 
         [HttpDelete("Delete/{id}")]
@@ -109,7 +119,7 @@ namespace SwiftShipping.API.Controllers
             var result = employeeService.DeleteEmployee(id);
             if (!result) return NotFound(new ApiResponse(404));
 
-            return Ok("Employee Deleted Successfully");
+            return Ok(new { Message = " Employee Deleted Successfully" });
         }
 
         [HttpPut("ToggleActivityStatus/{id}")]
@@ -117,7 +127,7 @@ namespace SwiftShipping.API.Controllers
         {
             var res = employeeService.ToggleActivityStatus(id);
             if (res)
-                return Ok("Activity Status Changed");
+                return Ok(new { Message = " Activity Status Changed" });
             else
                 return BadRequest(new ApiResponse(400));
         }

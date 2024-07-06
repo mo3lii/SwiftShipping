@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using SwiftShipping.DataAccessLayer.Enum;
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Repository;
 using SwiftShipping.ServiceLayer.DTO;
@@ -46,6 +47,48 @@ namespace SwiftShipping.ServiceLayer.Services
             }
 
             return (false, null, null);
+        }
+
+        public async Task<bool> addAdminAsync()
+        {
+
+            var appUser = new ApplicationUser()
+            {
+                Name = "admin",
+                UserName = "admin",
+                Email = "admin@gmail.com",
+                PhoneNumber = "0235188423",
+                Address = "admin address"
+                ,PasswordHash= "Admin@123"
+            };
+
+            IdentityResult result = await userManager.CreateAsync(appUser, "Admin@123");
+            if (result.Succeeded)
+            {
+                //Employee Role as String
+                var AdminRole = RoleTypes.Admin.ToString();
+
+                // check if the role is exist if not, add it
+                if (await roleManager.FindByNameAsync(AdminRole) == null)
+                    await roleManager.CreateAsync(new IdentityRole() { Name = AdminRole });
+
+                // assign roles  to created user
+                IdentityResult adminRoleAssigning = await userManager.AddToRoleAsync(appUser, AdminRole);
+
+                if (adminRoleAssigning.Succeeded)
+                {
+                    var admin = new Admin()
+                    {
+                        Name = "Admin",
+                        IsDeleted = false,
+                        userId = appUser.Id,
+                    };
+                    unit.AdminRipository.Insert(admin);
+                    unit.SaveChanges();
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

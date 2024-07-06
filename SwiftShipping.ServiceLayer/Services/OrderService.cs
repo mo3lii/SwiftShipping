@@ -270,6 +270,18 @@ namespace SwiftShipping.ServiceLayer.Services
             return orderTypes;
         }
 
+        public List<PaymentTypeDTO> GetPaymentTypes()
+        {
+            var orderTypes =
+                Enum.GetValues(typeof(PaymentType)).Cast<PaymentType>().Select(
+                    x => new PaymentTypeDTO()
+                    {
+                        Id = (int)x,
+                        Name = PaymentTypeMapper.PaymentTypeDictionary[x]
+                    }).ToList();
+            return orderTypes;
+        }
+
         public bool ChangeOrderStatus(OrderStatus status, int orderId)
         {
             try
@@ -285,15 +297,14 @@ namespace SwiftShipping.ServiceLayer.Services
                 }
                 else
                 {
-                    return false; 
+                    return false;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message); 
+                Console.WriteLine(ex.Message);
+                return false;
             }
-
-            return false; 
         }
 
         public bool UpdateOrder(int id, OrderDTO orderDTO)

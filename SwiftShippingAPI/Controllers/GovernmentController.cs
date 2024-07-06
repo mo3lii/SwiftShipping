@@ -53,7 +53,7 @@ namespace SwiftShipping.API.Controllers
             var result = governmentService.EditGovernment(id, governmentDTO);
             if (!result) return NotFound(new ApiResponse(404));
 
-            return Ok("Government Updated Successfully");
+            return Ok(new {msg = "Government Updated Successfully" });
         }
 
 
@@ -65,7 +65,8 @@ namespace SwiftShipping.API.Controllers
             var result = governmentService.Delete(id);
             if (!result) return NotFound(new ApiResponse(404));
 
-            return Ok("Government Deleted Successfully");
+            return Ok(new { msg = "Government deleted Successfully" });
+
         }
 
 

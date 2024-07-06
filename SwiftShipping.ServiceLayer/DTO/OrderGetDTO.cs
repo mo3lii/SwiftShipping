@@ -28,5 +28,7 @@ namespace SwiftShipping.ServiceLayer.DTO
         public string Status { get; set;}
         public DateTime CreationDate { get; set; }
         public OrderStatus OrderStatus { get; set; }
+        public decimal DeliveryCost { get; set; }
+
     }
 }

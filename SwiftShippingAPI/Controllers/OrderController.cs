@@ -23,9 +23,8 @@ namespace SwiftShipping.API.Controllers
         [HttpPost("Add")]
         public IActionResult Add(OrderDTO orderDTO)
         {
-
             orderService.AddOrder(orderDTO);
-            return Ok("Order Addes Successfully");
+            return Ok(new { msg = "order added successfully"});
         }
 
         [HttpGet("All")]

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using E_CommerceAPI.Errors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,12 +21,13 @@ namespace SwiftShipping.API.Controllers
         OrderService orderService;
         GovernmentService governmentService;
         RegionService regionService;
+        AdminService adminService;
 
         private readonly IMapper _mapper;
         private readonly UnitOfWork unit;
         public TestController(SellerService _sellerService, DeliveryManService _deliveryManService, OrderService _orderService
             , GovernmentService _governmentService, RegionService _regionService,
-            IMapper mapper, UnitOfWork unit)
+            IMapper mapper, UnitOfWork unit, AdminService adminService)
         {
 
             sellerService = _sellerService;
@@ -35,7 +37,7 @@ namespace SwiftShipping.API.Controllers
             regionService = _regionService;
             _mapper = mapper;
             this.unit = unit;
-
+            this.adminService = adminService;
         }
 
         [HttpPost("addSeller")]
@@ -141,6 +143,20 @@ namespace SwiftShipping.API.Controllers
         {
             return Ok(RoleTypes.GetNames(typeof(RoleTypes)).ToList()
 );
+        }
+        [HttpPost("addAdmin")]
+        public async Task<IActionResult> AddAdmin()
+        {
+
+            if (ModelState.IsValid)
+            {
+                await adminService.addAdminAsync();
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(new ApiResponse(400));
+            }
         }
 
     }

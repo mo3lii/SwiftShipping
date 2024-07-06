@@ -181,5 +181,37 @@ namespace SwiftShipping.ServiceLayer.Services
             return true;
         }
 
+        public bool AssignRegionsToDeliveryMan(int deliveryManId, int[]regions)
+        {
+            try
+            {
+                var deliveryMan = unit.DeliveryManRipository.GetById(deliveryManId);
+                if (deliveryMan == null)
+                {
+                    return false;
+                }
+                
+                for(int i = 0; i <regions.Length; i++)
+                {
+                    unit.DeliveryManRegionsRipository.Insert(new DeliveryManRegions()
+                    {
+                        DeliveryManId = deliveryMan.Id,
+                        RegionId = regions[i]
+                    });
+                }
+                unit.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+    
+        public List<DeliveryManRegions> GetDeliveryManRegions(int deliveryManId) {
+
+            var deliveryMan = unit.DeliveryManRipository.GetById(deliveryManId);
+            return deliveryMan.DeliveryManRegions;
+        }
     }
 }

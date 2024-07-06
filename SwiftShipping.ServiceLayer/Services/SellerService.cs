@@ -140,7 +140,6 @@ namespace SwiftShipping.ServiceLayer.Services
             }
             return true;
         }
-
         public bool Delete(int id)
         {
             try
@@ -165,7 +164,12 @@ namespace SwiftShipping.ServiceLayer.Services
             return true;
         }
 
-
+        public List<OrderGetDTO> GetSellerOrdersByStatus(int id, OrderStatus status)
+        {
+            var seller = unit.SellerRipository.GetById(id);
+            var sellerOrders = seller?.Orders.Where(x=>x.Status == status).ToList();
+            return mapper.Map<List<Order>, List<OrderGetDTO>>(sellerOrders);
+        }
 
     }
 }

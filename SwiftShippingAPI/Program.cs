@@ -149,7 +149,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-//Add UseCors Middleware in Configure method
-app.UseCors(MyAllowSpecificOrigins);
-
 app.Run();

@@ -1,4 +1,5 @@
 ﻿using E_CommerceAPI.Errors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SwiftShipping.DataAccessLayer.Enum;
@@ -10,6 +11,7 @@ namespace SwiftShipping.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class SellerController : ControllerBase
     {
         private SellerService _sellerService; 
@@ -123,6 +125,15 @@ namespace SwiftShipping.API.Controllers
         public IActionResult GetAllStatusCount(int SellerId)
         {
             return Ok(_orderService.GetAllOrderStatusCountForSeller(SellerId));
+        }
+
+        [HttpGet("{id}/orders/{status}")]
+        public ActionResult<List<OrderGetDTO>> getSellerOrdersByStatus(int id, OrderStatus status)
+        {
+            if (id == 0) return BadRequest(new ApiResponse(400, "seller not exist"));
+
+            var orders = _sellerService.GetSellerOrdersByStatus(id,status);
+            return Ok(orders);
         }
 
     }

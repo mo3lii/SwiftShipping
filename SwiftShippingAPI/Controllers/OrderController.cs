@@ -23,9 +23,8 @@ namespace SwiftShipping.API.Controllers
         [HttpPost("Add")]
         public IActionResult Add(OrderDTO orderDTO)
         {
-
             orderService.AddOrder(orderDTO);
-            return Ok("Order Addes Successfully");
+            return Ok(new { msg = "order added successfully"});
         }
 
         [HttpGet("All")]
@@ -85,6 +84,12 @@ namespace SwiftShipping.API.Controllers
             return Ok(shipingTypes);
         }
 
+        [HttpGet("PaymentTypes")]
+        public IActionResult GetPaymentTypes()
+        {
+            var PaymentTypes = orderService.GetPaymentTypes();
+            return Ok(PaymentTypes);
+        }
         [HttpPut("ChangeOrderStatus/{id}")]
         public IActionResult ChangeOrderStatus(int id, [FromBody] OrderStatus status)
         {
@@ -121,12 +126,11 @@ namespace SwiftShipping.API.Controllers
             return Ok("Order Deleted Successfully");
         }
 
-        [HttpGet("OrderCost")]
+        [HttpPost("OrderCost")]
         public IActionResult OrderCost(OrderCostDTO order)
         {
             var orderCost = orderService.CalculateOrderCost(order);
-            return(Ok(orderCost));
-
+            return Ok(orderCost);
         }
     }
 }

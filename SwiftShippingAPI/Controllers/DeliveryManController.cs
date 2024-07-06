@@ -37,7 +37,7 @@ namespace SwiftShipping.API.Controllers
             {
                 await deliveryManService.AddDliveryManAsync(deliveryManDTO);
 
-                return Ok(new { message = "Delivery Man Added Successfully" });
+                return Ok(new { Message = " Delivery Man Added Successfully" });
             }
             else
             {
@@ -136,7 +136,7 @@ namespace SwiftShipping.API.Controllers
             var result = deliveryManService.UpdateDeliveryMan(id, deliveryManDTO);
             if (!result) return NotFound(new ApiResponse(404, "delivary Does not exixt"));
 
-            return Ok("Delivery Man Updated Successfully");
+            return Ok(new { Message = " Delivery Man Updated Successfully" });
         }
 
         [HttpDelete("Delete/{id}")]
@@ -147,7 +147,7 @@ namespace SwiftShipping.API.Controllers
             var result = deliveryManService.DeleteDeliveryMan(id);
             if (!result) return NotFound(new ApiResponse(404));
 
-            return Ok("Delivery Man Deleted Successfully");
+            return Ok(new { Message = " Delivery Man Deleted Successfully" });
         }
 
         [HttpPost("AssignRegions/{deliveryManId}")]

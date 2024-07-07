@@ -30,7 +30,7 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpGet("All")]
-        [Authorize(Roles ="Employee")]
+        [Authorize(Roles ="Employee,Admin")]
         public ActionResult<List<RegionGetDTO>> GetAll()
         {
             var regions = regionService.GetAll();

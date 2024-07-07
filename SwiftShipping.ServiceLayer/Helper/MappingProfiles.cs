@@ -105,7 +105,8 @@ namespace SwiftShipping.ServiceLayer.Helper
 
             CreateMap<ApplicationUser, EmployeeDTO>().ForMember(dest => dest.password, opt => opt.MapFrom(src => src.PasswordHash));
 
-            CreateMap<SellerDTO, Seller>();
+            CreateMap<Seller, SellerDTO>().ReverseMap();
+            CreateMap<SellerGetDTO, Seller>();
 
             CreateMap<ApplicationUser, SellerDTO>();
 

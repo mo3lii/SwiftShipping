@@ -92,18 +92,17 @@ namespace SwiftShipping.ServiceLayer.Services
         }
 
 
-        public EmployeeDTO GetById(int id)
+        public EmployeeGetDTO GetById(int id)
         {
 
             var employee = unit.EmployeeRipository.GetById(id);
-            return mapper.Map<Employee, EmployeeDTO>(employee);
+            return mapper.Map<Employee, EmployeeGetDTO>(employee);
 
         }
-
-        public List<EmployeeDTO> GetAll()
+        public List<EmployeeGetDTO> GetAll()
         {
             var employeesData = unit.EmployeeRipository.GetAll();
-            return mapper.Map<List<Employee>, List<EmployeeDTO>>(employeesData);
+            return mapper.Map<List<Employee>, List<EmployeeGetDTO>>(employeesData);
         }
 
         public bool UpdateEmployee(int id, EmployeeDTO employeeDTO)
@@ -121,6 +120,9 @@ namespace SwiftShipping.ServiceLayer.Services
                 mapper.Map(employeeDTO, existingEmployee);
                 mapper.Map(employeeDTO, existingEmployeeUser);
                 unit.EmployeeRipository.Update(existingEmployee);
+
+                existingEmployeeUser.NormalizedUserName = userManager.NormalizeName(employeeDTO.userName);
+                existingEmployeeUser.NormalizedEmail = userManager.NormalizeEmail(employeeDTO.email);
                 unit.AppUserRepository.Update(existingEmployeeUser);
                 unit.SaveChanges();
             }

@@ -15,6 +15,7 @@ namespace SwiftShipping.ServiceLayer.Helper
             {OrderStatus.AcceptedByDeliveryCompany,"Accepted to delivery" },
             {OrderStatus.RejectedByDeliveryCompany,"Rejected delivery" },
             {OrderStatus.Pending,"Pending" },
+            {OrderStatus.Delivered,"Delivered" },
             {OrderStatus.DeliveredToDeliveryMan,"With Delivery Man" },
             {OrderStatus.CanNotBeReached,"Can't Be Reached" },
             {OrderStatus.Postponed,"Postponed" },

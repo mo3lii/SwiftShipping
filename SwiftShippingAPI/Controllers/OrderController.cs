@@ -19,14 +19,15 @@ namespace SwiftShipping.API.Controllers
             unitOfWork = _unitOfWork;
             orderService = _orderService;
         }
+
         [HttpPost("Add")]
         public IActionResult Add(OrderDTO orderDTO)
         {
             orderService.AddOrder(orderDTO);
-            return Created();
+            return Ok(new { msg = "order added successfully"});
         }
 
-        [HttpGet]
+        [HttpGet("All")]
         public ActionResult<OrderGetDTO> GetAll() { 
         
             var orders = orderService.GetAll();
@@ -83,17 +84,23 @@ namespace SwiftShipping.API.Controllers
             return Ok(shipingTypes);
         }
 
-        [HttpPut("ChangeOrderStatus")]
-        public IActionResult ChangeOrderStatus([FromBody] OrderStatus status, int id)
+        [HttpGet("PaymentTypes")]
+        public IActionResult GetPaymentTypes()
+        {
+            var PaymentTypes = orderService.GetPaymentTypes();
+            return Ok(PaymentTypes);
+        }
+        [HttpPut("ChangeOrderStatus/{id}")]
+        public IActionResult ChangeOrderStatus(int id, [FromBody] OrderStatus status)
         {
             var result = orderService.ChangeOrderStatus(status, id);
 
             if (result)
             {
-                return Ok("Status changed successfully");
+                return Ok(new { message = "Status changed successfully" });
             }
-          
-             return BadRequest(new ApiResponse(400, "Failed to change status"));
+
+            return BadRequest(new ApiResponse(400, "Failed to change status"));
         }
 
         [HttpPut("Edit/{id}")]
@@ -119,12 +126,11 @@ namespace SwiftShipping.API.Controllers
             return Ok("Order Deleted Successfully");
         }
 
-        [HttpGet("OrderCost")]
+        [HttpPost("OrderCost")]
         public IActionResult OrderCost(OrderCostDTO order)
         {
             var orderCost = orderService.CalculateOrderCost(order);
-            return(Ok(orderCost));
-
+            return Ok(orderCost);
         }
     }
 }

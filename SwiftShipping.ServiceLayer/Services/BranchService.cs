@@ -85,6 +85,7 @@ namespace SwiftShipping.ServiceLayer.Services
                 }
 
                 existingBranch.IsDeleted = true;
+                existingBranch.IsActive = false;
                 unit.BranchRipository.Update(existingBranch);
                 unit.SaveChanges();
             }

@@ -1,4 +1,5 @@
-﻿using SwiftShipping.DataAccessLayer.Models;
+﻿using SwiftShipping.DataAccessLayer.Enum;
+using SwiftShipping.DataAccessLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +19,21 @@ namespace SwiftShipping.ServiceLayer.DTO
         public bool IsShippedToVillage { get; set; }
         public string? VillageName { get; set; }
         public float Weight { get; set; }
+        public string BranchName { get; set; }
         public decimal OrderPrice { get; set; }
-        public string Note { get; set; }
+        public string? Note { get; set; }
         public string ShippingType { get; set; }
         public string OrderType { get; set; }
         public string PaymentType { get; set; }
         public string Status { get; set;}
+        public DateTime CreationDate { get; set; }
+        public OrderStatus OrderStatus { get; set; }
+        public decimal DeliveryCost { get; set; }
+
+
+
+        //delivery man id
+        public int? DeliveryId { get; set; }
+
     }
 }

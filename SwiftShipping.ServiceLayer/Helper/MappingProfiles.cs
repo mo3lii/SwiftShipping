@@ -21,7 +21,9 @@ namespace SwiftShipping.ServiceLayer.Helper
                 .ForMember(dest => dest.OrderType, opt => opt.MapFrom(src => OrderTypeMapper.OrderTypeDictionary[src.OrderType]))
                 .ForMember(dest => dest.PaymentType, opt => opt.MapFrom(src => PaymentTypeMapper.PaymentTypeDictionary[src.PaymentType]))
                 .ForMember(dest => dest.Government, opt => opt.MapFrom(src => src.Region.Government.Name))
+                .ForMember(dest => dest.BranchName, opt => opt.MapFrom(src => src.Branch.Name))
                 .ForMember(dest => dest.Region, opt => opt.MapFrom(src => src.Region.Name))
+                .ForMember(dest => dest.DeliveryCost, opt => opt.MapFrom(src => src.DeliveryCost))
                 .ForMember(dest => dest.OrderStatus, opt =>opt.MapFrom(src => src.Status));
 
 
@@ -112,6 +114,16 @@ namespace SwiftShipping.ServiceLayer.Helper
                 .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => DepartmentMapper.DepartmentsDictionary[src.DepartmentId])).ReverseMap();
 
             CreateMap<GovernmentDTO, Government>().ReverseMap();
+
+            CreateMap<DeliveryManRegions, RegionGetDTO>()
+                    .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Region.Id))
+                     .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Region.Name))
+                     .ForMember(dest => dest.PickupPrice, opt => opt.MapFrom(src => src.Region.PickupPrice))
+                     .ForMember(dest => dest.NormalPrice, opt => opt.MapFrom(src => src.Region.NormalPrice))
+                     .ForMember(dest => dest.GovernmentName, opt => opt.MapFrom(src => src.Region.Government.Name));
+
+
+
 
         }
     }

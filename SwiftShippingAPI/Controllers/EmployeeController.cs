@@ -13,7 +13,6 @@ namespace SwiftShipping.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
     public class EmployeeController : ControllerBase
     {
         UnitOfWork unitOfWork;
@@ -25,6 +24,7 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpPost("Add")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Register(EmployeeDTO employeeDTO)
         {
 
@@ -39,36 +39,7 @@ namespace SwiftShipping.API.Controllers
             }
         }
 
-        [HttpPost("Login")]
-        public async Task<IActionResult> Login(LoginDTO loginDTO)
-        {
-            if (ModelState.IsValid)
-            {
-                var result = await employeeService.Login(loginDTO);
-                if (result.Success == true)
-                {
-                    // Create the claims
-                    var claims = new List<Claim>
-                    {
-                        new Claim("UserId", result.UserId),
-                        new Claim(ClaimTypes.Role, result.Role),
-                        //new Claim("Policy", "CanView")
-                    };
-
-                    var Token = JwtTokenHelper.GenerateToken(claims);
-                    return Created("Login Successfully", new { token = Token, role = result.Role });
-
-                }
-                else
-                {
-                    return BadRequest(new ApiResponse(400, "Login Faild"));
-                }
-            }
-            else
-            {
-                return NotFound(new ApiResponse(404, "Employee does not exist"));
-            }
-        }
+       
 
         //[HttpGet("All")]
         //[Authorize(Roles = "Employee")]
@@ -80,9 +51,11 @@ namespace SwiftShipping.API.Controllers
         //}
 
         [HttpGet("All")]
+
         //[Authorize(Roles = "Employee")]
         //[Authorize(Policy = "CanView")]
         public ActionResult<List<EmployeeGetDTO>> GetAllEmployees()
+
         {
             var employees = employeeService.GetAll();
             return Ok(employees);
@@ -90,7 +63,9 @@ namespace SwiftShipping.API.Controllers
 
 
         [HttpGet("{id}")]
+
         public ActionResult<EmployeeGetDTO> GetById(int id)
+
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
 
@@ -101,6 +76,8 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpPut("Update/{id}")]
+        //[Authorize(Roles = "Employee")]
+
         public IActionResult UpdateEmployee(int id, EmployeeDTO employee)
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
@@ -112,6 +89,8 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
+        //[Authorize(Roles = "Employee")]
+
         public IActionResult DeleteEmployee(int id)
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
@@ -123,6 +102,8 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpPut("ToggleActivityStatus/{id}")]
+        //[Authorize(Roles = "Employee")]
+
         public IActionResult ToggleActivityStatus(int id)
         {
             var res = employeeService.ToggleActivityStatus(id);

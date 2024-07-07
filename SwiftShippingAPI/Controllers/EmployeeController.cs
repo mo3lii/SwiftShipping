@@ -39,23 +39,13 @@ namespace SwiftShipping.API.Controllers
             }
         }
 
-       
 
-        //[HttpGet("All")]
-        //[Authorize(Roles = "Employee")]
-        ////[Authorize(Policy = "CanView")]
-        //public ActionResult<List<EmployeeGetDTO>> GetAll()
-        //{
-        //    var employees = employeeService.GetAll();
-        //    return Ok(employees);
-        //}
+        
 
         [HttpGet("All")]
-
         //[Authorize(Roles = "Employee")]
         //[Authorize(Policy = "CanView")]
-        //[Authorize(Roles = "Employee,Admin")]
-
+        public ActionResult<List<EmployeeGetDTO>> GetAllEmployees()
         {
             var employees = employeeService.GetAll();
             return Ok(employees);

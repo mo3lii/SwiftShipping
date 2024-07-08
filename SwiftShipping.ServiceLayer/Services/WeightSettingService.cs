@@ -11,17 +11,17 @@ namespace SwiftShipping.ServiceLayer.Services
 {
     public class WeightSettingService
     {
-        private UnitOfWork unit;
-        public WeightSettingService(UnitOfWork _unit)
+        private readonly UnitOfWork _unit;
+        public WeightSettingService(UnitOfWork unit)
         {
-            unit = _unit;
+            _unit = unit;
         }
         public async Task<bool> UpdateSetting(WeightSetting weightSetting )
         {
             try
             {
-                unit.WeightSettingRepository.UpdateSetting(weightSetting);
-                unit.SaveChanges();
+                _unit.WeightSettingRepository.UpdateSetting(weightSetting);
+                _unit.SaveChanges();
             }
             catch
             {
@@ -32,7 +32,7 @@ namespace SwiftShipping.ServiceLayer.Services
 
         public async Task<WeightSetting> GetSettingAsync()
         {
-            return unit.WeightSettingRepository.GetSetting();
+            return _unit.WeightSettingRepository.GetSetting();
         }
     }
 }

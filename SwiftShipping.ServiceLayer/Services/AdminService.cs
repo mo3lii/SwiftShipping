@@ -14,32 +14,32 @@ namespace SwiftShipping.ServiceLayer.Services
 {
     public class AdminService
     {
-        private UnitOfWork unit;
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly RoleManager<IdentityRole> roleManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly UnitOfWork _unit;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AdminService(UnitOfWork _unit, UserManager<ApplicationUser> _userManager,
-            RoleManager<IdentityRole> _roleManager, SignInManager<ApplicationUser> _signInManager, IMapper _mapper)
+        public AdminService(UnitOfWork unit, UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager, IMapper mapper)
         {
-            unit = _unit;
-            userManager = _userManager;
-            roleManager = _roleManager;
-            signInManager = _signInManager;
+            _unit = unit;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _signInManager = signInManager;
         }
         public async Task<(bool Success, string UserId, string Role)> Login(LoginWithUserNameDTO loginDTO)
         {
-            ApplicationUser user = await userManager.FindByNameAsync(loginDTO.userName);
+            ApplicationUser user = await _userManager.FindByNameAsync(loginDTO.userName);
 
             if (user != null)
             {
-                bool found = await userManager.CheckPasswordAsync(user, loginDTO.password);
+                bool found = await _userManager.CheckPasswordAsync(user, loginDTO.password);
 
                 if (found)
                 {
-                    await signInManager.SignInAsync(user, loginDTO.RemembreMe);
+                    await _signInManager.SignInAsync(user, loginDTO.RemembreMe);
                     // Fetch user roles
-                    var roles = await userManager.GetRolesAsync(user);
+                    var roles = await _userManager.GetRolesAsync(user);
                     string role = roles.FirstOrDefault();
 
                     return (true, user.Id, role);
@@ -62,18 +62,18 @@ namespace SwiftShipping.ServiceLayer.Services
                 ,PasswordHash= "Admin@123"
             };
 
-            IdentityResult result = await userManager.CreateAsync(appUser, "Admin@123");
+            IdentityResult result = await _userManager.CreateAsync(appUser, "Admin@123");
             if (result.Succeeded)
             {
                 //Employee Role as String
                 var AdminRole = RoleTypes.Admin.ToString();
 
                 // check if the role is exist if not, add it
-                if (await roleManager.FindByNameAsync(AdminRole) == null)
-                    await roleManager.CreateAsync(new IdentityRole() { Name = AdminRole });
+                if (await _roleManager.FindByNameAsync(AdminRole) == null)
+                    await _roleManager.CreateAsync(new IdentityRole() { Name = AdminRole });
 
                 // assign roles  to created user
-                IdentityResult adminRoleAssigning = await userManager.AddToRoleAsync(appUser, AdminRole);
+                IdentityResult adminRoleAssigning = await _userManager.AddToRoleAsync(appUser, AdminRole);
 
                 if (adminRoleAssigning.Succeeded)
                 {
@@ -83,8 +83,8 @@ namespace SwiftShipping.ServiceLayer.Services
                         IsDeleted = false,
                         userId = appUser.Id,
                     };
-                    unit.AdminRipository.Insert(admin);
-                    unit.SaveChanges();
+                    _unit.AdminRipository.Insert(admin);
+                    _unit.SaveChanges();
                     return true;
                 }
             }

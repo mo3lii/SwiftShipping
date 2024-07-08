@@ -10,23 +10,23 @@ namespace SwiftShipping.API.Controllers
     [ApiController]
     public class BranchController : ControllerBase
     {
-        BranchService branchService;
-        public BranchController(BranchService _branchService) {
-            branchService = _branchService;
+        private readonly BranchService _branchService;
+        public BranchController(BranchService branchService) {
+            _branchService = branchService;
         }
 
         [HttpGet("All")]
         public IActionResult GetAllBranches()
         {
-            var branches = branchService.GetAll();
+            var branches = _branchService.GetAll();
             return Ok(branches);
         }
 
         [HttpPost("Add")]
         public IActionResult addBranch(BranchDTO branchDTO)
         {
-            branchService.AddBrnach(branchDTO);
-            return Ok("Branch Created Successfully");
+            _branchService.AddBrnach(branchDTO);
+            return Ok(new ApiResponse(200,"Branch Created Successfully"));
         }
 
         [HttpGet("{id}")]
@@ -34,7 +34,7 @@ namespace SwiftShipping.API.Controllers
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
 
-            var branch = branchService.GetById(id);
+            var branch = _branchService.GetById(id);
 
             if (branch == null) { return NotFound(new ApiResponse(404)); }
             return Ok(branch);
@@ -45,11 +45,11 @@ namespace SwiftShipping.API.Controllers
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
 
-            var result = branchService.EditBranch(id, branchDTO);
+            var result = _branchService.EditBranch(id, branchDTO);
 
             if (!result) return NotFound(new ApiResponse(404));
 
-            return Ok("Branch Updated Successfully");
+            return Ok(new ApiResponse(200,"Branch Updated Successfully"));
         }
 
         [HttpDelete("Delete/{id}")]
@@ -57,11 +57,11 @@ namespace SwiftShipping.API.Controllers
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
 
-            var result = branchService.DeleteBranch(id);
+            var result = _branchService.DeleteBranch(id);
 
             if (!result) return NotFound(new ApiResponse(404));
 
-            return Ok("Branch Deleted Successfully");
+            return Ok(new ApiResponse(200, "Branch Deleted Successfully"));
         }
 
 

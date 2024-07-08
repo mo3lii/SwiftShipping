@@ -11,15 +11,15 @@ namespace SwiftShipping.API.Controllers
     [ApiController]
     public class GovernmentController : ControllerBase
     {
-        private readonly GovernmentService governmentService;
-        public GovernmentController(GovernmentService _governmentService) {
-            governmentService = _governmentService;
+        private readonly GovernmentService _governmentService;
+        public GovernmentController(GovernmentService governmentService) {
+            _governmentService = governmentService;
         }
 
         [HttpGet("All")]
         public ActionResult<List<GovernmentGetDTO>> GetAll()
         {
-            var governemnts = governmentService.GetAll();
+            var governemnts = _governmentService.GetAll();
 
             return Ok(governemnts);
         }
@@ -29,7 +29,7 @@ namespace SwiftShipping.API.Controllers
         {
             if (name == null) { return BadRequest(new ApiResponse(400)); }
 
-            governmentService.AddGovernment(name);
+            _governmentService.AddGovernment(name);
             return Created();
         }
 
@@ -38,7 +38,7 @@ namespace SwiftShipping.API.Controllers
         {
             if (id == 0) { return BadRequest(new ApiResponse(400)); }
 
-            var government = governmentService.GetById(id);
+            var government = _governmentService.GetById(id);
 
             if (government == null) { return NotFound(new ApiResponse(404, "Government does not exist")); }
 
@@ -50,10 +50,10 @@ namespace SwiftShipping.API.Controllers
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
 
-            var result = governmentService.EditGovernment(id, governmentDTO);
+            var result = _governmentService.EditGovernment(id, governmentDTO);
             if (!result) return NotFound(new ApiResponse(404));
 
-            return Ok(new {msg = "Government Updated Successfully" });
+            return Ok(new ApiResponse(200, "Government Updated Successfully" ));
         }
 
 
@@ -62,10 +62,10 @@ namespace SwiftShipping.API.Controllers
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
 
-            var result = governmentService.Delete(id);
+            var result = _governmentService.Delete(id);
             if (!result) return NotFound(new ApiResponse(404));
 
-            return Ok(new { msg = "Government deleted Successfully" });
+            return Ok(new ApiResponse(200, "Government deleted Successfully"));
 
         }
 

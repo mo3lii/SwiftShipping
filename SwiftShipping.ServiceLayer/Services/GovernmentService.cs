@@ -13,19 +13,19 @@ namespace SwiftShipping.ServiceLayer.Services
 {
     public class GovernmentService
     {
-        private UnitOfWork unit;
-        private readonly IMapper mapper;
-        public GovernmentService(UnitOfWork _unit, IMapper mapper)
+        private readonly UnitOfWork _unit;
+        private readonly IMapper _mapper;
+        public GovernmentService(UnitOfWork unit, IMapper mapper)
         {
-            unit = _unit;
-            this.mapper = mapper;
+            _unit = unit;
+            this._mapper = mapper;
         }
 
         public bool AddGovernment(string name)
         {
             try { 
-            unit.GovernmentRipository.Insert(new Government() { Name = name, IsActive = true });
-            unit.SaveChanges();
+                _unit.GovernmentRipository.Insert(new Government() { Name = name, IsActive = true });
+                _unit.SaveChanges();
             }catch { 
             return false;
             }
@@ -33,14 +33,15 @@ namespace SwiftShipping.ServiceLayer.Services
         }
         public List<GovernmentGetDTO> GetAll()
         {
-            var governments = unit.GovernmentRipository.GetAll(x=>x.IsDeleted == false);
-            return mapper.Map<List<Government>, List<GovernmentGetDTO>>(governments);
+            var governments = _unit.GovernmentRipository.GetAll(government => government.IsDeleted == false);
+
+            return _mapper.Map<List<Government>, List<GovernmentGetDTO>>(governments);
         }
 
         public GovernmentGetDTO GetById(int id)
         {
-            var government = unit.GovernmentRipository.GetById(id);
-            return mapper.Map<Government, GovernmentGetDTO>(government);
+            var government = _unit.GovernmentRipository.GetById(id);
+            return _mapper.Map<Government, GovernmentGetDTO>(government);
 
         }
 
@@ -48,15 +49,15 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             try
             {
-                var foundgovernment = unit.GovernmentRipository.GetById(id);
+                var foundgovernment = _unit.GovernmentRipository.GetById(id);
                 if (foundgovernment == null)
                 {
                     return false;
                 }
 
-                mapper.Map(governmentDTO, foundgovernment);
-                unit.GovernmentRipository.Update(foundgovernment);
-                unit.SaveChanges();
+                _mapper.Map(governmentDTO, foundgovernment);
+                _unit.GovernmentRipository.Update(foundgovernment);
+                _unit.SaveChanges();
             }
             catch
             {
@@ -69,15 +70,15 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             try
             {
-                var foundGovernment = unit.GovernmentRipository.GetById(id);
+                var foundGovernment = _unit.GovernmentRipository.GetById(id);
                 if (foundGovernment == null)
                 {
                     return false;
                 }
 
                 foundGovernment.IsDeleted = true;
-                unit.GovernmentRipository.Update(foundGovernment);
-                unit.SaveChanges();
+                _unit.GovernmentRipository.Update(foundGovernment);
+                _unit.SaveChanges();
             }
             catch
             {

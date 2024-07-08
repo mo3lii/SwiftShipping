@@ -13,19 +13,19 @@ namespace SwiftShipping.API.Controllers
     [ApiController]
     public class RegionController : ControllerBase
     {
-        private readonly RegionService regionService;
-        private readonly IMapper mapper;
+        private readonly RegionService _regionService;
+        private readonly IMapper _mapper;
 
-        public RegionController(RegionService _regionService, IMapper _mapper)
+        public RegionController(RegionService regionService, IMapper mapper)
         {
-            regionService = _regionService;
-            mapper = _mapper;
+            _regionService = regionService;
+            _mapper = mapper;
         }
 
         [HttpPost("Add")]
         public IActionResult Add(RegionDTO regionDTO)
         {
-            regionService.Add(regionDTO);
+            _regionService.Add(regionDTO);
             return Created();
         }
 
@@ -33,7 +33,7 @@ namespace SwiftShipping.API.Controllers
         [Authorize(Roles ="Employee,Admin")]
         public ActionResult<List<RegionGetDTO>> GetAll()
         {
-            var regions = regionService.GetAll();
+            var regions = _regionService.GetAll();
             return Ok(regions);
         }
 
@@ -43,7 +43,7 @@ namespace SwiftShipping.API.Controllers
             if (id == 0)
                 return BadRequest(new ApiResponse(400));
 
-            var region = regionService.GetById(id);
+            var region = _regionService.GetById(id);
 
             if (region == null)
             {
@@ -58,9 +58,9 @@ namespace SwiftShipping.API.Controllers
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
 
-            var result = regionService.EditRegion(id, regionDTO);
+            var result = _regionService.EditRegion(id, regionDTO);
             if (!result) return NotFound(new ApiResponse(404));
-            return Ok("Region Updated Successfully");
+            return Ok(new ApiResponse(200, "Region Updated Successfully"));
         }
 
         [HttpDelete("Delete/{id}")]
@@ -68,10 +68,10 @@ namespace SwiftShipping.API.Controllers
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
 
-            var result = regionService.DeleteRegion(id);
+            var result = _regionService.DeleteRegion(id);
             if (!result) return NotFound(new ApiResponse(404));
 
-            return Ok("Region Deleted Successfully");
+            return Ok(new ApiResponse(200, "Region Deleted Successfully"));
         }
 
         [HttpGet("Government/{id}")]
@@ -79,8 +79,8 @@ namespace SwiftShipping.API.Controllers
         {
             if (id == 0)
                 return BadRequest(new ApiResponse(404));
-            var regions = regionService.GetRegionsByGovernment(id);
-            var res = mapper.Map<List<Region>, List<RegionGetDTO>>(regions);
+            var regions = _regionService.GetRegionsByGovernment(id);
+            var res = _mapper.Map<List<Region>, List<RegionGetDTO>>(regions);
             return Ok(res);
 
         }

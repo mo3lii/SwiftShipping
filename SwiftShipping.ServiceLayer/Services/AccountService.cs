@@ -14,31 +14,31 @@ namespace SwiftShipping.ServiceLayer.Services
 {
     public class AccountService
     {
-        private UnitOfWork unit;
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly RoleManager<IdentityRole> roleManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
-        public AccountService(UnitOfWork _unit, UserManager<ApplicationUser> _userManager,
-            RoleManager<IdentityRole> _roleManager, SignInManager<ApplicationUser> _signInManager, IMapper _mapper)
+        private UnitOfWork _unit;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        public AccountService(UnitOfWork unit, UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager, IMapper mapper)
         {
-            unit = _unit;
-            userManager = _userManager;
-            roleManager = _roleManager;
-            signInManager = _signInManager;
+            _unit = unit;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _signInManager = signInManager;
         }
         public async Task<(bool Success, string UserId, string Role)> LoginWithEmail(LoginWithEmailDTO loginDTO)
         {
-            ApplicationUser user = await userManager.FindByEmailAsync(loginDTO.email);
+            ApplicationUser user = await _userManager.FindByEmailAsync(loginDTO.email);
 
             if (user != null)
             {
-                bool found = await userManager.CheckPasswordAsync(user, loginDTO.password);
+                bool found = await _userManager.CheckPasswordAsync(user, loginDTO.password);
 
                 if (found)
                 {
-                    await signInManager.SignInAsync(user, loginDTO.RemembreMe);
+                    await _signInManager.SignInAsync(user, loginDTO.RemembreMe);
                     // Fetch user roles
-                    var roles = await userManager.GetRolesAsync(user);
+                    var roles = await _userManager.GetRolesAsync(user);
                     string role = roles.FirstOrDefault();
 
                     return (true, user.Id, role);
@@ -50,17 +50,17 @@ namespace SwiftShipping.ServiceLayer.Services
 
         public async Task<(bool Success, string UserId, string Role)> Login(LoginWithUserNameDTO loginDTO)
         {
-            ApplicationUser user = await userManager.FindByNameAsync(loginDTO.userName);
+            ApplicationUser user = await _userManager.FindByNameAsync(loginDTO.userName);
 
             if (user != null)
             {
-                bool found = await userManager.CheckPasswordAsync(user, loginDTO.password);
+                bool found = await _userManager.CheckPasswordAsync(user, loginDTO.password);
 
                 if (found)
                 {
-                    await signInManager.SignInAsync(user, loginDTO.RemembreMe);
+                    await _signInManager.SignInAsync(user, loginDTO.RemembreMe);
                     // Fetch user roles
-                    var roles = await userManager.GetRolesAsync(user);
+                    var roles = await _userManager.GetRolesAsync(user);
                     string role = roles.FirstOrDefault();
 
                     return (true, user.Id, role);
@@ -81,16 +81,16 @@ namespace SwiftShipping.ServiceLayer.Services
             switch (roleType)
             {
                 case RoleTypes.Employee:
-                    return unit.EmployeeRipository.GetFirstByFilter(e => e.UserId == userId).Id;
+                    return _unit.EmployeeRipository.GetFirstByFilter(e => e.UserId == userId).Id;
 
                 case RoleTypes.Seller:
-                    return unit.SellerRipository.GetFirstByFilter(e => e.UserId == userId).Id;
+                    return _unit.SellerRipository.GetFirstByFilter(e => e.UserId == userId).Id;
 
                 case RoleTypes.DeliveryMan:
-                    return unit.DeliveryManRipository.GetFirstByFilter(e => e.UserId == userId).Id;
+                    return _unit.DeliveryManRipository.GetFirstByFilter(e => e.UserId == userId).Id;
 
                 case RoleTypes.Admin:
-                    return unit.AdminRipository.GetFirstByFilter(e => e.userId == userId).Id;
+                    return _unit.AdminRipository.GetFirstByFilter(e => e.userId == userId).Id;
 
                 default:
                     throw new InvalidOperationException("Unknown role type");

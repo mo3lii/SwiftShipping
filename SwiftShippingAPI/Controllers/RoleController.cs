@@ -40,7 +40,7 @@ namespace SwiftShipping.API.Controllers
         {
             var result = _rolesService.updateRolePermissions(role, permissionsDTOList);
             if (!result) return NotFound(new ApiResponse(404));
-            return Ok("updated successfully");
+            return Ok(new ApiResponse(200, "updated successfully"));
         }
 
 

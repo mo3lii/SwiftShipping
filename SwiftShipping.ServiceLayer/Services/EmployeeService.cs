@@ -14,47 +14,47 @@ namespace SwiftShipping.ServiceLayer.Services
 {
     public class EmployeeService
     {
-        private UnitOfWork unit;
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly RoleManager<IdentityRole> roleManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
-        private readonly IMapper mapper; 
+        private readonly UnitOfWork _unit;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IMapper _mapper; 
 
-        public EmployeeService(UnitOfWork _unit, UserManager<ApplicationUser> _userManager,
-            RoleManager<IdentityRole> _roleManager, SignInManager<ApplicationUser> _signInManager,IMapper _mapper)
+        public EmployeeService(UnitOfWork unit, UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager,IMapper mapper)
         {
-            unit = _unit;
-            mapper = _mapper;
-            userManager = _userManager;
-            roleManager = _roleManager;
-            signInManager = _signInManager;
+            _unit = unit;
+            _mapper = mapper;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _signInManager = signInManager;
         }
 
         public async Task<bool> addEmployeeAsync(EmployeeDTO employeeDTO)
         {
           
-            var appUser = mapper.Map<EmployeeDTO, ApplicationUser>(employeeDTO);
+            var appUser = _mapper.Map<EmployeeDTO, ApplicationUser>(employeeDTO);
 
-            IdentityResult result = await userManager.CreateAsync(appUser, employeeDTO.password);
+            IdentityResult result = await _userManager.CreateAsync(appUser, employeeDTO.password);
             if (result.Succeeded)
             {
                 //Employee Role as String
                 var EmployeeRole = RoleTypes.Employee.ToString();
 
                 // check if the role is exist if not, add it
-                if (await roleManager.FindByNameAsync(EmployeeRole) == null)
-                    await roleManager.CreateAsync(new IdentityRole() { Name = EmployeeRole });
+                if (await _roleManager.FindByNameAsync(EmployeeRole) == null)
+                    await _roleManager.CreateAsync(new IdentityRole() { Name = EmployeeRole });
 
                 // assign roles  to created user
-                IdentityResult employeeRole = await userManager.AddToRoleAsync(appUser, EmployeeRole);
+                IdentityResult employeeRole = await _userManager.AddToRoleAsync(appUser, EmployeeRole);
 
 
                 if (employeeRole.Succeeded)
                 {
-                    var employee = mapper.Map<EmployeeDTO, Employee>(employeeDTO);
+                    var employee = _mapper.Map<EmployeeDTO, Employee>(employeeDTO);
                     employee.UserId = appUser.Id;
-                    unit.EmployeeRipository.Insert(employee);
-                    unit.SaveChanges();
+                    _unit.EmployeeRipository.Insert(employee);
+                    _unit.SaveChanges();
                     return true;
                 }
 
@@ -67,21 +67,21 @@ namespace SwiftShipping.ServiceLayer.Services
         
         public async Task<(bool Success, string UserId,string Role)> Login(LoginDTO loginDTO)
         {
-            ApplicationUser user = await userManager.FindByEmailAsync(loginDTO.email);
+            ApplicationUser user = await _userManager.FindByEmailAsync(loginDTO.email);
 
             if (user == null)
             {
-                user = await userManager.FindByNameAsync(loginDTO.userName);
+                user = await _userManager.FindByNameAsync(loginDTO.userName);
             }
 
             if (user != null)
             {
-                bool found = await userManager.CheckPasswordAsync(user, loginDTO.password);
+                bool found = await _userManager.CheckPasswordAsync(user, loginDTO.password);
                 if (found)
                 {
-                    await signInManager.SignInAsync(user, loginDTO.RemembreMe);
+                    await _signInManager.SignInAsync(user, loginDTO.RemembreMe);
                     // Fetch user roles
-                    var roles = await userManager.GetRolesAsync(user);
+                    var roles = await _userManager.GetRolesAsync(user);
                     string role = roles.FirstOrDefault(); 
 
                     return (true, user.Id,role);
@@ -95,36 +95,37 @@ namespace SwiftShipping.ServiceLayer.Services
         public EmployeeGetDTO GetById(int id)
         {
 
-            var employee = unit.EmployeeRipository.GetById(id);
-            return mapper.Map<Employee, EmployeeGetDTO>(employee);
+            var employee = _unit.EmployeeRipository.GetById(id);
+            return _mapper.Map<Employee, EmployeeGetDTO>(employee);
 
         }
         public List<EmployeeGetDTO> GetAll()
         {
-            var employeesData = unit.EmployeeRipository.GetAll();
-            return mapper.Map<List<Employee>, List<EmployeeGetDTO>>(employeesData);
+            var employeesData = _unit.EmployeeRipository.GetAll(employee => employee.IsDeleted == false);
+
+            return _mapper.Map<List<Employee>, List<EmployeeGetDTO>>(employeesData);
         }
 
         public bool UpdateEmployee(int id, EmployeeDTO employeeDTO)
         {
             try
             {
-                var existingEmployee = unit.EmployeeRipository.GetById(id);
+                var existingEmployee = _unit.EmployeeRipository.GetById(id);
                 //app user
                 if (existingEmployee == null)
                 {
                     return false;
                 }
-                var existingEmployeeUser = unit.AppUserRepository.GetById(existingEmployee.UserId);
+                var existingEmployeeUser = _unit.AppUserRepository.GetById(existingEmployee.UserId);
 
-                mapper.Map(employeeDTO, existingEmployee);
-                mapper.Map(employeeDTO, existingEmployeeUser);
-                unit.EmployeeRipository.Update(existingEmployee);
+                _mapper.Map(employeeDTO, existingEmployee);
+                _mapper.Map(employeeDTO, existingEmployeeUser);
+                _unit.EmployeeRipository.Update(existingEmployee);
 
-                existingEmployeeUser.NormalizedUserName = userManager.NormalizeName(employeeDTO.userName);
-                existingEmployeeUser.NormalizedEmail = userManager.NormalizeEmail(employeeDTO.email);
-                unit.AppUserRepository.Update(existingEmployeeUser);
-                unit.SaveChanges();
+                existingEmployeeUser.NormalizedUserName = _userManager.NormalizeName(employeeDTO.userName);
+                existingEmployeeUser.NormalizedEmail = _userManager.NormalizeEmail(employeeDTO.email);
+                _unit.AppUserRepository.Update(existingEmployeeUser);
+                _unit.SaveChanges();
             }
             catch
             {
@@ -137,17 +138,17 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             try
             {
-                var existingEmployee = unit.EmployeeRipository.GetById(id);
-                var existingEmployeeUser = unit.AppUserRepository.GetById(existingEmployee.UserId);
+                var existingEmployee = _unit.EmployeeRipository.GetById(id);
+                var existingEmployeeUser = _unit.AppUserRepository.GetById(existingEmployee.UserId);
                 if (existingEmployee == null)
                 {
                     return false;
                 }
                 existingEmployee.IsDeleted = true;
                 existingEmployeeUser.IsDeleted = true;  
-                unit.EmployeeRipository.Update(existingEmployee);
-                unit.AppUserRepository.Update(existingEmployeeUser);
-                unit.SaveChanges();
+                _unit.EmployeeRipository.Update(existingEmployee);
+                _unit.AppUserRepository.Update(existingEmployeeUser);
+                _unit.SaveChanges();
             }
             catch
             {
@@ -160,12 +161,12 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             try
             {
-                var existingEmployee = unit.EmployeeRipository.GetById(id);
+                var existingEmployee = _unit.EmployeeRipository.GetById(id);
                 if (existingEmployee == null)
                     return false;
                 existingEmployee.IsActive = !existingEmployee.IsActive;
-                unit.EmployeeRipository.Update(existingEmployee);
-                unit.SaveChanges();
+                _unit.EmployeeRipository.Update(existingEmployee);
+                _unit.SaveChanges();
                 return true;
             }catch
             {

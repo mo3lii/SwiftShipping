@@ -15,18 +15,19 @@ namespace SwiftShipping.API.Controllers
     [ApiController]
     public class DeliveryManController : ControllerBase
     {
-        DeliveryManService deliveryManService;
-        RegionService regionService;
-        private OrderService _orderService;
-        IMapper mapper;
-        public DeliveryManController(DeliveryManService _deliveryManService,
-            RegionService _regionService,
-            OrderService orderService, IMapper _mapper)
+        private readonly DeliveryManService _deliveryManService;
+        private readonly RegionService _regionService;
+        private readonly OrderService _orderService;
+        private readonly IMapper _mapper;
+
+        public DeliveryManController(DeliveryManService deliveryManService,
+            RegionService regionService,
+            OrderService orderService, IMapper mapper)
         {
-            deliveryManService = _deliveryManService;
-            regionService = _regionService;
+            _deliveryManService = deliveryManService;
+            _regionService = regionService;
             _orderService = orderService;
-            mapper = _mapper;
+            _mapper = mapper;
         }
 
         [HttpPost("Add")]
@@ -35,9 +36,9 @@ namespace SwiftShipping.API.Controllers
 
             if (ModelState.IsValid)
             {
-                await deliveryManService.AddDliveryManAsync(deliveryManDTO);
+                await _deliveryManService.AddDliveryManAsync(deliveryManDTO);
 
-                return Ok(new { Message = " Delivery Man Added Successfully" });
+                return Ok(new ApiResponse(200, "Delivery Man Added Successfully"));
             }
             else
             {
@@ -50,7 +51,7 @@ namespace SwiftShipping.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await deliveryManService.Login(loginDTO);
+                var result = await _deliveryManService.Login(loginDTO);
 
                 if (result.Success == true)
                 {
@@ -78,15 +79,15 @@ namespace SwiftShipping.API.Controllers
         {
             if (deliveryManId == 0 || regionId == 0) return BadRequest(new ApiResponse(400));
 
-            var deliveryMan = deliveryManService.GetById(deliveryManId);
+            var deliveryMan = _deliveryManService.GetById(deliveryManId);
 
             if (deliveryMan == null) return NotFound(new ApiResponse(404, "Delivary man does not exist"));
 
-            var region = regionService.GetById(regionId);
+            var region = _regionService.GetById(regionId);
 
             if (region == null) return NotFound(new ApiResponse(404, "Redion does not exist"));
 
-            var result = deliveryManService.assignDeliveryManTORegion(deliveryManId, regionId);
+            var result = _deliveryManService.assignDeliveryManTORegion(deliveryManId, regionId);
 
             if (result) return Ok();
 
@@ -98,11 +99,11 @@ namespace SwiftShipping.API.Controllers
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
 
-            var deliveryMan = deliveryManService.GetById(id);
+            var deliveryMan = _deliveryManService.GetById(id);
 
             if (deliveryMan == null) { return NotFound(new ApiResponse(404, "Delivary man does not exist")); } 
 
-            var orders = deliveryManService.GetDeliveryManOrders(id, status);
+            var orders = _deliveryManService.GetDeliveryManOrders(id, status);
 
             return Ok(orders);
         }
@@ -110,7 +111,7 @@ namespace SwiftShipping.API.Controllers
         [HttpGet("All")]
         public ActionResult<List<DeliveryManGetDTO>> GetAll()
         {
-            var deliveryMen = deliveryManService.GetAll();
+            var deliveryMen = _deliveryManService.GetAll();
 
             return Ok(deliveryMen);
         }
@@ -121,7 +122,7 @@ namespace SwiftShipping.API.Controllers
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
 
-            var deliveryMan = deliveryManService.GetById(id);
+            var deliveryMan = _deliveryManService.GetById(id);
 
             if (deliveryMan == null) {  return NotFound(new ApiResponse(404, "Delivary man does not exist")); }
 
@@ -133,10 +134,10 @@ namespace SwiftShipping.API.Controllers
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
 
-            var result = deliveryManService.UpdateDeliveryMan(id, deliveryManDTO);
+            var result = _deliveryManService.UpdateDeliveryMan(id, deliveryManDTO);
             if (!result) return NotFound(new ApiResponse(404, "delivary Does not exixt"));
 
-            return Ok(new { Message = " Delivery Man Updated Successfully" });
+            return Ok(new ApiResponse(200, " Delivery Man Updated Successfully"));
         }
 
         [HttpDelete("Delete/{id}")]
@@ -144,18 +145,19 @@ namespace SwiftShipping.API.Controllers
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
 
-            var result = deliveryManService.DeleteDeliveryMan(id);
+            var result = _deliveryManService.DeleteDeliveryMan(id);
             if (!result) return NotFound(new ApiResponse(404));
 
-            return Ok(new { Message = " Delivery Man Deleted Successfully" });
+            return Ok(new ApiResponse(200, " Delivery Man Deleted Successfully" ));
         }
 
         [HttpPost("AssignRegions/{deliveryManId}")]
         public IActionResult AssignRegions(int deliveryManId, int[] regionsId)
         {
-            var res = deliveryManService.AssignRegionsToDeliveryMan(deliveryManId, regionsId);
+            var res = _deliveryManService.AssignRegionsToDeliveryMan(deliveryManId, regionsId);
             if (res == true)
-                return Ok("regions assigned successfully");
+                return Ok(new ApiResponse(200, "regions assigned successfully"));
+
             return BadRequest(new ApiResponse(400));
         }
 
@@ -175,8 +177,9 @@ namespace SwiftShipping.API.Controllers
         [HttpGet("DeliveryManRegions/{deliveryManId}")]
         public IActionResult GetDeliveryManRegions(int deliveryManId)
         {
-            List<DeliveryManRegions> res =  deliveryManService.GetDeliveryManRegions(deliveryManId);
-            var regions = mapper.Map<List<DeliveryManRegions>, List<RegionGetDTO>>(res);
+            List<DeliveryManRegions> res =  _deliveryManService.GetDeliveryManRegions(deliveryManId);
+
+            var regions = _mapper.Map<List<DeliveryManRegions>, List<RegionGetDTO>>(res);
 
             return Ok(regions);
 

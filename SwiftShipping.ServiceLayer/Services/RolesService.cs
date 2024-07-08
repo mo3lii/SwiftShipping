@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using SwiftShipping.DataAccessLayer.Enum;
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.DataAccessLayer.Permissions;
 using SwiftShipping.DataAccessLayer.Repository;
@@ -32,6 +33,11 @@ namespace SwiftShipping.ServiceLayer.Services
 
             var permissions =  unit.RolePermissionsRepository.GetAll(r => r.RoleName == role);
             return  mapper.Map<List<RolePermissions>,List<PermissionDTO>>(permissions);
+        }
+        public PermissionDTO GetPermissionsByDepartment(string role,Department department)
+        {
+            var permissions = unit.RolePermissionsRepository.GetFirstByFilter(r => r.RoleName == role && r.DepartmentId==department );
+            return mapper.Map<RolePermissions, PermissionDTO>(permissions);
         }
         public bool isRolePermissionsExist(string role)
         {

@@ -3,6 +3,7 @@ using E_CommerceAPI.Errors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SwiftShipping.DataAccessLayer.Enum;
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.ServiceLayer.DTO;
 using SwiftShipping.ServiceLayer.Services;
@@ -26,6 +27,13 @@ namespace SwiftShipping.API.Controllers
             if(PermissionsDTOList == null || PermissionsDTOList.Count()==0) return NotFound(new ApiResponse(404));
             return Ok(PermissionsDTOList);
         }
+        [HttpGet("Department")]
+        public ActionResult<RolePermissions> GetDepartmentPermissionsByRole(string role,Department department)
+        {
+            var PermissionsDTO = _rolesService.GetPermissionsByDepartment(role,department);
+            if (PermissionsDTO == null) return NotFound(new ApiResponse(404));
+            return Ok(PermissionsDTO);
+        }
 
         [HttpPut("{role}")]
         public ActionResult<List<RolePermissions>> updatePermissionsByRole(string role,[FromBody]List<PermissionDTO> permissionsDTOList)
@@ -34,6 +42,7 @@ namespace SwiftShipping.API.Controllers
             if (!result) return NotFound(new ApiResponse(404));
             return Ok("updated successfully");
         }
+
 
         [HttpGet("Get/{role}")]
         public async Task<ActionResult<IdentityRole>> GetRole(string role)

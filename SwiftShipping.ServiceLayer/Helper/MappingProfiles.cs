@@ -71,8 +71,10 @@ namespace SwiftShipping.ServiceLayer.Helper
               .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
               .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.User.PhoneNumber))
               .ForMember(dest => dest.BranchName, opt => opt.MapFrom(src => src.Branch.Name))
-              .ForMember(dest => dest.RegionName, opt => opt.MapFrom(src => src.Region.Name));
-                
+              .ForMember(dest => dest.RegionName, opt => opt.MapFrom(src => src.Region.Name))
+              .ForMember(dest => dest.BranchId, opt => opt.MapFrom(src => src.Branch.Id))
+              .ForMember(dest => dest.RegionId, opt => opt.MapFrom(src => src.Region.Id));
+
 
 
             CreateMap<ApplicationUser, DeliveryManDTO>().ForMember(dest => dest.password, opt => opt.MapFrom(src => src.PasswordHash)); ;

@@ -69,6 +69,12 @@ namespace SwiftShipping.API.Controllers
 
         }
 
+        [HttpGet("GetAllGovernmentsWithRegions")]
+        public ActionResult<List<GovernmentWithRegionsDTO>> GetAllGovernmentsWithRegions()
+        {
+            var governments = _governmentService.GetAllGovernmentsWithRegions();
+            return Ok(governments);
+        }
 
     }
 }

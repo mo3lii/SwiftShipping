@@ -139,9 +139,13 @@ namespace SwiftShipping.ServiceLayer.Services
                 {
                     return false; 
                 }
+
                 var DeliveryManUser = _unit.AppUserRepository.GetById(existingDeliveryMan.UserId);
+
                 _mapper.Map(deliveryManDTO, existingDeliveryMan);
+
                 _mapper.Map(existingDeliveryMan, DeliveryManUser);
+
                 _unit.DeliveryManRipository.Update(existingDeliveryMan);
 
                 DeliveryManUser.NormalizedUserName = _userManager.NormalizeName(deliveryManDTO.userName);

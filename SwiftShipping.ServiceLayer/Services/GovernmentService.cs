@@ -87,6 +87,22 @@ namespace SwiftShipping.ServiceLayer.Services
             return true;
         }
 
+    public List<GovernmentWithRegionsDTO> GetAllGovernmentsWithRegions()
+    {
+        var governments = _unit.GovernmentRipository.GetAll(g => !g.IsDeleted)
+                            .Select(g => new GovernmentWithRegionsDTO
+                            {
+                                Id = g.Id,
+                                Name = g.Name,
+                                Regions = g.Regions.Select(r => new RegionGetDTO
+                                {
+                                    Id = r.Id,
+                                    Name = r.Name
+                                }).ToList()
+                            }).ToList();
 
+        return governments;
     }
+
+}
 }

@@ -14,22 +14,22 @@ namespace SwiftShipping.ServiceLayer.Services
 {
     public class OrderService
     {
-        private UnitOfWork unit;
-        private readonly IMapper mapper;
-        public OrderService(UnitOfWork _unit,IMapper mapper)
+        private readonly UnitOfWork _unit;
+        private readonly IMapper _mapper;
+        public OrderService(UnitOfWork unit,IMapper mapper)
         {
-            unit = _unit;
-            this.mapper = mapper;
+            _unit = unit;
+            _mapper = mapper;
         }
 
         public decimal CalculateOrderCost(OrderCostDTO order )
         {
-            var settings = unit.WeightSettingRepository.GetSetting();
+            var settings = _unit.WeightSettingRepository.GetSetting();
             float MaxFreeWeight = settings.DefaultWeight;
             decimal extraKiloPrice = settings.KGPrice;
             decimal calculatedPrice = 0;
 
-            var Region = unit.RegionRipository.GetById(order.RegionId);
+            var Region = _unit.RegionRipository.GetById(order.RegionId);
             if (order.OrderType == OrderType.PickUp)
             {
                 calculatedPrice = Region.PickupPrice;
@@ -67,7 +67,7 @@ namespace SwiftShipping.ServiceLayer.Services
         }
         public decimal CalculateOrderCost(Order order)
         {
-            var settings = unit.WeightSettingRepository.GetSetting();
+            var settings = _unit.WeightSettingRepository.GetSetting();
             float MaxFreeWeight = settings.DefaultWeight;
             decimal extraKiloPrice = settings.KGPrice;
             decimal calculatedPrice = 0;
@@ -112,14 +112,14 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             try
             {
-                var order = mapper.Map<OrderDTO, Order>(orderDTO);
+                var order = _mapper.Map<OrderDTO, Order>(orderDTO);
                 order.Status=OrderStatus.New;
                 order.CreationDate = DateTime.Now;
                 //assign region before send order to get the price
-                order.Region = unit.RegionRipository.GetById(order.RegionId);
+                order.Region = _unit.RegionRipository.GetById(order.RegionId);
                 order.DeliveryCost = CalculateOrderCost(order);
-                unit.OrderRipository.Insert(order);
-                unit.SaveChanges();
+                _unit.OrderRipository.Insert(order);
+                _unit.SaveChanges();
                 return true;
             }catch 
             {
@@ -130,14 +130,14 @@ namespace SwiftShipping.ServiceLayer.Services
 
         public bool AssignOrderToDeliveryMan(int orderID, int deliveryManID)
         {
-            Order order = unit.OrderRipository.GetFirstByFilter(o => o.Id == orderID);
+            Order order = _unit.OrderRipository.GetFirstByFilter(o => o.Id == orderID);
             if (order != null)
             {
                 // Update the delivery man ID
                 order.DeliveryId = deliveryManID;
                 // Save changes
-                unit.OrderRipository.Update(order);
-                unit.SaveChanges();
+                _unit.OrderRipository.Update(order);
+                _unit.SaveChanges();
                 return true; 
             }
             return false; 
@@ -145,26 +145,28 @@ namespace SwiftShipping.ServiceLayer.Services
 
         public List<OrderGetDTO> GetAll()
         {
-            var orders = unit.OrderRipository.GetAll();
-            return mapper.Map<List<Order>, List<OrderGetDTO>>(orders);
+            var orders = _unit.OrderRipository.GetAll(order => order.IsDeleted == false);
+
+            return _mapper.Map<List<Order>, List<OrderGetDTO>>(orders);
         }
 
         public OrderGetDTO GetById(int id)
         {
-            var order = unit.OrderRipository.GetById(id);
-            return mapper.Map<Order, OrderGetDTO>(order);
+            var order = _unit.OrderRipository.GetById(id);
+            return _mapper.Map<Order, OrderGetDTO>(order);
 
         }
    
         public List<OrderGetDTO> GetByStatus(OrderStatus orderStatus)
         {
-            var orders = unit.OrderRipository.GetAll(o => o.Status == orderStatus).ToList();
-            return mapper.Map<List<Order>, List<OrderGetDTO>>(orders);
+            var orders = _unit.OrderRipository.GetAll(order => order.Status == orderStatus && order.IsDeleted == false).ToList();
+
+            return _mapper.Map<List<Order>, List<OrderGetDTO>>(orders);
         }
 
         public EnumDTO GetOrderStatusCount(OrderStatus orderStatus)
         {
-             int count = unit.OrderRipository.GetAll(o => o.Status == orderStatus).Count;
+             int count = _unit.OrderRipository.GetAll(order => order.Status == orderStatus && order.IsDeleted == false).Count;
 
             return (new EnumDTO() { Name = StatusMapper.StatusDictionary[orderStatus], Count =  count, Id =  (int) orderStatus });
         }
@@ -172,7 +174,8 @@ namespace SwiftShipping.ServiceLayer.Services
         public List<EnumDTO> GetAllOrderStatusCount()
         {
             // get status, count
-            var res = unit.OrderRipository.GetAll().GroupBy(x => x.Status).ToDictionary(g => g.Key, g => g.Count());
+            var res = _unit.OrderRipository.GetAll(order => order.IsDeleted == false)
+                .GroupBy(x => x.Status).ToDictionary(g => g.Key, g => g.Count());
 
             foreach (var status in StatusMapper.StatusDictionary)
             {
@@ -181,7 +184,7 @@ namespace SwiftShipping.ServiceLayer.Services
             }
 
             List<EnumDTO> statusWithCount =
-                res.Select(x=> new EnumDTO() { Name = StatusMapper.StatusDictionary[x.Key], 
+                res.Select(x => new EnumDTO() { Name = StatusMapper.StatusDictionary[x.Key], 
                     Count = x.Value, Id = (int) x.Key}).ToList();
 
             return statusWithCount;
@@ -189,7 +192,8 @@ namespace SwiftShipping.ServiceLayer.Services
         }
         public EnumDTO GetOrderStatusCountForSeller(OrderStatus orderStatus, int sellerId)
         {
-            int count = unit.OrderRipository.GetAll(order => order.Status == orderStatus && order.SellerId == sellerId).Count;
+            int count = _unit.OrderRipository.GetAll(order => order.Status == orderStatus 
+                        && order.SellerId == sellerId && order.IsDeleted == false).Count;
 
             return (new EnumDTO() { Name = StatusMapper.StatusDictionary[orderStatus], Count = count, Id = (int)orderStatus });
         }
@@ -197,7 +201,7 @@ namespace SwiftShipping.ServiceLayer.Services
         public List<EnumDTO> GetAllOrderStatusCountForSeller(int sellerId)
         {
             // get status, count
-            var res = unit.OrderRipository.GetAll(order => order.SellerId == sellerId)
+            var res = _unit.OrderRipository.GetAll(order => order.SellerId == sellerId && order.IsDeleted == false)
                 .GroupBy(x => x.Status)
                 .ToDictionary(g => g.Key, g => g.Count());
 
@@ -220,7 +224,8 @@ namespace SwiftShipping.ServiceLayer.Services
 
         public EnumDTO GetOrderStatusCountForDelivary(OrderStatus orderStatus, int delivaryId)
         {
-            int count = unit.OrderRipository.GetAll(order => order.Status == orderStatus && order.DeliveryId == delivaryId).Count;
+            int count = _unit.OrderRipository.GetAll(order => order.Status == orderStatus && order.DeliveryId == delivaryId
+                                    && order.IsDeleted == false).Count;
 
             return (new EnumDTO() { Name = StatusMapper.StatusDictionary[orderStatus], Count = count, Id = (int)orderStatus });
         }
@@ -228,7 +233,7 @@ namespace SwiftShipping.ServiceLayer.Services
         public List<EnumDTO> GetAllOrderStatusCountForDelivary(int delivaryId)
         {
             // get status, count
-            var res = unit.OrderRipository.GetAll(order => order.DeliveryId == delivaryId)
+            var res = _unit.OrderRipository.GetAll(order => order.DeliveryId == delivaryId && order.IsDeleted == false)
                 .GroupBy(x => x.Status)
                 .ToDictionary(g => g.Key, g => g.Count());
 
@@ -286,13 +291,13 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             try
             {
-                var order = unit.OrderRipository.GetById(orderId);
+                var order = _unit.OrderRipository.GetById(orderId);
 
                 if (order != null)
                 {
                     order.Status = status;
-                    unit.OrderRipository.Update(order);
-                    unit.SaveChanges();
+                    _unit.OrderRipository.Update(order);
+                    _unit.SaveChanges();
                     return true;
                 }
                 else
@@ -311,16 +316,16 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             try
             {
-                var foundOrder = unit.OrderRipository.GetById(id);
+                var foundOrder = _unit.OrderRipository.GetById(id);
                 //app user
                 if (foundOrder == null)
                 {
                     return false;
                 }
 
-                mapper.Map(orderDTO, foundOrder);
-                unit.OrderRipository.Update(foundOrder);
-                unit.SaveChanges();
+                _mapper.Map(orderDTO, foundOrder);
+                _unit.OrderRipository.Update(foundOrder);
+                _unit.SaveChanges();
             }
             catch
             {
@@ -333,14 +338,14 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             try
             {
-                var foundOrder = unit.OrderRipository.GetById(id);
+                var foundOrder = _unit.OrderRipository.GetById(id);
                 if (foundOrder == null)
                 {
                     return false;
                 }
                 foundOrder.IsDeleted = true;
-                unit.OrderRipository.Update(foundOrder);
-                unit.SaveChanges();
+                _unit.OrderRipository.Update(foundOrder);
+                _unit.SaveChanges();
             }
             catch
             {

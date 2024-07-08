@@ -14,42 +14,42 @@ namespace SwiftShipping.ServiceLayer.Services
 {
     public class SellerService
     {
-        private UnitOfWork unit;
-        private readonly IMapper mapper;
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly RoleManager<IdentityRole> roleManager;
+        private readonly UnitOfWork _unit;
+        private readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
         public SellerService(
-            UnitOfWork _unit, 
-            UserManager<ApplicationUser> _userManager, 
-            RoleManager<IdentityRole> _roleManager, SignInManager<ApplicationUser> signInManager,
-            IMapper _mapper)
+            UnitOfWork unit, 
+            UserManager<ApplicationUser> userManager, 
+            RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager,
+            IMapper mapper)
         {
-            unit = _unit;
-            mapper = _mapper;
-            userManager = _userManager;
+            _unit = unit;
+            _mapper = mapper;
+            _userManager = userManager;
             _signInManager = signInManager;
-            roleManager = _roleManager;
+            _roleManager = roleManager;
         }
 
         public async Task<(bool Success, string UserId, string Role)> Login(LoginDTO loginDTO)
         {
-            ApplicationUser user = await userManager.FindByEmailAsync(loginDTO.email);
+            ApplicationUser user = await _userManager.FindByEmailAsync(loginDTO.email);
 
             if (user == null)
             {
-                user = await userManager.FindByNameAsync(loginDTO.userName);
+                user = await _userManager.FindByNameAsync(loginDTO.userName);
             }
 
             if (user != null)
             {
-                bool found = await userManager.CheckPasswordAsync(user, loginDTO.password);
+                bool found = await _userManager.CheckPasswordAsync(user, loginDTO.password);
                 if (found)
                 {
                     await _signInManager.SignInAsync(user, loginDTO.RemembreMe);
                     // Fetch user roles
-                    var roles = await userManager.GetRolesAsync(user);
+                    var roles = await _userManager.GetRolesAsync(user);
                     string role = roles.FirstOrDefault();
 
                     return (true, user.Id, role);
@@ -61,32 +61,28 @@ namespace SwiftShipping.ServiceLayer.Services
 
         public async Task<bool> addSellerAsync(SellerDTO sellerDTO)
         {
-            var appUser = mapper.Map<SellerDTO, ApplicationUser>(sellerDTO);
+            var appUser = _mapper.Map<SellerDTO, ApplicationUser>(sellerDTO);
 
-            IdentityResult result = await userManager.CreateAsync(appUser, sellerDTO.password);
+            IdentityResult result = await _userManager.CreateAsync(appUser, sellerDTO.password);
             if (result.Succeeded)
             {
                 //Seller Role as string
                 var SellerRole = RoleTypes.Seller.ToString();
 
                 // check if the role is exist if not, add it
-                if (await roleManager.FindByNameAsync(SellerRole) == null)
-                    await roleManager.CreateAsync(new IdentityRole() { Name = SellerRole });
+                if (await _roleManager.FindByNameAsync(SellerRole) == null)
+                    await _roleManager.CreateAsync(new IdentityRole() { Name = SellerRole });
 
                 // assign roles  to created user
-                IdentityResult sellerRole = await userManager.AddToRoleAsync(appUser, SellerRole);
-            
+                IdentityResult sellerRole = await _userManager.AddToRoleAsync(appUser, SellerRole);
 
                 if (sellerRole.Succeeded ) {
-
-                    
-                    var seller = mapper.Map<SellerDTO, Seller>(sellerDTO);
+                    var seller = _mapper.Map<SellerDTO, Seller>(sellerDTO);
                     seller.UserId = appUser.Id;
-                    unit.SellerRipository.Insert(seller);
-                    unit.SaveChanges();
+                    _unit.SellerRipository.Insert(seller);
+                    _unit.SaveChanges();
                     return true;
-                }
-              
+                } 
             }
          
             return false;
@@ -94,45 +90,45 @@ namespace SwiftShipping.ServiceLayer.Services
 
         public SellerGetDTO GetById(int id)
         {
-            var seller = unit.SellerRipository.GetById(id);
-            return mapper.Map<Seller, SellerGetDTO>(seller);
+            var seller = _unit.SellerRipository.GetById(id);
+            return _mapper.Map<Seller, SellerGetDTO>(seller);
 
         }
 
         public List<SellerGetDTO> GetAll()
         {
-            var sellers = unit.SellerRipository.GetAll();
-            return mapper.Map<List<Seller>, List<SellerGetDTO>>(sellers);
+            var sellers = _unit.SellerRipository.GetAll(seller => seller.IsDeleted == false);
+            return _mapper.Map<List<Seller>, List<SellerGetDTO>>(sellers);
         }
 
         public List<OrderGetDTO> GetSellerOrders(int id)
         {
-            var seller = unit.SellerRipository.GetById(id);
-            var sellerOrders = seller?.Orders;
-            return mapper.Map<List<Order>, List<OrderGetDTO>>(sellerOrders);
+            var seller = _unit.SellerRipository.GetById(id);
+            var sellerOrders = seller?.Orders.Where(order => order.IsDeleted == false).ToList();
+            return _mapper.Map<List<Order>, List<OrderGetDTO>>(sellerOrders);
         }
 
         public bool Update(int id, SellerDTO sellerDTO)
         {
             try
             {
-                var foundSeller = unit.SellerRipository.GetById(id);
+                var foundSeller = _unit.SellerRipository.GetById(id);
                 //app user
                 if (foundSeller == null)
                 {
                     return false;
                 }
-                var existingSellerUser = unit.AppUserRepository.GetById(foundSeller.UserId);
+                var existingSellerUser = _unit.AppUserRepository.GetById(foundSeller.UserId);
 
-                mapper.Map(sellerDTO, foundSeller);
-                mapper.Map(sellerDTO, existingSellerUser);
-                unit.SellerRipository.Update(foundSeller);
+                _mapper.Map(sellerDTO, foundSeller);
+                _mapper.Map(sellerDTO, existingSellerUser);
+                _unit.SellerRipository.Update(foundSeller);
 
-                existingSellerUser.NormalizedUserName = userManager.NormalizeName(sellerDTO.userName);
-                existingSellerUser.NormalizedEmail = userManager.NormalizeEmail(sellerDTO.email);
+                existingSellerUser.NormalizedUserName = _userManager.NormalizeName(sellerDTO.userName);
+                existingSellerUser.NormalizedEmail = _userManager.NormalizeEmail(sellerDTO.email);
 
-                unit.AppUserRepository.Update(existingSellerUser);
-                unit.SaveChanges();
+                _unit.AppUserRepository.Update(existingSellerUser);
+                _unit.SaveChanges();
             }
             catch
             {
@@ -144,18 +140,19 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             try
             {
-                var foundSeller = unit.SellerRipository.GetById(id);
-                var existingSellerUser = unit.AppUserRepository.GetById(foundSeller.UserId);
+                var foundSeller = _unit.SellerRipository.GetById(id);
+                var existingSellerUser = _unit.AppUserRepository.GetById(foundSeller.UserId);
                 if (foundSeller == null)
                 {
                     return false;
                 }
+
                 foundSeller.IsDeleted = true;
                 existingSellerUser.IsDeleted = true;
 
-                unit.SellerRipository.Update(foundSeller);
-                unit.AppUserRepository.Update(existingSellerUser);
-                unit.SaveChanges();
+                _unit.SellerRipository.Update(foundSeller);
+                _unit.AppUserRepository.Update(existingSellerUser);
+                _unit.SaveChanges();
             }
             catch
             {
@@ -166,9 +163,9 @@ namespace SwiftShipping.ServiceLayer.Services
 
         public List<OrderGetDTO> GetSellerOrdersByStatus(int id, OrderStatus status)
         {
-            var seller = unit.SellerRipository.GetById(id);
-            var sellerOrders = seller?.Orders.Where(x=>x.Status == status).ToList();
-            return mapper.Map<List<Order>, List<OrderGetDTO>>(sellerOrders);
+            var seller = _unit.SellerRipository.GetById(id);
+            var sellerOrders = seller?.Orders.Where(order => order.Status == status && order.IsDeleted == false).ToList();
+            return _mapper.Map<List<Order>, List<OrderGetDTO>>(sellerOrders);
         }
 
     }

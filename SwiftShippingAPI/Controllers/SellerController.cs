@@ -14,8 +14,8 @@ namespace SwiftShipping.API.Controllers
 
     public class SellerController : ControllerBase
     {
-        private SellerService _sellerService; 
-        private OrderService _orderService;
+        private readonly SellerService _sellerService; 
+        private readonly OrderService _orderService;
         public SellerController(SellerService sellerService, OrderService orderService)
         {
             _sellerService = sellerService;
@@ -59,7 +59,7 @@ namespace SwiftShipping.API.Controllers
             if (ModelState.IsValid)
             {
                 await _sellerService.addSellerAsync(sellerDTO);
-                return Ok("seller Added Successfully");
+                return Ok(new ApiResponse(200, "seller Added Successfully"));
             }
            
                 return BadRequest(new ApiResponse(400)); 
@@ -100,7 +100,7 @@ namespace SwiftShipping.API.Controllers
 
             var result = _sellerService.Update(id, sellerDTO);
             if (!result) return NotFound(new ApiResponse(404, "Seller Does not exixt"));
-            return Ok("Seller Updated Successfully");
+            return Ok(new ApiResponse(200, "Seller Updated Successfully"));
         }
 
         [HttpDelete("Delete/{id}")]
@@ -111,7 +111,7 @@ namespace SwiftShipping.API.Controllers
             var result = _sellerService.Delete(id);
             if (!result) return NotFound(new ApiResponse(404));
 
-            return Ok("Seller Deleted Successfully");
+            return Ok(new ApiResponse(200, "Seller Deleted Successfully"));
         }
 
         [HttpGet("Count")]
@@ -130,7 +130,7 @@ namespace SwiftShipping.API.Controllers
         [HttpGet("{id}/orders/{status}")]
         public ActionResult<List<OrderGetDTO>> getSellerOrdersByStatus(int id, OrderStatus status)
         {
-            if (id == 0) return BadRequest(new ApiResponse(400, "seller not exist"));
+            if (id == 0) return BadRequest(new ApiResponse(400, "Seller Not Exist"));
 
             var orders = _sellerService.GetSellerOrdersByStatus(id,status);
             return Ok(orders);

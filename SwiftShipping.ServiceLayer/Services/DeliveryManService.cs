@@ -14,20 +14,20 @@ namespace SwiftShipping.ServiceLayer.Services
 {
     public class DeliveryManService
     {
-        private UnitOfWork unit;
-        private readonly UserManager<ApplicationUser> userManager;
+        private UnitOfWork _unit;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        private readonly RoleManager<IdentityRole> roleManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
 
-        public DeliveryManService(UnitOfWork _unit, UserManager<ApplicationUser> _userManager,
-           RoleManager<IdentityRole> _roleManager, SignInManager<ApplicationUser> signInManager,
+        public DeliveryManService(UnitOfWork unit, UserManager<ApplicationUser> userManager,
+           RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager,
            IMapper mapper)
         {
-            unit = _unit;
-            userManager = _userManager;
-            roleManager = _roleManager;
+            _unit = unit;
+            _userManager = userManager;
+            _roleManager = roleManager;
             _mapper = mapper;
             _signInManager = signInManager;
 
@@ -36,21 +36,21 @@ namespace SwiftShipping.ServiceLayer.Services
 
         public async Task<(bool Success, string UserId, string Role)> Login(LoginDTO loginDTO)
         {
-            ApplicationUser user = await userManager.FindByEmailAsync(loginDTO.email);
+            ApplicationUser user = await _userManager.FindByEmailAsync(loginDTO.email);
 
             if (user == null)
             {
-                user = await userManager.FindByNameAsync(loginDTO.userName);
+                user = await _userManager.FindByNameAsync(loginDTO.userName);
             }
 
             if (user != null)
             {
-                bool found = await userManager.CheckPasswordAsync(user, loginDTO.password);
+                bool found = await _userManager.CheckPasswordAsync(user, loginDTO.password);
                 if (found)
                 {
                     await _signInManager.SignInAsync(user, loginDTO.RemembreMe);
                     // Fetch user roles
-                    var roles = await userManager.GetRolesAsync(user);
+                    var roles = await _userManager.GetRolesAsync(user);
                     string role = roles.FirstOrDefault();
 
                     return (true, user.Id, role);
@@ -63,23 +63,23 @@ namespace SwiftShipping.ServiceLayer.Services
         public async Task<bool> AddDliveryManAsync(DeliveryManDTO deliveryManDTO)
         {
             var appUser = _mapper.Map<DeliveryManDTO, ApplicationUser>(deliveryManDTO);
-            IdentityResult result = await userManager.CreateAsync(appUser, deliveryManDTO.password);
+            IdentityResult result = await _userManager.CreateAsync(appUser, deliveryManDTO.password);
             if (result.Succeeded)
             {
                 //Delivery Man Role as string
                 var DeliveryManRole = RoleTypes.DeliveryMan.ToString();
 
                 // check if the role is exist if not, add it
-                if (await roleManager.FindByNameAsync(DeliveryManRole) == null)
-                    await roleManager.CreateAsync(new IdentityRole() { Name = DeliveryManRole });
+                if (await _roleManager.FindByNameAsync(DeliveryManRole) == null)
+                    await _roleManager.CreateAsync(new IdentityRole() { Name = DeliveryManRole });
                 // assign roles  to created user
-                IdentityResult deliveryManRole = await userManager.AddToRoleAsync(appUser, DeliveryManRole);
+                IdentityResult deliveryManRole = await _userManager.AddToRoleAsync(appUser, DeliveryManRole);
                 if (deliveryManRole.Succeeded)
                 {
                     var deliveryMan = _mapper.Map<DeliveryManDTO, DeliveryMan>(deliveryManDTO);
                     deliveryMan.UserId = appUser.Id;
-                    unit.DeliveryManRipository.Insert(deliveryMan);
-                    unit.SaveChanges();
+                    _unit.DeliveryManRipository.Insert(deliveryMan);
+                    _unit.SaveChanges();
                     return true;
                 }
             }
@@ -95,8 +95,8 @@ namespace SwiftShipping.ServiceLayer.Services
                     DeliveryManId = DeliveyManId,
                     RegionId = RegionId
                 };
-                unit.DeliveryManRegionsRipository.Insert(deliveryManRegion);
-                unit.SaveChanges();
+                _unit.DeliveryManRegionsRipository.Insert(deliveryManRegion);
+                _unit.SaveChanges();
                 return true;
             }
             catch { return false; }
@@ -106,25 +106,27 @@ namespace SwiftShipping.ServiceLayer.Services
         {
            
             if (status != null) {
-                var ordersByStatus =  unit.OrderRipository.GetAll(order => order.DeliveryId == deliveryManId 
-                && order.Status == status);
+                var ordersByStatus =  _unit.OrderRipository.GetAll(order => order.DeliveryId == deliveryManId 
+                && order.Status == status && order.IsDeleted == false);
 
                 return _mapper.Map<List<Order>, List<OrderGetDTO>>(ordersByStatus);
             }
 
-            var orders =  unit.OrderRipository.GetAll(order => order.DeliveryId == deliveryManId);
+            var orders =  _unit.OrderRipository.GetAll(order => order.DeliveryId == deliveryManId && order.IsDeleted == false);
+
             return _mapper.Map<List<Order>, List<OrderGetDTO>>(orders);
         }
 
         public DeliveryManGetDTO GetById(int id)
         {
-            var deliveryMan = unit.DeliveryManRipository.GetById(id);
+            var deliveryMan = _unit.DeliveryManRipository.GetById(id);
             return _mapper.Map<DeliveryMan, DeliveryManGetDTO>(deliveryMan);
         }
 
         public List<DeliveryManGetDTO> GetAll()
         {
-            var deliveryMenData = unit.DeliveryManRipository.GetAll();
+            var deliveryMenData = _unit.DeliveryManRipository.GetAll(deliveryMan => deliveryMan.IsDeleted == false);
+
             return _mapper.Map<List<DeliveryMan>, List<DeliveryManGetDTO>>(deliveryMenData);
         }
 
@@ -132,22 +134,22 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             try
             {
-                var existingDeliveryMan = unit.DeliveryManRipository.GetById(id);
+                var existingDeliveryMan = _unit.DeliveryManRipository.GetById(id);
                 if (existingDeliveryMan == null)
                 {
                     return false; 
                 }
-                var DeliveryManUser = unit.AppUserRepository.GetById(existingDeliveryMan.UserId);
+                var DeliveryManUser = _unit.AppUserRepository.GetById(existingDeliveryMan.UserId);
                 _mapper.Map(deliveryManDTO, existingDeliveryMan);
                 _mapper.Map(existingDeliveryMan, DeliveryManUser);
-                unit.DeliveryManRipository.Update(existingDeliveryMan);
+                _unit.DeliveryManRipository.Update(existingDeliveryMan);
 
-                DeliveryManUser.NormalizedUserName = userManager.NormalizeName(deliveryManDTO.userName);
-                DeliveryManUser.NormalizedEmail = userManager.NormalizeEmail(deliveryManDTO.email);
+                DeliveryManUser.NormalizedUserName = _userManager.NormalizeName(deliveryManDTO.userName);
+                DeliveryManUser.NormalizedEmail = _userManager.NormalizeEmail(deliveryManDTO.email);
 
-                unit.AppUserRepository.Update(DeliveryManUser);
+                _unit.AppUserRepository.Update(DeliveryManUser);
 
-                unit.SaveChanges();
+                _unit.SaveChanges();
             }
             catch
             {
@@ -160,19 +162,19 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             try
             {
-                var existingDeliveryMan = unit.DeliveryManRipository.GetById(id);
+                var existingDeliveryMan = _unit.DeliveryManRipository.GetById(id);
                 if (existingDeliveryMan == null)
                 {
                     return false;
                 }
-                var existingUser = unit.AppUserRepository.GetById(existingDeliveryMan.UserId);
+                var existingUser = _unit.AppUserRepository.GetById(existingDeliveryMan.UserId);
 
                 existingDeliveryMan.IsDeleted = true;
                 existingUser.IsDeleted = true;
 
-                unit.DeliveryManRipository.Update(existingDeliveryMan);
-                unit.AppUserRepository.Update(existingUser);
-                unit.SaveChanges();
+                _unit.DeliveryManRipository.Update(existingDeliveryMan);
+                _unit.AppUserRepository.Update(existingUser);
+                _unit.SaveChanges();
             }
             catch
             {
@@ -185,7 +187,7 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             try
             {
-                var deliveryMan = unit.DeliveryManRipository.GetById(deliveryManId);
+                var deliveryMan = _unit.DeliveryManRipository.GetById(deliveryManId);
                 if (deliveryMan == null)
                 {
                     return false;
@@ -193,13 +195,13 @@ namespace SwiftShipping.ServiceLayer.Services
                 
                 for(int i = 0; i <regions.Length; i++)
                 {
-                    unit.DeliveryManRegionsRipository.Insert(new DeliveryManRegions()
+                    _unit.DeliveryManRegionsRipository.Insert(new DeliveryManRegions()
                     {
                         DeliveryManId = deliveryMan.Id,
                         RegionId = regions[i]
                     });
                 }
-                unit.SaveChanges();
+                _unit.SaveChanges();
                 return true;
             }
             catch
@@ -210,7 +212,7 @@ namespace SwiftShipping.ServiceLayer.Services
     
         public List<DeliveryManRegions> GetDeliveryManRegions(int deliveryManId) {
 
-            var deliveryMan = unit.DeliveryManRipository.GetById(deliveryManId);
+            var deliveryMan = _unit.DeliveryManRipository.GetById(deliveryManId);
             return deliveryMan.DeliveryManRegions;
         }
     }

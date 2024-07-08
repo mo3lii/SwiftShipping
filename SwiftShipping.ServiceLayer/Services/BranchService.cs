@@ -13,23 +13,23 @@ namespace SwiftShipping.ServiceLayer.Services
 {
     public class BranchService
     {
-        private UnitOfWork unit;
-        private readonly IMapper mapper;
+        private readonly UnitOfWork _unit;
+        private readonly IMapper _mapper;
 
-        public BranchService(UnitOfWork _unit, IMapper _mapper)
+        public BranchService(UnitOfWork unit, IMapper mapper)
         {
-            unit = _unit;
-            mapper = _mapper;
+            _unit = unit;
+            _mapper = mapper;
         }
 
         public bool AddBrnach(BranchDTO branchDTO)
         {
             try
             {
-                var branch = mapper.Map<BranchDTO,Branch>(branchDTO);
+                var branch = _mapper.Map<BranchDTO,Branch>(branchDTO);
                branch.CreationDate = DateTime.Now;
-                unit.BranchRipository.Insert(branch);
-                unit.SaveChanges();
+                _unit.BranchRipository.Insert(branch);
+                _unit.SaveChanges();
             }
             catch
             {
@@ -40,14 +40,15 @@ namespace SwiftShipping.ServiceLayer.Services
     
         public IEnumerable<BranchGetDTO> GetAll()
         {
-            var branches = unit.BranchRipository.GetAll();
-            return mapper.Map<IEnumerable<Branch>, IEnumerable<BranchGetDTO>>(branches);
+            var branches = _unit.BranchRipository.GetAll(branch => branch.IsDeleted == false);
+
+            return _mapper.Map<IEnumerable<Branch>, IEnumerable<BranchGetDTO>>(branches);
         }
 
         public BranchGetDTO GetById(int id)
         {
-            var branch = unit.BranchRipository.GetById(id);
-            return mapper.Map<Branch, BranchGetDTO>(branch);
+            var branch = _unit.BranchRipository.GetById(id);
+            return _mapper.Map<Branch, BranchGetDTO>(branch);
 
         }
 
@@ -56,16 +57,16 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             try
             {
-                var existingBranch = unit.BranchRipository.GetById(id);
+                var existingBranch = _unit.BranchRipository.GetById(id);
 
                 if (existingBranch == null)
                 {
                     return false;
                 }
 
-                mapper.Map(branchDTO, existingBranch);
-                unit.BranchRipository.Update(existingBranch);
-                unit.SaveChanges();
+                _mapper.Map(branchDTO, existingBranch);
+                _unit.BranchRipository.Update(existingBranch);
+                _unit.SaveChanges();
             }
             catch
             {
@@ -78,7 +79,7 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             try
             {
-                var existingBranch = unit.BranchRipository.GetById(id);
+                var existingBranch = _unit.BranchRipository.GetById(id);
                 if (existingBranch == null)
                 {
                     return false; 
@@ -86,8 +87,8 @@ namespace SwiftShipping.ServiceLayer.Services
 
                 existingBranch.IsDeleted = true;
                 existingBranch.IsActive = false;
-                unit.BranchRipository.Update(existingBranch);
-                unit.SaveChanges();
+                _unit.BranchRipository.Update(existingBranch);
+                _unit.SaveChanges();
             }
             catch
             {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using E_CommerceAPI.Errors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SwiftShipping.DataAccessLayer.Models;
 using SwiftShipping.ServiceLayer.Services;
@@ -9,7 +10,7 @@ namespace SwiftShipping.API.Controllers
     [ApiController]
     public class WeightSettingController : ControllerBase
     {
-        private WeightSettingService _weightSettingService;
+        private readonly WeightSettingService _weightSettingService;
         public WeightSettingController(WeightSettingService weightSettingService)
         {
             _weightSettingService = weightSettingService;
@@ -38,7 +39,7 @@ namespace SwiftShipping.API.Controllers
                 return NotFound();
             }
 
-            return Ok("Updated Successfully");
+            return Ok(new ApiResponse(200, "Updated Successfully"));
         }
     }
 }

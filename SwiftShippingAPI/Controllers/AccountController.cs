@@ -31,10 +31,10 @@ namespace SwiftShipping.API.Controllers
             var user = await _userManager.FindByEmailAsync(email);
             if (user != null)
             {
-                return Ok(new { exists = true });
+                return Ok(new ApiResponse(200, "Email Exist"));
             }
 
-            return Ok(new { exists = false });
+            return Ok(new ApiResponse(404, "Email Does Not Exist"));
         }
 
         [HttpGet("CheckUsername")]
@@ -43,10 +43,10 @@ namespace SwiftShipping.API.Controllers
             var user = await _userManager.FindByNameAsync(username);
             if (user != null)
             {
-                return Ok(new { exists = true });
+                return Ok(new ApiResponse(200, "UserName Exist"));
             }
 
-            return Ok(new { exists = false });
+            return Ok(new ApiResponse(404, "UserName Does Not Exist"));
         }
 
         [HttpPost("LoginWithUserName")]
@@ -119,7 +119,7 @@ namespace SwiftShipping.API.Controllers
         {
             await _signInManager.SignOutAsync();
 
-            return Ok();
+            return Ok(new ApiResponse (200,"Log Out Successfuly"));
         }
     }
 }

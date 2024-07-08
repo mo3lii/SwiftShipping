@@ -3,14 +3,14 @@ namespace E_CommerceAPI.Errors
 {
     public class ApiResponse
     {
+        public int Status { get; set; }
+        public string? Message { get; set; }
         public ApiResponse(int status, string? message = null)
         {
             Status = status;
             Message = message ?? GetDefaultMessage(status);
         }
 
-        public int Status { get; set; }
-        public string? Message { get; set; }
 
         private string? GetDefaultMessage(int status)
         {

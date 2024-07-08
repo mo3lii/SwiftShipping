@@ -11,12 +11,10 @@ namespace SwiftShipping.API.Controllers
     [ApiController]
     public class OrderStatusController : ControllerBase
     {
-        UnitOfWork unitOfWork;
-        OrderService orderService;
-        public OrderStatusController(UnitOfWork _unitOfWork, OrderService _orderService)
+        private readonly OrderService _orderService;
+        public OrderStatusController(OrderService orderService)
         {
-            unitOfWork = _unitOfWork;
-            orderService = _orderService;
+            _orderService = orderService;
         }
 
         [HttpGet("All")]
@@ -28,14 +26,14 @@ namespace SwiftShipping.API.Controllers
         [HttpGet("getCount")] 
         public IActionResult getOrderStatusCount(OrderStatus status)
         {
-             var res =  orderService.GetOrderStatusCount(status);
+             var res =  _orderService.GetOrderStatusCount(status);
             return Ok(res);
         }
 
         [HttpGet("GetAllStatusCount")]
         public IActionResult GetAllStatusCount()
         {
-           return Ok(orderService.GetAllOrderStatusCount());
+           return Ok(_orderService.GetAllOrderStatusCount());
         }
 
 

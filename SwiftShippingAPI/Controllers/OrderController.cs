@@ -12,25 +12,25 @@ namespace SwiftShipping.API.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        UnitOfWork unitOfWork;
-        OrderService orderService;
-        public OrderController(UnitOfWork _unitOfWork, OrderService _orderService)
+        private readonly UnitOfWork _unitOfWork;
+        private readonly OrderService _orderService;
+        public OrderController(UnitOfWork unitOfWork, OrderService orderService)
         {
-            unitOfWork = _unitOfWork;
-            orderService = _orderService;
+            _unitOfWork = unitOfWork;
+            _orderService = orderService;
         }
 
         [HttpPost("Add")]
         public IActionResult Add(OrderDTO orderDTO)
         {
-            orderService.AddOrder(orderDTO);
-            return Ok(new { msg = "order added successfully"});
+            _orderService.AddOrder(orderDTO);
+            return Ok(new ApiResponse(200, "order added successfully"));
         }
 
         [HttpGet("All")]
         public ActionResult<OrderGetDTO> GetAll() { 
         
-            var orders = orderService.GetAll();
+            var orders = _orderService.GetAll();
 
             return Ok(orders);
         }
@@ -40,7 +40,7 @@ namespace SwiftShipping.API.Controllers
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
 
-            var order = orderService.GetById(id);
+            var order = _orderService.GetById(id);
 
             if (order == null) { return NotFound(new ApiResponse(404, "Order Not Fond")); }
 
@@ -50,7 +50,7 @@ namespace SwiftShipping.API.Controllers
         [HttpPost("AssignToDeliveryMan")]
         public async Task<IActionResult> AssignDeliveryManToOrder(int orderID,  int deliveryManID )
         {
-            var result = orderService.AssignOrderToDeliveryMan(orderID, deliveryManID);
+            var result = _orderService.AssignOrderToDeliveryMan(orderID, deliveryManID);
             if(result == true)
             {
                 return Ok("Order Assigned Successfully to Delivery man");
@@ -66,38 +66,38 @@ namespace SwiftShipping.API.Controllers
         {
             if (status == null) return BadRequest(new ApiResponse(400));
 
-            var orders = orderService.GetByStatus(status);
+            var orders = _orderService.GetByStatus(status);
             return Ok(orders);
         }
 
         [HttpGet("OrderTypes")]
         public IActionResult GetOrderTypes()
         {
-            var ordersTypes = orderService.GetOrderTypes();
+            var ordersTypes = _orderService.GetOrderTypes();
             return Ok(ordersTypes);
         }
 
         [HttpGet("ShippingTypes")]
         public IActionResult GetShippingTypes()
         {
-            var shipingTypes = orderService.GetShippingTypes();
+            var shipingTypes = _orderService.GetShippingTypes();
             return Ok(shipingTypes);
         }
 
         [HttpGet("PaymentTypes")]
         public IActionResult GetPaymentTypes()
         {
-            var PaymentTypes = orderService.GetPaymentTypes();
+            var PaymentTypes = _orderService.GetPaymentTypes();
             return Ok(PaymentTypes);
         }
         [HttpPut("ChangeOrderStatus/{id}")]
         public IActionResult ChangeOrderStatus(int id, [FromBody] OrderStatus status)
         {
-            var result = orderService.ChangeOrderStatus(status, id);
+            var result = _orderService.ChangeOrderStatus(status, id);
 
             if (result)
             {
-                return Ok(new { message = "Status changed successfully" });
+                return Ok(new ApiResponse(200, "Status changed successfully" ));
             }
 
             return BadRequest(new ApiResponse(400, "Failed to change status"));
@@ -108,11 +108,11 @@ namespace SwiftShipping.API.Controllers
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
 
-            var result = orderService.UpdateOrder(id, order);
+            var result = _orderService.UpdateOrder(id, order);
 
             if (!result) return NotFound(new ApiResponse(404));
 
-            return Ok("Order Updated Successfully");
+            return Ok(new ApiResponse(200, "Order Updated Successfully"));
         }
 
         [HttpDelete("Delete/{id}")]
@@ -120,16 +120,16 @@ namespace SwiftShipping.API.Controllers
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
 
-            var result = orderService.DeleteOrder(id);
+            var result = _orderService.DeleteOrder(id);
             if (!result) return NotFound(new ApiResponse(404));
 
-            return Ok("Order Deleted Successfully");
+            return Ok(new ApiResponse(200, "Order Deleted Successfully"));
         }
 
         [HttpPost("OrderCost")]
         public IActionResult OrderCost(OrderCostDTO order)
         {
-            var orderCost = orderService.CalculateOrderCost(order);
+            var orderCost = _orderService.CalculateOrderCost(order);
             return Ok(orderCost);
         }
     }

@@ -12,21 +12,22 @@ namespace SwiftShipping.ServiceLayer.Services
 {
     public class RegionService
     {
-        private UnitOfWork unit;
-        private readonly IMapper mapper;
-        public RegionService(UnitOfWork _unit, IMapper mapper)
+        private readonly UnitOfWork _unit;
+        private readonly IMapper _mapper;
+
+        public RegionService(UnitOfWork unit, IMapper mapper)
         {
-            unit = _unit;
-            this.mapper = mapper;
+            _unit = unit;
+            _mapper = mapper;
         }
 
         public bool Add(RegionDTO regionDTO)
         {
             try
             {
-                var region = mapper.Map<RegionDTO, Region>(regionDTO);
-                unit.RegionRipository.Insert(region);
-                unit.SaveChanges();
+                var region = _mapper.Map<RegionDTO, Region>(regionDTO);
+                _unit.RegionRipository.Insert(region);
+                _unit.SaveChanges();
             }
             catch
             {
@@ -37,30 +38,31 @@ namespace SwiftShipping.ServiceLayer.Services
 
         public List<RegionGetDTO> GetAll()
         {
-            var regions = unit.RegionRipository.GetAll();
-            return mapper.Map<List<Region>, List<RegionGetDTO>>(regions);
+            var regions = _unit.RegionRipository.GetAll(region => region.IsDeleted == false);
+
+            return _mapper.Map<List<Region>, List<RegionGetDTO>>(regions);
         }
 
         public RegionGetDTO GetById(int id)
         {
-            var region = unit.RegionRipository.GetById(id);
-            return mapper.Map<Region, RegionGetDTO>(region);
+            var region = _unit.RegionRipository.GetById(id);
 
+            return _mapper.Map<Region, RegionGetDTO>(region);
         }
 
         public bool EditRegion(int id, RegionDTO regionDTO)
         {
             try
             {
-                var foundRegion= unit.RegionRipository.GetById(id);
+                var foundRegion= _unit.RegionRipository.GetById(id);
                 if (foundRegion == null)
                 {
                     return false;
                 }
 
-                mapper.Map(regionDTO, foundRegion);
-                unit.RegionRipository.Update(foundRegion);
-                unit.SaveChanges();
+                _mapper.Map(regionDTO, foundRegion);
+                _unit.RegionRipository.Update(foundRegion);
+                _unit.SaveChanges();
             }
             catch
             {
@@ -73,14 +75,14 @@ namespace SwiftShipping.ServiceLayer.Services
         {
             try
             {
-                var foundRegion = unit.RegionRipository.GetById(id);
+                var foundRegion = _unit.RegionRipository.GetById(id);
                 if (foundRegion == null)
                 {
                     return false;
                 }
                 foundRegion.IsDeleted = true;
-                unit.RegionRipository.Update(foundRegion);
-                unit.SaveChanges();
+                _unit.RegionRipository.Update(foundRegion);
+                _unit.SaveChanges();
             }
             catch
             {
@@ -91,7 +93,7 @@ namespace SwiftShipping.ServiceLayer.Services
     
         public List<Region> GetRegionsByGovernment(int governrmrntId)
         {
-            var regions =   unit.RegionRipository.GetAll(x => x.GovernmentId == governrmrntId);
+            var regions =   _unit.RegionRipository.GetAll(region => region.GovernmentId == governrmrntId && region.IsDeleted == false);
             return regions;
         }
     }

@@ -26,7 +26,7 @@ namespace SwiftShipping.API.Controllers
         public IActionResult Add(RegionDTO regionDTO)
         {
             _regionService.Add(regionDTO);
-            return Created();
+            return Ok(new ApiResponse(200, "Region Added Successfully"));
         }
 
         [HttpGet("All")]
@@ -59,7 +59,9 @@ namespace SwiftShipping.API.Controllers
             if (id == 0) return BadRequest(new ApiResponse(400));
 
             var result = _regionService.EditRegion(id, regionDTO);
+
             if (!result) return NotFound(new ApiResponse(404));
+
             return Ok(new ApiResponse(200, "Region Updated Successfully"));
         }
 

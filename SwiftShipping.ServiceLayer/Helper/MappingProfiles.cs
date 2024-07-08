@@ -39,7 +39,7 @@ namespace SwiftShipping.ServiceLayer.Helper
 
             CreateMap<Region, RegionGetDTO>()
                 .ForMember(dest => dest.GovernmentName, opt => opt.MapFrom(src => src.Government.Name));
-
+            CreateMap<RegionGetDTO, Region>();
 
             CreateMap<DeliveryManDTO, ApplicationUser>()
                 .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.password)).ReverseMap();

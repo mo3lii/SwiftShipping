@@ -41,6 +41,7 @@ namespace SwiftShipping.API.Controllers
         public async Task<IActionResult> CheckUsername(string username)
         {
             var user = await _userManager.FindByNameAsync(username);
+
             if (user != null)
             {
                 return Ok(new ApiResponse(200, "UserName Exist"));
@@ -59,6 +60,7 @@ namespace SwiftShipping.API.Controllers
                 if (result.Success == true)
                 {
                     int Id = await _accountService.getIdByRole(result.UserId, result.Role);
+
                     // Create the claims
                     var claims = new List<Claim>
                     {
@@ -78,7 +80,7 @@ namespace SwiftShipping.API.Controllers
             }
             else
             {
-                return BadRequest(new ApiResponse(400));
+                return BadRequest(new ApiResponse(400, "Invalid userName or Password"));
             }
         }
 

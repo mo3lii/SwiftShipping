@@ -53,7 +53,7 @@ namespace SwiftShipping.API.Controllers
             var result = _orderService.AssignOrderToDeliveryMan(orderID, deliveryManID);
             if(result == true)
             {
-                return Ok("Order Assigned Successfully to Delivery man");
+                return Ok(new ApiResponse(200, "Order Assigned Successfully to Delivery man"));
             }
            
              return BadRequest(new ApiResponse(400, "Fail To assign order to Delivery Man"));

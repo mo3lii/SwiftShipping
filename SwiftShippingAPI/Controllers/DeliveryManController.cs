@@ -89,7 +89,7 @@ namespace SwiftShipping.API.Controllers
 
             var result = _deliveryManService.assignDeliveryManTORegion(deliveryManId, regionId);
 
-            if (result) return Ok();
+            if (result) return Ok(new ApiResponse(200, "region assigned successfully"));
 
             return BadRequest(new ApiResponse(400));
         }

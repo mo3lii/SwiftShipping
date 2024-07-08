@@ -124,7 +124,7 @@ namespace SwiftShipping.ServiceLayer.Services
 
         public List<DeliveryManGetDTO> GetAll()
         {
-            var deliveryMenData = unit.DeliveryManRipository.GetAll();
+            var deliveryMenData = unit.DeliveryManRipository.GetAll(d => d.IsDeleted == false);
             return _mapper.Map<List<DeliveryMan>, List<DeliveryManGetDTO>>(deliveryMenData);
         }
 

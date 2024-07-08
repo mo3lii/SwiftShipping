@@ -101,7 +101,7 @@ namespace SwiftShipping.ServiceLayer.Services
 
         public List<SellerGetDTO> GetAll()
         {
-            var sellers = unit.SellerRipository.GetAll();
+            var sellers = unit.SellerRipository.GetAll(s => s.IsDeleted == false);
             return mapper.Map<List<Seller>, List<SellerGetDTO>>(sellers);
         }
 

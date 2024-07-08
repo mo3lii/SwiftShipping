@@ -10,7 +10,9 @@ namespace SwiftShipping.ServiceLayer.DTO
     {
         public int Id { get; set; }
         public string BranchName { get; set; }
+        public int BranchId { get; set; }
         public string RegionName { get; set; }
+        public int RegionId { get; set; }
         public string StoreName { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }

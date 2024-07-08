@@ -101,7 +101,7 @@ namespace SwiftShipping.ServiceLayer.Services
         }
         public List<EmployeeGetDTO> GetAll()
         {
-            var employeesData = unit.EmployeeRipository.GetAll();
+            var employeesData = unit.EmployeeRipository.GetAll(e => e.IsDeleted == false);
             return mapper.Map<List<Employee>, List<EmployeeGetDTO>>(employeesData);
         }
 

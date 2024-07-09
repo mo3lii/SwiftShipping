@@ -10,6 +10,7 @@ namespace SwiftShipping.ServiceLayer.DTO
 {
     public class DeliveryManDTO
     {
+        public int id {  get; set; }
         public string name { get; set; }
         public string address { get; set; }
         public string email { get; set; }

@@ -86,21 +86,21 @@ namespace SwiftShipping.ServiceLayer.Services
             return false;
         }
 
-        public bool assignDeliveryManTORegion(int DeliveyManId, int RegionId)
-        {
-            try
-            {
-                var deliveryManRegion = new DeliveryManRegions()
-                {
-                    DeliveryManId = DeliveyManId,
-                    RegionId = RegionId
-                };
-                _unit.DeliveryManRegionsRipository.Insert(deliveryManRegion);
-                _unit.SaveChanges();
-                return true;
-            }
-            catch { return false; }
-        }
+        //public bool assignDeliveryManTORegion(int DeliveyManId, int RegionId)
+        //{
+        //    try
+        //    {
+        //        var deliveryManRegion = new DeliveryManRegions()
+        //        {
+        //            DeliveryManId = DeliveyManId,
+        //            RegionId = RegionId
+        //        };
+        //        _unit.DeliveryManRegionsRipository.Insert(deliveryManRegion);
+        //        _unit.SaveChanges();
+        //        return true;
+        //    }
+        //    catch { return false; }
+        //}
 
         public List<OrderGetDTO> GetDeliveryManOrders(int deliveryManId , OrderStatus? status = null)
         {
@@ -186,24 +186,18 @@ namespace SwiftShipping.ServiceLayer.Services
             }
             return true;
         }
-
-        public bool AssignRegionsToDeliveryMan(int deliveryManId, int[]regions)
+     public bool AssignRegionsToDeliveryMan(int deliveryManId, int[] regionIds)
         {
             try
             {
-                var deliveryMan = _unit.DeliveryManRipository.GetById(deliveryManId);
-                if (deliveryMan == null)
+                foreach (var regionId in regionIds)
                 {
-                    return false;
-                }
-                
-                for(int i = 0; i <regions.Length; i++)
-                {
-                    _unit.DeliveryManRegionsRipository.Insert(new DeliveryManRegions()
+                    var deliveryManRegion = new DeliveryManRegions
                     {
-                        DeliveryManId = deliveryMan.Id,
-                        RegionId = regions[i]
-                    });
+                        DeliveryManId = deliveryManId,
+                        RegionId = regionId
+                    };
+                    _unit.DeliveryManRegionsRipository.Insert(deliveryManRegion);
                 }
                 _unit.SaveChanges();
                 return true;
@@ -213,7 +207,7 @@ namespace SwiftShipping.ServiceLayer.Services
                 return false;
             }
         }
-    
+
         public List<DeliveryManRegions> GetDeliveryManRegions(int deliveryManId) {
 
             var deliveryMan = _unit.DeliveryManRipository.GetById(deliveryManId);

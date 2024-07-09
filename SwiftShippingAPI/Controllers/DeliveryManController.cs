@@ -74,25 +74,38 @@ namespace SwiftShipping.API.Controllers
             return BadRequest(new ApiResponse(400, "Login Faild"));
         }
 
-        [HttpPost("AssignToRegion")]
-        public IActionResult AssignToRegion(int deliveryManId, int regionId)
+
+        [HttpPost("AssignRegions")]
+        public async Task<IActionResult> AssignRegionsToDeliveryMan([FromBody] AssignRegionsDTO assignRegionsDTO)
         {
-            if (deliveryManId == 0 || regionId == 0) return BadRequest(new ApiResponse(400));
-
-            var deliveryMan = _deliveryManService.GetById(deliveryManId);
-
-            if (deliveryMan == null) return NotFound(new ApiResponse(404, "Delivary man does not exist"));
-
-            var region = _regionService.GetById(regionId);
-
-            if (region == null) return NotFound(new ApiResponse(404, "Redion does not exist"));
-
-            var result = _deliveryManService.assignDeliveryManTORegion(deliveryManId, regionId);
-
-            if (result) return Ok(new ApiResponse(200, "region assigned successfully"));
-
-            return BadRequest(new ApiResponse(400));
+            var result = _deliveryManService.AssignRegionsToDeliveryMan(assignRegionsDTO.DeliveryManId, assignRegionsDTO.RegionIds);
+            if (result)
+            {
+                return Ok();
+            }
+            return BadRequest();
         }
+
+
+        //[HttpPost("AssignToRegion")]
+        //public IActionResult AssignToRegion(int deliveryManId, int regionId)
+        //{
+        //    if (deliveryManId == 0 || regionId == 0) return BadRequest(new ApiResponse(400));
+
+        //    var deliveryMan = _deliveryManService.GetById(deliveryManId);
+
+        //    if (deliveryMan == null) return NotFound(new ApiResponse(404, "Delivary man does not exist"));
+
+        //    var region = _regionService.GetById(regionId);
+
+        //    if (region == null) return NotFound(new ApiResponse(404, "Redion does not exist"));
+
+        //    var result = _deliveryManService.assignDeliveryManTORegion(deliveryManId, regionId);
+
+        //    if (result) return Ok(new ApiResponse(200, "region assigned successfully"));
+
+        //    return BadRequest(new ApiResponse(400));
+        //}
 
         [HttpGet("{id}/orders")]
         public ActionResult<List<OrderGetDTO>> GetDeliveryManOrders(int id, OrderStatus? status = null)

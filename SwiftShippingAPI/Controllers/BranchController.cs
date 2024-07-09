@@ -1,4 +1,5 @@
 ﻿using E_CommerceAPI.Errors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SwiftShipping.ServiceLayer.DTO;
@@ -16,6 +17,7 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpGet("All")]
+        //[Authorize(Policy = "Branches/View")]
         public IActionResult GetAllBranches()
         {
             var branches = _branchService.GetAll();
@@ -23,6 +25,8 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpPost("Add")]
+        [Authorize(Roles = "Admin")]
+        //[Authorize(Policy = "Branches/Add")]
         public IActionResult addBranch(BranchDTO branchDTO)
         {
             _branchService.AddBrnach(branchDTO);
@@ -30,6 +34,8 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
+        //[Authorize(Policy = "Branches/Edit")]
         public ActionResult<BranchGetDTO> GetById(int id)
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
@@ -41,6 +47,8 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpPut("Edit/{id}")]
+        [Authorize(Roles = "Admin")]
+        //[Authorize(Policy = "Branches/Edit")]
         public IActionResult EditBranch(int id, BranchDTO branchDTO)
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
@@ -53,6 +61,8 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
+        [Authorize(Roles = "Admin")]
+        //[Authorize(Policy = "Branches/Delete")]
         public IActionResult DeleteBranch(int id)
         {
             if (id == 0) return BadRequest(new ApiResponse(400));

@@ -93,12 +93,46 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("Employees/View", policy =>
+    options.AddPolicy("Branches/View", policy =>
              policy.RequireAuthenticatedUser()
-                   .AddRequirements(new PermissionRequirement(Department.Employees, PermissionType.View)));
+                   .AddRequirements(new PermissionRequirement(Department.Branches, PermissionType.View)));
+    options.AddPolicy("Branches/Add", policy =>
+         policy.RequireAuthenticatedUser()
+               .AddRequirements(new PermissionRequirement(Department.Branches, PermissionType.Add)));
+    options.AddPolicy("Branches/Edit", policy =>
+         policy.RequireAuthenticatedUser()
+               .AddRequirements(new PermissionRequirement(Department.Branches, PermissionType.Edit)));
+    options.AddPolicy("Branches/Delete", policy =>
+         policy.RequireAuthenticatedUser()
+               .AddRequirements(new PermissionRequirement(Department.Branches, PermissionType.Delete)));
+    ///////////////////////////////////////////
+    options.AddPolicy("Regions/View", policy =>
+         policy
+               .AddRequirements(new PermissionRequirement(Department.Regions, PermissionType.View)));
+    options.AddPolicy("Regions/Add", policy =>
+         policy.RequireAuthenticatedUser()
+               .AddRequirements(new PermissionRequirement(Department.Regions, PermissionType.Add)));
+    options.AddPolicy("Regions/Edit", policy =>
+         policy.RequireAuthenticatedUser()
+               .AddRequirements(new PermissionRequirement(Department.Regions, PermissionType.Edit)));
+    options.AddPolicy("Regions/Delete", policy =>
+         policy.RequireAuthenticatedUser()
+               .AddRequirements(new PermissionRequirement(Department.Regions, PermissionType.Delete)));
+    ///////////////////////////////////////////
+    options.AddPolicy("Governments/View", policy =>
+         policy.RequireAuthenticatedUser()
+               .AddRequirements(new PermissionRequirement(Department.Governments, PermissionType.View)));
+    options.AddPolicy("Governments/Add", policy =>
+         policy.RequireAuthenticatedUser()
+               .AddRequirements(new PermissionRequirement(Department.Governments, PermissionType.Add)));
+    options.AddPolicy("Governments/Edit", policy =>
+         policy.RequireAuthenticatedUser()
+               .AddRequirements(new PermissionRequirement(Department.Governments, PermissionType.Edit)));
+    options.AddPolicy("Governments/DeletB", policy =>
+         policy.RequireAuthenticatedUser()
+               .AddRequirements(new PermissionRequirement(Department.Governments, PermissionType.Delete)));
+   
 
-    //policy name : DepartmentName/Permission  example: Branch/View
-    //AuthorizationPolicies.AddDepartmentsPolicies(options);
 });
 
 

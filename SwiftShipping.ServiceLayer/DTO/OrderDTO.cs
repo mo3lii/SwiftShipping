@@ -14,7 +14,7 @@ namespace SwiftShipping.ServiceLayer.DTO
 
         [Required(ErrorMessage = "Name is Required")]
         [MaxLength(50, ErrorMessage = "maximum length is 50")]
-        [RegularExpression(@"^[a-zA-Z\s]{3,}", ErrorMessage = "name must start with at least 3 charachters")]
+        [RegularExpression(@"^[a-zA-Z\s]{3}.*", ErrorMessage = "name must start with at least 3 charachters")]
         public string customerName { get; set; }
 
         [RegularExpression(@"^[0](10|11|12|15)[0-9]{8}$", ErrorMessage = "Invalid phone number format")]
@@ -22,7 +22,7 @@ namespace SwiftShipping.ServiceLayer.DTO
 
         [Required(ErrorMessage = "address is Required")]
         [MaxLength(50, ErrorMessage = "maximum length is 50")]
-        [RegularExpression(@"^[a-zA-Z\s]{3,}", ErrorMessage = "adress must start with at least 3 charachters")]
+        [RegularExpression(@"^[a-zA-Z\s]{3}.*", ErrorMessage = "address must start with at least 3 charachters")]
         public string address { get; set; }
 
 

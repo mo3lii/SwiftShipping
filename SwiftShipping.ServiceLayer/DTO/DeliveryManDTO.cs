@@ -15,12 +15,12 @@ namespace SwiftShipping.ServiceLayer.DTO
 
         [Required(ErrorMessage = "Name is Required")]
         [MaxLength(50, ErrorMessage = "maximum length is 50")]
-        [RegularExpression(@"^[a-zA-Z\s]{3,}", ErrorMessage = "name must start with at least 3 charachters")]
+        [RegularExpression(@"^[a-zA-Z\s]{3}.*", ErrorMessage = "name must start with at least 3 charachters")]
         public string name { get; set; }
 
         [Required(ErrorMessage = "address is Required")]
         [MaxLength(50, ErrorMessage = "maximum length is 50")]
-        [RegularExpression(@"^[a-zA-Z\s]{3,}", ErrorMessage = "address must start with at least 3 charachters")]
+        [RegularExpression(@"^[a-zA-Z\s]{3}.*", ErrorMessage = "address must start with at least 3 charachters")]
         public string address { get; set; }
 
         [Required(ErrorMessage = "Email is Required")]
@@ -38,6 +38,7 @@ namespace SwiftShipping.ServiceLayer.DTO
         public string phoneNumber { get; set; }
 
         [Required(ErrorMessage = "branch is Required")]
+        [RegularExpression(@"^[1-9]{1}[0-9]*", ErrorMessage = "enter valid branchId")]
         public int branchId { get; set; }
 
     }

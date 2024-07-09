@@ -60,19 +60,20 @@ namespace SwiftShipping.ServiceLayer.Services
             return (false, null, null);
         }
 
-        public async Task<bool> AddDliveryManAsync(DeliveryManDTO deliveryManDTO)
+        public async Task<(bool isSuccess, int deliveryManId)> AddDliveryManAsync(DeliveryManDTO deliveryManDTO)
         {
             var appUser = _mapper.Map<DeliveryManDTO, ApplicationUser>(deliveryManDTO);
             IdentityResult result = await _userManager.CreateAsync(appUser, deliveryManDTO.password);
             if (result.Succeeded)
             {
-                //Delivery Man Role as string
+                // Delivery Man Role as string
                 var DeliveryManRole = RoleTypes.DeliveryMan.ToString();
 
-                // check if the role is exist if not, add it
+                // Check if the role exists, if not, add it
                 if (await _roleManager.FindByNameAsync(DeliveryManRole) == null)
                     await _roleManager.CreateAsync(new IdentityRole() { Name = DeliveryManRole });
-                // assign roles  to created user
+
+                // Assign roles to the created user
                 IdentityResult deliveryManRole = await _userManager.AddToRoleAsync(appUser, DeliveryManRole);
                 if (deliveryManRole.Succeeded)
                 {
@@ -80,11 +81,41 @@ namespace SwiftShipping.ServiceLayer.Services
                     deliveryMan.UserId = appUser.Id;
                     _unit.DeliveryManRipository.Insert(deliveryMan);
                     _unit.SaveChanges();
-                    return true;
+
+                    // Get the ID of the newly added delivery man
+                    int deliveryManId = deliveryMan.Id;
+
+                    return (true, deliveryManId);
                 }
             }
-            return false;
+            return (false, 0);
         }
+
+        //public async Task<bool> AddDliveryManAsync(DeliveryManDTO deliveryManDTO)
+        //{
+        //    var appUser = _mapper.Map<DeliveryManDTO, ApplicationUser>(deliveryManDTO);
+        //    IdentityResult result = await _userManager.CreateAsync(appUser, deliveryManDTO.password);
+        //    if (result.Succeeded)
+        //    {
+        //        //Delivery Man Role as string
+        //        var DeliveryManRole = RoleTypes.DeliveryMan.ToString();
+
+        //        // check if the role is exist if not, add it
+        //        if (await _roleManager.FindByNameAsync(DeliveryManRole) == null)
+        //            await _roleManager.CreateAsync(new IdentityRole() { Name = DeliveryManRole });
+        //        // assign roles  to created user
+        //        IdentityResult deliveryManRole = await _userManager.AddToRoleAsync(appUser, DeliveryManRole);
+        //        if (deliveryManRole.Succeeded)
+        //        {
+        //            var deliveryMan = _mapper.Map<DeliveryManDTO, DeliveryMan>(deliveryManDTO);
+        //            deliveryMan.UserId = appUser.Id;
+        //            _unit.DeliveryManRipository.Insert(deliveryMan);
+        //            _unit.SaveChanges();
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //}
 
         //public bool assignDeliveryManTORegion(int DeliveyManId, int RegionId)
         //{

@@ -11,7 +11,6 @@ namespace SwiftShipping.ServiceLayer.DTO
 {
     public class DeliveryManDTO
     {
-        public int id {  get; set; }
 
         [Required(ErrorMessage = "Name is Required")]
         [MaxLength(50, ErrorMessage = "maximum length is 50")]

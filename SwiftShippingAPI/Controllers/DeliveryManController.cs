@@ -36,9 +36,9 @@ namespace SwiftShipping.API.Controllers
 
             if (ModelState.IsValid)
             {
-                await _deliveryManService.AddDliveryManAsync(deliveryManDTO);
+               var result= await _deliveryManService.AddDliveryManAsync(deliveryManDTO);
 
-                return Ok(new ApiResponse(200, "Delivery Man Added Successfully"));
+                return Ok(new { message = "Delivery Man Added Successfully", deliverymanId=result.deliveryManId });
             }
             else
             {

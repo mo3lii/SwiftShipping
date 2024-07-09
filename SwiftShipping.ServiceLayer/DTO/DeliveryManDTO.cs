@@ -13,15 +13,13 @@ namespace SwiftShipping.ServiceLayer.DTO
     {
 
         [Required(ErrorMessage = "Name is Required")]
-        [MinLength(3, ErrorMessage = "lenght must be at leat 3")]
         [MaxLength(50, ErrorMessage = "maximum length is 50")]
-        [RegularExpression(@"^[\d]{3,}", ErrorMessage = "name must start with at least 3 charachters")]
+        [RegularExpression(@"^[a-zA-Z\s]{3,}", ErrorMessage = "name must start with at least 3 charachters")]
         public string name { get; set; }
 
         [Required(ErrorMessage = "address is Required")]
-        [MinLength(3, ErrorMessage = "lenght must be at leat 3")]
         [MaxLength(50, ErrorMessage = "maximum length is 50")]
-        [RegularExpression(@"^[\d]{3,}", ErrorMessage = "address must start with at least 3 charachters")]
+        [RegularExpression(@"^[a-zA-Z\s]{3,}", ErrorMessage = "address must start with at least 3 charachters")]
         public string address { get; set; }
 
         [Required(ErrorMessage = "Email is Required")]
@@ -32,7 +30,7 @@ namespace SwiftShipping.ServiceLayer.DTO
         public string userName { get; set; }
 
         [Required(ErrorMessage = "password is Required")]
-        [RegularExpression(@"^(?=.*[A-Z])(?=.*[\dA-Za-z]{4,})(?=.*[_$@|/\\.&])[A-Za-z\d_$@|/\\.&]{8,}$", ErrorMessage = "ErrorMessage = \"Password must contain at least 1 uppercase letter, 4 alphanumeric characters, and at least one special character.\"")]
+        [RegularExpression(@"^(?=.*[A-Z])(?=.*[\dA-Za-z]{4,})(?=.*[_$@|/\\.&])[A-Za-z\d_$@|/\\.&]{8,}$", ErrorMessage = "Password must contain at least 1 uppercase letter, 4 alphanumeric characters, and at least one special character.")]
         public string password { get; set; }
 
         [RegularExpression(@"^[0](10|11|12|15)[0-9]{8}$", ErrorMessage = "Invalid phone number format")]

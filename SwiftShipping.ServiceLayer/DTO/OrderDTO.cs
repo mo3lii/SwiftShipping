@@ -13,32 +13,35 @@ namespace SwiftShipping.ServiceLayer.DTO
     {
 
         [Required(ErrorMessage = "Name is Required")]
-        [MinLength(3, ErrorMessage = "lenght must be at leat 3")]
         [MaxLength(50, ErrorMessage = "maximum length is 50")]
-        [RegularExpression(@"^[\d]{3,}", ErrorMessage = "name must start with at least 3 charachters")]
+        [RegularExpression(@"^[a-zA-Z\s]{3,}", ErrorMessage = "name must start with at least 3 charachters")]
         public string customerName { get; set; }
 
         [RegularExpression(@"^[0](10|11|12|15)[0-9]{8}$", ErrorMessage = "Invalid phone number format")]
         public string customerPhone { get; set; }
 
         [Required(ErrorMessage = "address is Required")]
-        [MinLength(3, ErrorMessage = "lenght must be at leat 3")]
         [MaxLength(50, ErrorMessage = "maximum length is 50")]
-        [RegularExpression(@"^[\d]{3,}", ErrorMessage = "address must start with at least 3 charachters")]
+        [RegularExpression(@"^[a-zA-Z\s]{3,}", ErrorMessage = "adress must start with at least 3 charachters")]
         public string address { get; set; }
 
 
         [Required(ErrorMessage = "Branch is Required")]
+        [RegularExpression(@"^[1-9]{1}[0-9]*", ErrorMessage = "enter valid branch number")]
         public int branchId { get; set; }
 
+
         [Required(ErrorMessage = "Region is Required")]
+        [RegularExpression(@"^[1-9]{1}[0-9]*", ErrorMessage = "enter valid region number")]
         public int regionId { get; set; }
 
         [Required(ErrorMessage = "isShippedToVillage? is Required")]
         public bool isShippedToVillage { get; set; }
+
         public string? villageName { get; set; }
 
         [Required(ErrorMessage = "weight is Required")]
+        [RegularExpression(@"^[1-9]{1}[0-9]*", ErrorMessage = "weight must be a number")]
         public float weight { get; set; }
 
         [Required(ErrorMessage = "order price is Required")]
@@ -47,7 +50,7 @@ namespace SwiftShipping.ServiceLayer.DTO
         public string? note { get; set; }
 
         [Required(ErrorMessage = "sellerId is Required")]
-        [RegularExpression(@"\d+", ErrorMessage = "order price must be number")]
+        [RegularExpression(@"^[1-9]{1}[0-9]*", ErrorMessage = "enter valid sellerId")]
         public int sellerId { get; set; }
 
         [Required(ErrorMessage = "shippingType is Required")]
@@ -61,7 +64,6 @@ namespace SwiftShipping.ServiceLayer.DTO
 
         //delivery man id
         public int? DeliveryId { get; set; }
-
 
     }
 }

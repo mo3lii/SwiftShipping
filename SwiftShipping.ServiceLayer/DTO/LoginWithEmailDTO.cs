@@ -14,6 +14,7 @@ namespace SwiftShipping.ServiceLayer.DTO
 
 
         [Required(ErrorMessage = "password field is Required")]
+        [RegularExpression(@"^(?=.*[A-Z])(?=.*[\dA-Za-z]{4,})(?=.*[_$@|/\\.&])[A-Za-z\d_$@|/\\.&]{8,}$", ErrorMessage = "Password must contain at least 1 uppercase letter, 4 alphanumeric characters, and at least one special character.")]
         public string password { get; set; }
 
 

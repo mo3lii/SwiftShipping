@@ -11,6 +11,8 @@ namespace SwiftShipping.ServiceLayer.DTO
     public class OrderCostDTO
     {
         [Required(ErrorMessage = "weight field is Required")]
+        [RegularExpression(@"[\d]+", ErrorMessage = "weight must be a number")]
+
         public float Weight{ get; set; }
 
         [Required(ErrorMessage = "ordertype field is Required")]

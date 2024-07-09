@@ -11,7 +11,6 @@ namespace SwiftShipping.ServiceLayer.DTO
     {
 
         [Required(ErrorMessage = "Id field is Required")]
-
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Name field is Required")]

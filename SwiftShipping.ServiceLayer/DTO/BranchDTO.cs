@@ -14,9 +14,8 @@ namespace SwiftShipping.ServiceLayer.DTO
 
 
         [Required(ErrorMessage = "Name is Required")]
-        [MinLength(3, ErrorMessage = "lenght must be at leat 3")]
         [MaxLength(50, ErrorMessage = "maximum length is 50")]
-        [RegularExpression(@"^[\d]{3,}", ErrorMessage ="name must start with at least 3 charachters")]
+        [RegularExpression(@"^[a-zA-Z\s]{3,}", ErrorMessage ="name must start with at least 3 charachters")]
         public string Name { get; set; }
 
 

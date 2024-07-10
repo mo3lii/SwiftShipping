@@ -24,7 +24,6 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpPost("Add")]
-        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Register(EmployeeDTO employeeDTO)
         {
 
@@ -43,8 +42,7 @@ namespace SwiftShipping.API.Controllers
         
 
         [HttpGet("All")]
-        [Authorize(Roles = "Admin")]
-        //[Authorize(Policy = "CanView")]
+        //[Authorize(Roles = "Admin")]
         public ActionResult<List<EmployeeGetDTO>> GetAllEmployees()
         {
             var employees = _employeeService.GetAll();
@@ -66,7 +64,6 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpPut("Update/{id}")]
-        //[Authorize(Roles = "Employee")]
 
         public IActionResult UpdateEmployee(int id, EmployeeDTO employee)
         {

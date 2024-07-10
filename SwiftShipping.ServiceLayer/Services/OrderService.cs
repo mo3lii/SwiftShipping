@@ -47,9 +47,9 @@ namespace SwiftShipping.ServiceLayer.Services
                 case ShippingType.In24H:
                     calculatedPrice += 30m;
                     break;
-                    //case ShippingType.In2to5Days:
-                    //    calculatedPrice += 15m;
-                    //    break;
+                case ShippingType.In2to5Days:
+                    calculatedPrice += 15m;
+                    break;
             }
 
             if (order.IsShippedToVillage)
@@ -89,9 +89,9 @@ namespace SwiftShipping.ServiceLayer.Services
                 case ShippingType.In24H:
                     calculatedPrice += 30m;
                     break;
-                //case ShippingType.In2to5Days:
-                //    calculatedPrice += 15m;
-                //    break;
+                case ShippingType.In2to5Days:
+                    calculatedPrice += 15m;
+                    break;
             }
 
             if(order.isShippedToVillage)

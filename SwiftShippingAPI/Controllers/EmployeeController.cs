@@ -43,7 +43,7 @@ namespace SwiftShipping.API.Controllers
         
 
         [HttpGet("All")]
-        //[Authorize(Roles = "Employee")]
+        [Authorize(Roles = "Admin")]
         //[Authorize(Policy = "CanView")]
         public ActionResult<List<EmployeeGetDTO>> GetAllEmployees()
         {

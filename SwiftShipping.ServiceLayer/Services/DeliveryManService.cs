@@ -56,7 +56,7 @@ namespace SwiftShipping.ServiceLayer.Services
             return (false, null, null);
         }
 
-        public async Task<bool> AddDliveryManAsync(DeliveryManDTO deliveryManDTO)
+        public async Task<(bool success, int deliveryManId)> AddDliveryManAsync(DeliveryManDTO deliveryManDTO)
         {
             var appUser = _mapper.Map<DeliveryManDTO, ApplicationUser>(deliveryManDTO);
             IdentityResult result = await _userManager.CreateAsync(appUser, deliveryManDTO.password);
@@ -76,10 +76,10 @@ namespace SwiftShipping.ServiceLayer.Services
                     deliveryMan.UserId = appUser.Id;
                     _unit.DeliveryManRipository.Insert(deliveryMan);
                     _unit.SaveChanges();
-                    return true;
+                    return (true, deliveryMan.Id);
                 }
             }
-            return false;
+            return (false,0);
         }
 
         //public bool assignDeliveryManTORegion(int DeliveyManId, int RegionId)

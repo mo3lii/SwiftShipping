@@ -1,4 +1,5 @@
 ﻿using E_CommerceAPI.Errors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SwiftShipping.DataAccessLayer.Models;
@@ -17,6 +18,8 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpGet("All")]
+        [Authorize(Policy = "Governments/View")]
+
         public ActionResult<List<GovernmentGetDTO>> GetAll()
         {
             var governemnts = _governmentService.GetAll();
@@ -25,6 +28,7 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpPost("Add")]
+        [Authorize(Policy = "Governments/Add")]
         public IActionResult addGovernment(string name)
         {
             if (name == null) { return BadRequest(new ApiResponse(400)); }
@@ -34,6 +38,7 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy = "Governments/Edit")]
         public ActionResult<GovernmentGetDTO> GetById(int id)
         {
             if (id == 0) { return BadRequest(new ApiResponse(400)); }
@@ -46,6 +51,7 @@ namespace SwiftShipping.API.Controllers
         }
 
         [HttpPut("Edit/{id}")]
+        [Authorize(Policy = "Governments/Edit")]
         public IActionResult Edit(int id, GovernmentDTO governmentDTO)
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
@@ -58,10 +64,11 @@ namespace SwiftShipping.API.Controllers
 
 
         [HttpDelete("Delete/{id}")]
+        [Authorize(Policy = "Governments/Delete")]
+
         public IActionResult Delete(int id)
         {
             if (id == 0) return BadRequest(new ApiResponse(400));
-
             var result = _governmentService.Delete(id);
             if (!result) return NotFound(new ApiResponse(404));
 
